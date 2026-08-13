@@ -1,0 +1,41 @@
+---
+title: "Daves' Bakery"
+kind: "client"
+summary: "A beloved Campbell River bakery's 13-year-old WordPress site replaced in six days, without touching the Square store the business runs on."
+year: "2026"
+timeline: "1 week"
+role: "Design, build, DNS cutover"
+stack: ["Next.js", "TypeScript", "Keystatic CMS", "Square (preserved)", "Vercel"]
+liveUrl: "https://davesbakery.ca"
+hero: "/images/work/daves-bakery.png"
+heroAlt: "Daves' Bakery website hero on desktop"
+order: 5
+---
+
+Daves' Bakery has been a Willow Point institution for over thirty years. David and Dave start production at 3:30 every morning. Their website told a different story: a WordPress site they'd built themselves thirteen years earlier, loading over insecure http, stuck on a PHP version their host couldn't upgrade. They'd found the dead end themselves; patching it wasn't worth anyone's time.
+
+![Daves' Bakery's previous WordPress website](/images/work/daves-bakery/old-site.webp)
+
+One constraint was non-negotiable: the Square online store and pre-order forms they'd wired up over a single COVID weekend still worked perfectly, and the bakery runs on them. The new site had to point at that system, not replace it.
+
+## The day-aware bread board
+
+The centrepiece of the new six-page build is a bread board that knows what day it is. The bakery bakes to a weekly schedule customers actually plan around, so on a Tuesday the site highlights the Czech rye and on a Thursday the rohlík. It's a small piece of logic (the baking schedule lives in the CMS, the site resolves today against it at render time), but it's the difference between a brochure and a tool people check.
+
+![The day-aware bread board on the new Daves' Bakery site](/images/work/daves-bakery/bread-board.webp)
+
+The counter page lists real prices straight from their Square catalog, the story page covers the two Daves and the local supply loop the City of Campbell River wrote up in 2017, and every order button points at the untouched Square store.
+
+![The counter page with real Square catalog prices](/images/work/daves-bakery/counter.webp)
+
+## The cutover is the risky part
+
+Replacing a site is easy. Replacing it without breaking a business's email is the part that rewards paranoia. Before touching anything I pull the full DNS zone (A, MX, TXT, DKIM, SRV, the lot), then change only the apex A record and the `www` CNAME to point at Vercel, leaving every mail record exactly where it was. Their email kept working through the switch, and the old site's press features and order forms all came along to the new home.
+
+## The result
+
+Six days after the go-ahead, davesbakery.ca was serving the new site: secure, mobile-friendly, and pointed at the same Square store their customers already use. Like every build, it ships with a CMS, so after thirteen years of fighting WordPress updates, changing the soup of the day takes minutes.
+
+> "Looks absolutely AMAZING and we are very happy with it. Thank you once again very much for your kind help and assistance with this exciting project."
+>
+> — David & Dave, Daves' Bakery

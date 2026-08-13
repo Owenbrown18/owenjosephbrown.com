@@ -1,0 +1,44 @@
+---
+title: "Lead generation pipeline"
+kind: "systems"
+summary: "The ~3,900-line Python system that finds OBdesign's clients: scraping, analysis, email discovery, and drafting, instrumented all the way to revenue."
+year: "2026"
+timeline: "2026 – present"
+role: "Sole developer & operator"
+stack: ["Python", "Google Maps scraping", "Tavily Search API", "Gmail API", "RDAP"]
+order: 2
+---
+
+OBdesign's clients are small businesses on Vancouver Island, and small businesses don't come to you. The pipeline is the system I built to go to them: it scrapes, qualifies, and drafts so that my only manual job is the judgment call and the send button.
+
+## The pipeline
+
+Five stages, run from the command line:
+
+1. **Scrape.** Pull businesses for a region and niche from Google Maps: name, site, phone, reviews.
+2. **Analyze.** Visit the business's website (if one exists) and assess it: platform, age signals, mobile behaviour, obvious problems. Domain registration data comes over RDAP and gets cached, because a domain registered in 2009 that still serves a table-based layout tells you something.
+3. **Discover.** Find the owner's real email. This runs on the Tavily search API rather than scraping search engines, which block datacentre traffic silently. Cost is about 1.4 credits per lead, budgeted against a monthly quota.
+4. **Validate.** Suppression lists (already contacted, chains, wrong niche, asked to be removed), dedupe, and sanity checks before a lead is allowed to become an email.
+5. **Draft.** Write a personalized first email referencing what the analysis actually found, and save it to Gmail as a draft via the API. Nothing sends automatically; I read and send every one by hand.
+
+State lives in flat JSON files under version control: contacted, suppressed, outcomes, removed. Boring, inspectable, and diffable, which matters more than a database when the operator is also the developer.
+
+## Instrumented to revenue, not to opens
+
+Every send gets an outcome recorded, so the funnel math is real money, not marketing metrics. The numbers that came out surprised me:
+
+- Roughly **7% of first cold emails convert to a paying project**. Not replies. Paying projects.
+- **Follow-ups are worth nothing.** Around fifty follow-ups sent, zero replies. Every client the pipeline has ever produced came from a first email. The system no longer drafts follow-ups at all.
+- At the studio's average deal size, one sent email carries an expected value of about **$60**, which reframed the whole business: the bottleneck was never leads, it was sends.
+
+## The bug that taught me the most
+
+The analyzer originally generated a "hook" for each lead: the specific problem with their website that the email would open with. An audit of flagged leads found that **about 97% of those hooks were wrong**. The analyzer was pattern-matching its way into confident claims about sites it hadn't verified, and I nearly sent personalized emails built on invented problems.
+
+The fix was philosophical as much as technical: the drafter may only assert what the analyzer verifiably observed, and anything inferred gets softened or cut. "No website found" still requires human confirmation before it's usable, because a business with only a Facebook page and a business with a site the scraper missed look identical from the data.
+
+That rule (claims must trace to evidence) now applies to everything the system writes, and honestly, to everything I write.
+
+## Why this project matters to me
+
+It's not a portfolio piece that simulates a business problem. It funds my degree. The pipeline found and helped close most of the client work on this site, and its funnel numbers decide how I spend my mornings.

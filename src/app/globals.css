@@ -1,26 +1,456 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/*
+ * OBdesign family tokens. Source of truth: the studio brand
+ * (Deep Forest / Sage / Warm Paper, Fraunces + Inter).
+ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-forest: #0b1f1d;
+  --color-forest-mid: #1e3a37;
+  --color-forest-high: #2e5450;
+  --color-sage: #7ba49e;
+  --color-ink: #1e1e1e;
+  --color-paper: #f7f6f3;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --fg: #1e1e1e;
+  --fg-muted: #444444;
+  --fg-faint: #666666;
+  --line: rgba(30, 30, 30, 0.14);
+  --accent: #7ba49e;
+  /* Sage is decorative only on light ground; text-level accents use a
+     darker sage that passes AA on warm paper. */
+  --accent-text: #3e6b64;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0b1f1d;
+  --surface: #122a27;
+  --fg: rgba(255, 255, 255, 0.92);
+  --fg-muted: rgba(255, 255, 255, 0.68);
+  --fg-faint: rgba(255, 255, 255, 0.55);
+  --line: rgba(255, 255, 255, 0.14);
+  --accent: #7ba49e;
+  --accent-text: #8fb8b1;
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.04em;
+    line-height: 0.98;
+    font-weight: 700;
+    color: var(--fg);
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #0b1f1d;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-text);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .container-site {
+    margin-inline: auto;
+    max-width: 1200px;
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .container-site {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Signature quiet label: the studio eyebrow. */
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+
+  /* 2px sage rule that introduces a section. */
+  .sage-bar {
+    width: 2.5rem;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  /* Sage underline that wipes out on hover (origin left -> right). */
+  .link-underline {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 100% 1.5px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.25s ease;
+    padding-bottom: 2px;
+  }
+  .link-underline:hover {
+    background-size: 0% 1.5px;
+    background-position: 100% 100%;
+  }
+
+  .hairline {
+    border-top: 1px solid var(--line);
+  }
+
+  /* The forest gradient, as a static fallback and as dark-band ground. */
+  .forest-ground {
+    background-color: #0b1f1d;
+    background-image: radial-gradient(
+      ellipse 70% 55% at 20% 25%,
+      #2e5450 0%,
+      #1e3a37 35%,
+      #0b1f1d 80%
+    );
+  }
+}
+
+/* Scroll reveal: CSS scroll-driven where supported, static everywhere else.
+   No JS, no hydration flash, dies under prefers-reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal-up {
+      animation: reveal-up 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+    @keyframes reveal-up {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+
+  .hero-stage > * {
+    animation: hero-rise 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+  }
+  .hero-stage > *:nth-child(2) {
+    animation-delay: 0.08s;
+  }
+  .hero-stage > *:nth-child(3) {
+    animation-delay: 0.16s;
+  }
+  .hero-stage > *:nth-child(4) {
+    animation-delay: 0.24s;
+  }
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Phone-screenshot rows in case studies */
+.screen-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.screen-row img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+@media (max-width: 640px) {
+  .screen-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .screen-row img:nth-child(3) {
+    display: none;
+  }
+}
+
+/* Command palette (cmdk) */
+.cmdk-group [cmdk-group-heading] {
+  padding: 0.5rem 0.75rem 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.cmdk-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.cmdk-item[data-selected="true"] {
+  background: var(--surface);
+  color: var(--fg);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/* Case-study prose. Kept bespoke rather than @tailwindcss/typography so the
+   type matches the brand exactly. */
+.prose-ob {
+  max-width: 65ch;
+  color: var(--fg-muted);
+}
+.prose-ob > * + * {
+  margin-top: 1.25em;
+}
+.prose-ob h2 {
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  margin-top: 2.2em;
+  color: var(--fg);
+}
+.prose-ob h3 {
+  font-size: clamp(1.35rem, 2.5vw, 1.7rem);
+  margin-top: 1.8em;
+  color: var(--fg);
+}
+.prose-ob strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+.prose-ob a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+.prose-ob a:hover {
+  text-decoration-color: currentColor;
+}
+.prose-ob ul,
+.prose-ob ol {
+  padding-left: 1.25rem;
+}
+.prose-ob ul {
+  list-style: disc;
+}
+.prose-ob ol {
+  list-style: decimal;
+}
+.prose-ob li + li {
+  margin-top: 0.5em;
+}
+.prose-ob blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1.25rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+.prose-ob img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+.prose-ob table {
+  width: 100%;
+  font-size: 0.9rem;
+  border-collapse: collapse;
+}
+.prose-ob th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--fg);
+  border-bottom: 1px solid var(--line);
+  padding: 0.5rem 0.75rem 0.5rem 0;
+}
+.prose-ob td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  vertical-align: top;
+}
+.prose-ob :not(pre) > code {
+  font-size: 0.875em;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  color: var(--fg);
+}
+.prose-ob pre {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  background: #0b1f1d !important;
+  padding: 1.1rem 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.prose-ob pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* Shiki dual-theme: light theme uses the dark panel too, so only the dark
+   variables apply. */
+.prose-ob pre span {
+  color: var(--shiki-dark, inherit);
+}
+
+/* Resume */
+.resume-heading {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.6rem;
+}
+
+@media print {
+  :root {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --fg: #111111;
+    --fg-muted: #333333;
+    --fg-faint: #555555;
+    --line: #cccccc;
+    --accent: #3e6b64;
+    --accent-text: #3e6b64;
+  }
+  header,
+  footer,
+  [cmdk-dialog] {
+    display: none !important;
+  }
+  body {
+    font-size: 11.5px;
+  }
+  .resume-entry {
+    break-inside: avoid;
+  }
+  main {
+    padding: 0;
+  }
+}
+
+/* Client-site screenshot marquee (landing page) */
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 6%,
+    black 94%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 6%,
+    black 94%,
+    transparent
+  );
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 55s linear infinite;
+}
+.marquee-half {
+  display: flex;
+}
+.marquee-card {
+  margin-right: 1.25rem;
+  flex-shrink: 0;
+}
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .marquee-track {
+    animation: none;
+  }
 }

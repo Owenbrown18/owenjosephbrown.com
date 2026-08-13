@@ -1,0 +1,42 @@
+---
+title: "Figs & Honey"
+kind: "client"
+summary: "Replacing a hacked, decade-old WordPress site with a nine-page custom build: booking, a shop, and a journal the owner runs herself."
+year: "2026"
+timeline: "6 weeks"
+role: "Design, build, integrations, deploy"
+stack: ["Next.js", "TypeScript", "Keystatic CMS", "Square", "Mailchimp", "Turnstile"]
+liveUrl: "https://figsandhoney.com"
+hero: "/images/work/figs-and-honey.png"
+heroAlt: "Figs & Honey website hero on desktop"
+order: 4
+---
+
+Figs & Honey is a Salt Spring Island spa run by a practitioner with over twenty years in the field. Her website hadn't kept pace: an aging WordPress build that looked dated and, worse, had been quietly compromised. Spam links were being injected into her contact page without her knowledge.
+
+![The previous Figs & Honey WordPress site](/images/work/figs-and-honey/old-site.webp)
+
+Cleaning a hacked WordPress install is a gamble that it stays clean. We replaced the platform entirely instead: a static-rendered Next.js build has no plugin surface for the old problems to crawl back through.
+
+## Nine pages, three integrations, one editor
+
+The site covers everything the business actually does: treatments, weddings, retreats, coaching, gift certificates, an online shop, a journal, and contact. The interesting part is how much of it the owner operates herself.
+
+![The treatments page with Square booking](/images/work/figs-and-honey/treatments.webp)
+
+- **Booking** goes straight into Square Appointments. One calendar across every service, so double-bookings can't happen. The site links deep into specific services rather than dumping visitors at a generic booking page.
+- **The shop** is a Keystatic collection: each product is an entry with a photo, description, price, and a Square checkout link. Adding a new balm is a CMS edit, not a developer request.
+- **The journal** is a posts collection with the same editing flow, and Mailchimp signup grows her list from the site.
+- **Forms** are spam-protected properly: honeypot plus Cloudflare Turnstile verified server-side, which matters on a site whose previous life involved injected spam.
+
+This build carries the largest Keystatic schema I've shipped (a 673-line config), which taught me how to structure singletons and collections so the CMS editor reads in the same order as the page. Numbered section labels, `itemLabel` on every array so entries read by name, and seeded defaults so no field ever opens blank.
+
+![The Figs & Honey online shop](/images/work/figs-and-honey/shop.webp)
+
+## The result
+
+figsandhoney.com runs fast and clean with none of the old platform's baggage: no plugins to patch, no compromised code, and forms that don't leak spam. The owner writes her own journal posts, stocks her own shop, and takes bookings through one calendar.
+
+> "Owen was brilliant. He held my hand and was incredibly patient and helpful. He built two wonderful websites for me with a shop on and booking system too."
+>
+> — Lisa Sliwowska, Figs & Honey

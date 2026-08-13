@@ -1,0 +1,81 @@
+---
+title: "grain"
+kind: "product"
+summary: "A shared film camera for iOS. Friends join a roll, shoot blind, and nobody sees a photo until the roll gets developed."
+year: "2026"
+timeline: "January 2026 – present"
+role: "Founder & sole developer"
+stack: ["React Native", "Expo", "Supabase", "Postgres + RLS", "Skia / SkSL"]
+hero: "/images/grain/branding.png"
+heroAlt: "grain branding: a film-styled camera app for iOS"
+order: 1
+---
+
+Digital photos are instant and endless. Film isn't. grain brings the constraint back: every roll has a fixed number of shots (12, 24, or 36) split evenly across everyone on it. You shoot with no preview and no redo, and when the roll is full the creator develops it. Everyone gets the photos at once, pushed to an Apple Photos album.
+
+The whole app exists to protect one moment: the reveal. That decision shaped the architecture more than any framework choice.
+
+<ScreenRow>
+  <img src="/images/grain/home_roll.png" alt="Home screen with an active roll and live film-strip counter" />
+  <img src="/images/grain/new_roll_qr.png" alt="A new roll's QR code and share code, ready to send to friends" />
+  <img src="/images/grain/waiting.png" alt="The waiting room: exposed frames shown as opaque film squares" />
+</ScreenRow>
+
+## The rule that can't be client-side
+
+If photos are supposed to be secret until develop, the secrecy has to be enforced where the client can't reach it. The storage bucket is private, row-level security hides photo rows until the roll's status flips to `developed`, and developed photos are served through short-lived signed URLs. There is no client-side trick to see them early; the database says no.
+
+Every game-critical write goes through a `security definer` RPC, so the client never mutates state directly:
+
+| RPC | What it guarantees |
+| --- | --- |
+| `create_roll` | 3-roll cap, collision-safe 6-char codes, creator membership |
+| `join_roll` | row-locked, fair shot redistribution including shots already used |
+| `take_shot` | atomic photo insert + member decrement + roll increment |
+| `develop_roll` | creator-only, one-way status flip |
+| `discard_roll` | creatorship transfers so a roll is never orphaned |
+| `report_photo` / `remove_member` | UGC safety (App Store guideline 1.2) |
+
+This is the actual `take_shot` from the schema. Both rows get locked before anything moves, and the storage path is validated so a member can't write into another roll's folder:
+
+```sql
+select * into v_roll from rolls where id = p_roll_id for update;
+if v_roll.status <> 'shooting' then raise exception 'ROLL_DEVELOPED'; end if;
+
+select * into v_member from members
+  where roll_id = p_roll_id and user_id = v_uid and kept for update;
+if v_member.shots_remaining <= 0 then raise exception 'NO_SHOTS_REMAINING'; end if;
+
+-- Path must live under this roll's folder — prevents cross-roll spoofing
+if p_storage_path not like 'rolls/' || p_roll_id || '/%' then
+  raise exception 'INVALID_STORAGE_PATH';
+end if;
+```
+
+Joining late is the interesting case. Shares are recomputed across all active members inside a single row-locked transaction, accounting for shots people have already used, with the floor-division remainder going to the oldest members. Two people scanning the same QR code at the same instant both get a correct, fair split.
+
+## A shutter that never waits for the network
+
+Rolls get shot at parties, on beaches, on ferries. The shutter has to fire instantly and nothing can be lost when the signal drops. So capture, filtering, and upload are fully decoupled: the photo goes through the film pipeline, lands in a persisted queue, and a background worker uploads with retry. Queued shots survive app restarts and merge optimistically into the UI counters. Shooting an entire roll offline works; the frames catch up when the phone does.
+
+## The film look, computed at capture
+
+The filter is a multi-pass SkSL pipeline (via `@shopify/react-native-skia`) applied to a ~2400px working frame the moment the shutter fires, modeled on Kodak Gold 200:
+
+- **Grain**: two octaves of bilinear value noise, clumpy like film, midtone-weighted, sized relative to frame width
+- **Halation**: highlights extracted at quarter resolution with a soft threshold, Gaussian-blurred, tinted red-orange, and plus-blended back, so only hot highlights glow
+- **Tone curve**: black lift, shadow fill, highlight shoulder, applied luma-proportionally to preserve hue
+- **Colour grade**: the Kodak split-tone (cool-green shadows, golden midtones), windowed by luma so blacks and whites stay neutral
+- **Softness and vignette**: a 4-tap cross sample kills the digital edge, then a wide organic falloff
+
+If the shader fails to compile on a device, the app falls back to a colour matrix rather than shipping an unfiltered frame.
+
+## Decisions I'd defend
+
+- **No accounts.** Anonymous Supabase auth with a display name. Signup friction would kill the "scan this QR at a party" loop.
+- **No preview.** The point of the app. It also deletes an entire category of UI.
+- **Server-authoritative everything.** v1 checked creator-only develop in the UI; v2 enforces it in the database. The UI is now just an opinion about state it doesn't own.
+
+## Status
+
+In active development, with TestFlight as the next milestone. The remaining work is hardening, not features: the core loop (create, join, shoot, develop, reveal) is complete and running on device.

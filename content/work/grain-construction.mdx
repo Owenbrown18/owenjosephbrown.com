@@ -1,0 +1,44 @@
+---
+title: "Grain Construction"
+kind: "client"
+summary: "The first-ever website for a Salt Spring Island builder: 291 photos organized into thirteen project galleries, all editable by the owners."
+year: "2026"
+timeline: "4 weeks"
+role: "Design, build, deploy, DNS"
+stack: ["Next.js", "TypeScript", "Tailwind", "Keystatic CMS", "Vercel"]
+liveUrl: "https://grainconstruction.ca"
+hero: "/images/work/grain-construction.png"
+heroAlt: "Grain Construction website hero on desktop"
+order: 3
+---
+
+Grain Construction built its reputation on Salt Spring Island the traditional way: good work, word of mouth, and an Instagram account. No website, ever. When the owners reached out, the timing had a deadline attached. They were printing stickers for the company vehicles, so the domain had to be locked in before anything else. grainconstruction.ca was still available, and it was theirs within days.
+
+## The real problem was 300 photos
+
+Construction clients evaluate a builder one way: they want to see finished work. Years of it existed, but as a raw photo library of over three hundred shots (resort cabins, residential builds, renovations) with no organization at all.
+
+I curated that down to 291 web-ready images across thirteen distinct projects, each with its own gallery page, so a visitor can walk through a single build start to finish instead of scrolling a wall of unrelated photos.
+
+![Grain Construction featured project on the homepage](/images/work/grain-construction/featured-project.webp)
+
+## The build
+
+A four-page Next.js site in TypeScript, deployed on Vercel, using the company's real branding: their logo, their copper-and-black palette, their fonts. Every gallery is a Keystatic collection entry, so the owners add a project, drop in photos, and reorder them without touching code.
+
+![The project gallery organized by individual build](/images/work/grain-construction/gallery.webp)
+
+Two engineering details from this one that I keep reusing:
+
+- **Keystatic image paths have a shape, and getting it wrong fails silently.** For collections, images store under `directory/<entry-slug>/<file>` and the JSON value must include the slug segment. Seed it flat and the site renders perfectly while the CMS editor shows every image field empty. The site being green proves nothing; I now open the editor and check the collection before any delivery.
+- **Honest empty states.** The testimonial section stayed hidden until real client reviews existed, rather than padding the launch with fakes. It has since earned its content.
+
+![A single project gallery page with its full photo set](/images/work/grain-construction/project-page.webp)
+
+## The result
+
+grainconstruction.ca went live about a month after the go-ahead: the company's first website, on a domain they own outright, matching the stickers on their trucks. The owners manage projects and photos themselves through the CMS.
+
+> "The entire experience was outstanding from start to finish. The process was seamless, his communication was excellent, and the attention to detail he put into every aspect of the site was exceptional."
+>
+> — Dan Smith, Grain Construction
