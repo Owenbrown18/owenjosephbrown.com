@@ -9,7 +9,8 @@ const anchors = [
   { num: "01", label: "home", href: "/#home" },
   { num: "02", label: "expertise", href: "/#expertise" },
   { num: "03", label: "work", href: "/#work" },
-  { num: "04", label: "contact", href: "/#contact" },
+  { num: "04", label: "about", href: "/#about" },
+  { num: "05", label: "contact", href: "/#contact" },
 ];
 
 export function Header() {
@@ -34,7 +35,7 @@ export function Header() {
               key={item.href}
               href={item.href}
               className={`px-2 py-1.5 text-[13px] text-white/60 transition-colors hover:text-white sm:px-3 ${
-                i === 1 ? "hidden sm:block" : ""
+                i === 1 || i === 3 ? "hidden sm:block" : ""
               }`}
             >
               <span aria-hidden className="nav-num">

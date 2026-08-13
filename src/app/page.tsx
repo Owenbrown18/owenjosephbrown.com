@@ -143,6 +143,12 @@ export default function HomePage() {
 
       {/* 03 · Work */}
       <section id="work" className="relative">
+        {/* The tunnel: the ground deepens toward black through the projects
+            so the imagery carries the light. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-[5] bg-gradient-to-b from-transparent via-black/40 to-transparent"
+        />
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
@@ -196,6 +202,10 @@ export default function HomePage() {
 
         {/* Desktop: staggered full-bleed collage with opposing parallax. */}
         <div className="fullbleed relative mt-[-1.5rem] hidden h-[clamp(380px,52vw,680px)] sm:mt-[-3rem] sm:block">
+          <div
+            aria-hidden
+            className="absolute left-[8%] top-[5%] h-[90%] w-[65%] bg-[radial-gradient(closest-side,rgba(123,164,158,0.13),transparent)]"
+          />
           <div className="parallax-a absolute left-[3%] top-[8%] w-[54%] border border-white/15 shadow-2xl">
             <Image
               src="/images/work/grain-construction.png"
@@ -263,6 +273,10 @@ export default function HomePage() {
               </p>
             </div>
             <div className="relative grid grid-cols-3 items-end gap-4">
+              <div
+                aria-hidden
+                className="absolute -inset-12 bg-[radial-gradient(closest-side,rgba(214,164,80,0.12),transparent)]"
+              />
               <div className="parallax-b">
                 <PhoneFrame>
                   <Image
@@ -322,45 +336,76 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 04 · Contact, with the about woven in as its opening. */}
-      <section id="contact" className="relative overflow-hidden">
-        <div className="container-site grid gap-10 pb-4 pt-24 sm:pt-32 md:grid-cols-[auto_1fr] md:gap-20">
-          <div className="reveal-up">
-            <div className="sage-bar mb-7" />
-            <p className="eyebrow !text-sage">About</p>
-            <h2 className="mt-4 max-w-[12ch] text-[clamp(2rem,4.5vw,3.25rem)] text-white/95">
-              A ferry ride from everything.
+      {/* 04 · About */}
+      <section id="about" className="relative">
+        <p
+          aria-hidden
+          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
+        >
+          04
+        </p>
+        <div className="container-site pt-24 sm:pt-32">
+          <div className="reveal-up flex items-end justify-between gap-6">
+            <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
+              About me<span className="text-sage">.</span>
             </h2>
+            <p className="eyebrow hidden !text-white/40 sm:block">04</p>
           </div>
-          <p
-            id="about"
-            className="reveal-up max-w-[52ch] self-end text-[clamp(1.05rem,1.8vw,1.3rem)] leading-relaxed text-white/75"
-          >
-            I grew up on Salt Spring Island and study software engineering at
-            UVic. At nineteen I ran a painting business to $80,000 in revenue.
-            Now{" "}
-            <a
-              href="https://www.obwebdesign.ca"
-              rel="noopener"
-              className="font-semibold text-white underline decoration-sage decoration-2 underline-offset-4 hover:decoration-white"
-            >
-              the studio
-            </a>{" "}
-            funds my degree and{" "}
-            <Link
-              href="/work/grain"
-              className="font-semibold text-white underline decoration-sage decoration-2 underline-offset-4 hover:decoration-white"
-            >
-              the projects
-            </Link>{" "}
-            sharpen the engineering. I like shipping more than I like
-            starting, and I’d rather show you a live URL than a slide about
-            one.
-          </p>
-        </div>
 
+          <div className="mt-14 grid items-center gap-14 md:grid-cols-[minmax(260px,380px)_1fr] md:gap-20">
+            <div className="reveal-up relative max-w-[380px]">
+              <Image
+                src="/images/about/owen-brown.jpg"
+                alt="Owen Brown"
+                width={760}
+                height={950}
+                className="relative z-10 aspect-[4/5] w-full rounded-3xl object-cover shadow-[0_24px_64px_rgba(0,0,0,0.45)]"
+              />
+              <div
+                aria-hidden
+                className="absolute -bottom-5 -right-5 z-0 h-[65%] w-[65%] rounded-3xl border-2 border-sage/40 bg-sage/10"
+              />
+            </div>
+            <div className="reveal-up">
+              <p className="max-w-[52ch] text-[clamp(1.05rem,1.8vw,1.3rem)] leading-relaxed text-white/75">
+                I grew up on Salt Spring Island and study software engineering
+                at UVic. At nineteen I ran a painting business to $80,000 in
+                revenue. Now{" "}
+                <a
+                  href="https://www.obwebdesign.ca"
+                  rel="noopener"
+                  className="font-semibold text-white underline decoration-sage decoration-2 underline-offset-4 hover:decoration-white"
+                >
+                  the studio
+                </a>{" "}
+                funds my degree and{" "}
+                <Link
+                  href="/work/grain"
+                  className="font-semibold text-white underline decoration-sage decoration-2 underline-offset-4 hover:decoration-white"
+                >
+                  the projects
+                </Link>{" "}
+                sharpen the engineering. I like shipping more than I like
+                starting, and I’d rather show you a live URL than a slide
+                about one.
+              </p>
+              <p className="mt-6 max-w-[52ch] text-white/60">
+                Looking for a Spring 2027 co-op in Victoria or remote. The
+                full picture is on the{" "}
+                <Link href="/resume" className="link-underline text-white/90">
+                  resume
+                </Link>
+                .
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 05 · Contact */}
+      <section id="contact" className="relative overflow-hidden">
         <div className="container-site relative pb-10 pt-20 text-center sm:pt-28">
-          <p className="eyebrow !text-sage">04 · Contact</p>
+          <p className="eyebrow !text-sage">05 · Contact</p>
           <h2 className="mx-auto mt-5 max-w-[16ch] text-[clamp(2.75rem,7vw,5rem)] font-extrabold text-white/95">
             Let’s talk.
           </h2>

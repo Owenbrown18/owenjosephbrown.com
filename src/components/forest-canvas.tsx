@@ -53,6 +53,20 @@ float fbm(vec2 p) {
   return v;
 }
 
+// Sparse drifting specks: one candidate per grid cell, floating slowly
+// upward, each twinkling on its own phase.
+float fireflies(vec2 p, float t, float scale) {
+  vec2 cell = p * scale;
+  cell.y -= t * 0.12;
+  vec2 id = floor(cell);
+  vec2 f = fract(cell);
+  float keep = step(0.62, hash(id + 3.1));
+  vec2 dotPos = 0.2 + 0.6 * vec2(hash(id), hash(id + 7.3));
+  float tw = 0.35 + 0.65 * (0.5 + 0.5 * sin(t * (0.6 + hash(id) * 1.4) + hash(id + 7.3) * 6.28));
+  float d = length(f - dotPos);
+  return smoothstep(0.045, 0.0, d) * tw * keep;
+}
+
 void main() {
   vec2 uv = gl_FragCoord.xy / u_res;
   float aspect = u_res.x / u_res.y;
@@ -90,6 +104,10 @@ void main() {
   vec2 m = vec2(u_pointer.x * aspect, u_pointer.y);
   float glow = exp(-distance(p, m) * 3.2);
   col += SAGE * glow * 0.07;
+
+  // Fireflies: two layers, coarse sage and fine white, drifting upward.
+  col += SAGE * fireflies(p, u_time, 5.0) * 0.4;
+  col += vec3(0.9) * fireflies(p + 17.0, u_time * 0.75, 9.0) * 0.14;
 
   // Dither to kill banding on the dark ramp.
   col += (hash(gl_FragCoord.xy + fract(u_time)) - 0.5) / 255.0;
