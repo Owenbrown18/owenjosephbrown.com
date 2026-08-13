@@ -65,11 +65,12 @@ export default function HomePage() {
       <div className="forest-ground fixed inset-0 -z-10">
         <ForestCanvas />
       </div>
+      <div aria-hidden className="scroll-progress" />
 
       {/* 01 · Hero */}
       <section id="home" className="relative">
         <div className="container-site relative flex min-h-[100svh] flex-col items-center justify-center pb-40 pt-24 text-center">
-          <div className="hero-stage">
+          <div className="hero-stage hero-parallax">
             <p className="eyebrow !text-sage">
               Salt Spring Island, BC · UVic software engineering
             </p>
@@ -84,7 +85,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="absolute inset-x-0 bottom-10">
+          <div className="hero-parallax absolute inset-x-0 bottom-10">
             <p className="eyebrow !text-white/40">
               Real sites for real businesses
             </p>
@@ -102,8 +103,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 02 · Expertise: an open list, not cards. */}
+      {/* 02 · Expertise: the page's one open, lighter clearing. */}
       <section id="expertise" className="relative">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-[5] bg-[radial-gradient(ellipse_60%_70%_at_50%_40%,rgba(123,164,158,0.07),transparent)]"
+        />
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute -top-16 right-[2%] select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
@@ -111,7 +116,7 @@ export default function HomePage() {
           02
         </p>
         <div className="container-site pb-6 pt-14 sm:pt-20">
-          <div className="reveal-up flex items-end justify-between gap-6">
+          <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               My expertise<span className="text-sage">.</span>
             </h2>
@@ -156,7 +161,7 @@ export default function HomePage() {
           03
         </p>
         <div className="container-site pt-24 sm:pt-32">
-          <div className="reveal-up flex items-end justify-between gap-6">
+          <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               My work<span className="text-sage">.</span>
             </h2>
@@ -336,8 +341,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 04 · About */}
+      {/* 04 · About: comes back up out of the tunnel. */}
       <section id="about" className="relative">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-[5] bg-gradient-to-b from-black/35 via-transparent to-transparent"
+        />
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
@@ -345,7 +354,7 @@ export default function HomePage() {
           04
         </p>
         <div className="container-site pt-24 sm:pt-32">
-          <div className="reveal-up flex items-end justify-between gap-6">
+          <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               About me<span className="text-sage">.</span>
             </h2>

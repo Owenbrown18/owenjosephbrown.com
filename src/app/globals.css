@@ -186,11 +186,69 @@
   margin-left: calc(50% - 50vw);
 }
 
+/* Scroll progress hairline: the one piece of persistent chrome, so you
+   always know how far through the page you are. Compositor-only. */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent) 40%,
+    var(--accent)
+  );
+  z-index: 60;
+}
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    animation: progress-grow linear both;
+    animation-timeline: scroll(root);
+  }
+  @keyframes progress-grow {
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
 /* Scroll parallax for big imagery: two opposing drifts so stacked photos
    move against each other. CSS scroll-driven only; static without support
    or under prefers-reduced-motion. */
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
+    /* The hero drifts up and dissolves as you leave it. */
+    .hero-parallax {
+      animation: hero-depart linear both;
+      animation-timeline: view();
+      animation-range: exit-crossing 0% exit 100%;
+    }
+    @keyframes hero-depart {
+      to {
+        transform: translateY(-14%);
+        opacity: 0.25;
+      }
+    }
+
+    /* Section headings rise slightly slower than the page. */
+    .lift {
+      animation: lift linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 45%;
+    }
+    @keyframes lift {
+      from {
+        transform: translateY(28px);
+      }
+      to {
+        transform: none;
+      }
+    }
+
     .parallax-a {
       animation: parallax-a linear both;
       animation-timeline: view();

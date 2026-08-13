@@ -24,6 +24,7 @@ precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
 uniform vec2 u_pointer; // 0..1, y up
+uniform float u_scroll; // 0..1 page progress
 
 const vec3 FOREST = vec3(0.043, 0.122, 0.114); // #0b1f1d
 const vec3 MID    = vec3(0.118, 0.227, 0.216); // #1e3a37
@@ -105,9 +106,11 @@ void main() {
   float glow = exp(-distance(p, m) * 3.2);
   col += SAGE * glow * 0.07;
 
-  // Fireflies: two layers, coarse sage and fine white, drifting upward.
-  col += SAGE * fireflies(p, u_time, 5.0) * 0.4;
-  col += vec3(0.9) * fireflies(p + 17.0, u_time * 0.75, 9.0) * 0.14;
+  // Fireflies: quiet, and only where the page opens up — the hero and
+  // the contact end. The work tunnel stays clean.
+  float fw = max(smoothstep(0.3, 0.02, u_scroll), smoothstep(0.72, 0.96, u_scroll));
+  col += SAGE * fireflies(p, u_time, 5.0) * 0.14 * fw;
+  col += vec3(0.9) * fireflies(p + 17.0, u_time * 0.75, 9.0) * 0.05 * fw;
 
   // Dither to kill banding on the dark ramp.
   col += (hash(gl_FragCoord.xy + fract(u_time)) - 0.5) / 255.0;
@@ -186,6 +189,7 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     const uRes = gl.getUniformLocation(program, "u_res");
     const uTime = gl.getUniformLocation(program, "u_time");
     const uPointer = gl.getUniformLocation(program, "u_pointer");
+    const uScroll = gl.getUniformLocation(program, "u_scroll");
 
     let width = 0;
     let height = 0;
@@ -218,6 +222,13 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     let last = 0;
     const start = performance.now();
 
+    let easedScroll = 0;
+    const scrollProgress = () => {
+      const max =
+        document.documentElement.scrollHeight - window.innerHeight;
+      return max > 0 ? window.scrollY / max : 0;
+    };
+
     // The drift is slow; 30fps is indistinguishable and halves the cost.
     const frame = (now: number) => {
       raf = 0;
@@ -228,9 +239,11 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       resize();
       eased.x += (target.x - eased.x) * 0.09;
       eased.y += (target.y - eased.y) * 0.09;
+      easedScroll += (scrollProgress() - easedScroll) * 0.12;
       gl.uniform2f(uRes, width, height);
       gl.uniform1f(uTime, (performance.now() - start) / 1000);
       gl.uniform2f(uPointer, eased.x, eased.y);
+      gl.uniform1f(uScroll, easedScroll);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
@@ -250,6 +263,7 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     gl.uniform2f(uRes, width, height);
     gl.uniform1f(uTime, 12.0);
     gl.uniform2f(uPointer, eased.x, eased.y);
+    gl.uniform1f(uScroll, 0);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 
     const io = new IntersectionObserver(
