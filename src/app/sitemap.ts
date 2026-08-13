@@ -4,7 +4,7 @@ import { getWorkEntries } from "@/lib/content";
 const BASE = "https://owenjosephbrown.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const statics = ["", "/obdesign", "/about", "/resume"].map((p) => ({
+  const statics = ["", "/obdesign", "/resume"].map((p) => ({
     url: `${BASE}${p}`,
     lastModified: new Date(),
   }));

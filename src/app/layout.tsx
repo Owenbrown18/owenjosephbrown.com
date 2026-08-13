@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Inter } from "next/font/google";
+import { Bricolage_Grotesque, Fraunces, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -9,6 +9,16 @@ const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   axes: ["opsz", "wdth"],
   variable: "--font-bricolage",
+  display: "swap",
+});
+
+// Fraunces exists here for exactly one job: the OBdesign wordmark, which
+// per brand spec is never set in another face.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  axes: ["opsz"],
+  weight: "variable",
+  variable: "--font-fraunces",
   display: "swap",
 });
 
@@ -42,7 +52,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      className={`${bricolage.variable} ${fraunces.variable} ${inter.variable}`}
+    >
       <body>
         <a
           href="#main"

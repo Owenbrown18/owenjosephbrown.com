@@ -1,10 +1,17 @@
 import { MDXRemote } from "next-mdx-remote-client/rsc";
 import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
-import type { ReactNode } from "react";
+import { Children, type ReactNode } from "react";
+import { PhoneFrame } from "@/components/phone-frame";
 
 function ScreenRow({ children }: { children: ReactNode }) {
-  return <div className="screen-row">{children}</div>;
+  return (
+    <div className="screen-row">
+      {Children.map(children, (child) => (
+        <PhoneFrame>{child}</PhoneFrame>
+      ))}
+    </div>
+  );
 }
 
 const components = {

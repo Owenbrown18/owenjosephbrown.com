@@ -58,25 +58,38 @@ void main() {
   float aspect = u_res.x / u_res.y;
   vec2 p = vec2(uv.x * aspect, uv.y);
 
-  // Slow drift through the noise field.
-  float t = u_time * 0.03;
+  // Drift through the noise field — visible, not subliminal.
+  float t = u_time * 0.055;
   float n = fbm(p * 1.6 + vec2(t, -t * 0.6));
 
-  // The brand's radial gradient, its centre gently displaced by the noise.
-  vec2 centre = vec2(0.2 * aspect, 0.75) + (n - 0.5) * 0.22;
+  // The brand's radial gradient, its centre displaced by the noise.
+  vec2 centre = vec2(0.2 * aspect, 0.75) + (n - 0.5) * 0.3;
   float d = distance(p, centre) / (0.75 * max(aspect, 1.0));
   d = clamp(d, 0.0, 1.0);
 
   vec3 col = mix(HIGH, MID, smoothstep(0.0, 0.45, d));
   col = mix(col, FOREST, smoothstep(0.35, 0.95, d));
 
-  // Noise breathes a little sage into the mid band.
-  col += SAGE * (n - 0.5) * 0.05 * (1.0 - d);
+  // Noise breathes sage into the mid band.
+  col += SAGE * (n - 0.5) * 0.08 * (1.0 - d);
 
-  // Soft pointer light, very restrained.
+  // Two slow orbiting glows: one warm (golden-hour), one sage. The
+  // moving elements that keep the field alive.
+  float t2 = u_time * 0.12;
+  vec2 orb1 = vec2(0.8 * aspect, 0.68)
+    + vec2(sin(t2 * 0.7), cos(t2 * 0.45)) * 0.14;
+  float g1 = exp(-distance(p, orb1) * 4.5);
+  col += vec3(0.62, 0.45, 0.26) * g1 * 0.22;
+
+  vec2 orb2 = vec2(0.3 * aspect, 0.3)
+    + vec2(cos(t2 * 0.5 + 2.0), sin(t2 * 0.65 + 1.0)) * 0.18;
+  float g2 = exp(-distance(p, orb2) * 5.0);
+  col += SAGE * g2 * 0.14;
+
+  // Soft pointer light.
   vec2 m = vec2(u_pointer.x * aspect, u_pointer.y);
   float glow = exp(-distance(p, m) * 3.2);
-  col += SAGE * glow * 0.055;
+  col += SAGE * glow * 0.07;
 
   // Dither to kill banding on the dark ramp.
   col += (hash(gl_FragCoord.xy + fract(u_time)) - 0.5) / 255.0;

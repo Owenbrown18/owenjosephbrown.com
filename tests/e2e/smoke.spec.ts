@@ -8,7 +8,6 @@ const pages = [
   { path: "/work/grain-construction", h1: /grain construction/i },
   { path: "/work/figs-and-honey", h1: /figs & honey/i },
   { path: "/work/daves-bakery", h1: /daves' bakery/i },
-  { path: "/about", h1: /shipping/i },
   { path: "/resume", h1: /owen brown/i },
 ];
 

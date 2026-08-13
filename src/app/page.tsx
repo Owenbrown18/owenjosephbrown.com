@@ -2,6 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { ForestCanvas } from "@/components/forest-canvas";
 import { SiteMarquee } from "@/components/site-marquee";
+import { PhoneFrame } from "@/components/phone-frame";
+import {
+  ArrowUpRightIcon,
+  GitHubIcon,
+  LinkedInIcon,
+  MailIcon,
+  ObdesignWordmark,
+} from "@/components/icons";
 import { clientSites } from "@/lib/sites";
 import { identity } from "@/lib/resume-data";
 
@@ -60,7 +68,7 @@ export default function HomePage() {
 
       {/* 01 · Hero */}
       <section id="home" className="relative">
-        <div className="container-site flex min-h-[100svh] flex-col justify-center pb-14 pt-28 text-center">
+        <div className="container-site relative flex min-h-[100svh] flex-col items-center justify-center pb-40 pt-24 text-center">
           <div className="hero-stage">
             <p className="eyebrow !text-sage">
               Salt Spring Island, BC · UVic software engineering
@@ -76,11 +84,11 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-auto pt-14">
+          <div className="absolute inset-x-0 bottom-10">
             <p className="eyebrow !text-white/40">
               Real sites for real businesses
             </p>
-            <p className="mx-auto mt-3 max-w-[72ch] text-sm leading-relaxed text-white/45">
+            <p className="mx-auto mt-3 max-w-[72ch] px-6 text-sm leading-relaxed text-white/45">
               {clientSites.map((s, i) => (
                 <span key={s.slug}>
                   <span className="whitespace-nowrap">{s.name}</span>
@@ -96,6 +104,12 @@ export default function HomePage() {
 
       {/* 02 · Expertise: an open list, not cards. */}
       <section id="expertise" className="relative">
+        <p
+          aria-hidden
+          className="parallax-b pointer-events-none absolute -top-16 right-[2%] select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
+        >
+          02
+        </p>
         <div className="container-site pb-6 pt-14 sm:pt-20">
           <div className="reveal-up flex items-end justify-between gap-6">
             <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
@@ -129,6 +143,12 @@ export default function HomePage() {
 
       {/* 03 · Work */}
       <section id="work" className="relative">
+        <p
+          aria-hidden
+          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
+        >
+          03
+        </p>
         <div className="container-site pt-24 sm:pt-32">
           <div className="reveal-up flex items-end justify-between gap-6">
             <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
@@ -145,8 +165,8 @@ export default function HomePage() {
         {/* The studio, full bleed and photo-first. */}
         <div className="container-site relative z-10 mt-16">
           <p className="eyebrow !text-sage">The studio</p>
-          <h3 className="mt-3 font-display text-[clamp(2.75rem,8vw,6rem)] font-extrabold leading-[0.9] text-white/95">
-            OBdesign<span className="text-sage">.</span>
+          <h3 className="mt-3 text-[clamp(2.75rem,8vw,6rem)] leading-[0.95] text-white/95">
+            <ObdesignWordmark />
           </h3>
           <p className="mt-5 max-w-[52ch] text-white/70">
             My one-person web studio. Nine production sites for BC businesses,
@@ -244,31 +264,37 @@ export default function HomePage() {
             </div>
             <div className="relative grid grid-cols-3 items-end gap-4">
               <div className="parallax-b">
-                <Image
-                  src="/images/grain/home_roll.png"
-                  alt="grain home screen with an active roll"
-                  width={260}
-                  height={563}
-                  className="h-auto w-full border border-white/15 shadow-2xl"
-                />
+                <PhoneFrame>
+                  <Image
+                    src="/images/grain/home_roll.png"
+                    alt="grain home screen with an active roll"
+                    width={260}
+                    height={563}
+                    className="h-auto w-full"
+                  />
+                </PhoneFrame>
               </div>
               <div className="parallax-a mb-10">
-                <Image
-                  src="/images/grain/new_roll_qr.png"
-                  alt="A roll's QR share code"
-                  width={260}
-                  height={563}
-                  className="h-auto w-full border border-white/15 shadow-2xl"
-                />
+                <PhoneFrame>
+                  <Image
+                    src="/images/grain/new_roll_qr.png"
+                    alt="A roll's QR share code"
+                    width={260}
+                    height={563}
+                    className="h-auto w-full"
+                  />
+                </PhoneFrame>
               </div>
               <div className="parallax-b mb-4">
-                <Image
-                  src="/images/grain/waiting.png"
-                  alt="The waiting room before a roll is developed"
-                  width={260}
-                  height={563}
-                  className="h-auto w-full border border-white/15 shadow-2xl"
-                />
+                <PhoneFrame>
+                  <Image
+                    src="/images/grain/waiting.png"
+                    alt="The waiting room before a roll is developed"
+                    width={260}
+                    height={563}
+                    className="h-auto w-full"
+                  />
+                </PhoneFrame>
               </div>
             </div>
           </div>
@@ -296,11 +322,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* About, conversational. */}
-      <section id="about" className="relative">
-        <div className="container-site max-w-4xl py-24 sm:py-32">
-          <p className="reveal-up eyebrow !text-sage">About</p>
-          <p className="reveal-up mt-6 text-[clamp(1.15rem,2.2vw,1.5rem)] leading-relaxed text-white/80">
+      {/* 04 · Contact, with the about woven in as its opening. */}
+      <section id="contact" className="relative overflow-hidden">
+        <div className="container-site grid gap-10 pb-4 pt-24 sm:pt-32 md:grid-cols-[auto_1fr] md:gap-20">
+          <div className="reveal-up">
+            <div className="sage-bar mb-7" />
+            <p className="eyebrow !text-sage">About</p>
+            <h2 className="mt-4 max-w-[12ch] text-[clamp(2rem,4.5vw,3.25rem)] text-white/95">
+              A ferry ride from everything.
+            </h2>
+          </div>
+          <p
+            id="about"
+            className="reveal-up max-w-[52ch] self-end text-[clamp(1.05rem,1.8vw,1.3rem)] leading-relaxed text-white/75"
+          >
             I grew up on Salt Spring Island and study software engineering at
             UVic. At nineteen I ran a painting business to $80,000 in revenue.
             Now{" "}
@@ -322,20 +357,9 @@ export default function HomePage() {
             starting, and I’d rather show you a live URL than a slide about
             one.
           </p>
-          <p className="reveal-up mt-8">
-            <Link
-              href="/about"
-              className="link-underline font-display text-xl font-bold text-white/95"
-            >
-              See more about me →
-            </Link>
-          </p>
         </div>
-      </section>
 
-      {/* 04 · Contact */}
-      <section id="contact" className="relative overflow-hidden">
-        <div className="container-site relative pb-10 pt-10 text-center sm:pt-16">
+        <div className="container-site relative pb-10 pt-20 text-center sm:pt-28">
           <p className="eyebrow !text-sage">04 · Contact</p>
           <h2 className="mx-auto mt-5 max-w-[16ch] text-[clamp(2.75rem,7vw,5rem)] font-extrabold text-white/95">
             Let’s talk.
@@ -344,26 +368,37 @@ export default function HomePage() {
             Hiring for a co-op or internship, or just curious how something
             here was built? My inbox is open.
           </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-x-7 gap-y-4">
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
             <a
               href={`mailto:${identity.email}`}
-              className="rounded-full bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-forest transition-transform duration-200 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-forest transition-transform duration-200 hover:-translate-y-0.5"
             >
+              <MailIcon className="h-3.5 w-3.5" />
               Email me
-            </a>
-            <a
-              href={identity.linkedin}
-              rel="me noopener"
-              className="text-sm text-white/70 transition-colors hover:text-white"
-            >
-              LinkedIn
             </a>
             <a
               href={identity.github}
               rel="me noopener"
-              className="text-sm text-white/70 transition-colors hover:text-white"
+              className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
             >
+              <GitHubIcon />
               GitHub
+            </a>
+            <a
+              href={identity.linkedin}
+              rel="me noopener"
+              className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
+            >
+              <LinkedInIcon />
+              LinkedIn
+            </a>
+            <a
+              href="https://www.obwebdesign.ca"
+              rel="noopener"
+              className="inline-flex items-center gap-1.5 text-sm text-white/70 transition-colors hover:text-white"
+            >
+              <ObdesignWordmark className="text-base" />
+              <ArrowUpRightIcon />
             </a>
           </div>
           <p
