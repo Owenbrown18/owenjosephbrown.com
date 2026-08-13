@@ -46,7 +46,7 @@ export default function ObdesignPage() {
             obwebdesign.ca
           </a>
           <span className="mx-3 text-fg-faint">·</span>
-          <Link href="/#experience" className="link-underline text-fg">
+          <Link href="/#work" className="link-underline text-fg">
             Back to the overview
           </Link>
         </p>

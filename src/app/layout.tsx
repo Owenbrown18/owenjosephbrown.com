@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
-import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { CommandPalette } from "@/components/command-palette";
-import { getWorkEntries } from "@/lib/content";
 import "./globals.css";
 
 // Fraunces must load with the optical-size axis; without it the face
@@ -46,30 +43,18 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const work = getWorkEntries().map(({ slug, title }) => ({ slug, title }));
   return (
-    <html
-      lang="en"
-      className={`${fraunces.variable} ${inter.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body>
-        <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="dark"
-          themes={["light", "dark"]}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-bg focus:px-4 focus:py-2 focus:text-fg"
         >
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-bg focus:px-4 focus:py-2 focus:text-fg"
-          >
-            Skip to content
-          </a>
-          <Header />
-          <main id="main">{children}</main>
-          <Footer />
-          <CommandPalette work={work} />
-        </ThemeProvider>
+          Skip to content
+        </a>
+        <Header />
+        <main id="main">{children}</main>
+        <Footer />
         {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>

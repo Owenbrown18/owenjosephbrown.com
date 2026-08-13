@@ -102,10 +102,10 @@ export default async function WorkEntryPage({
         className="mt-20 flex items-center justify-between border-t border-line pt-8"
       >
         <Link
-          href={entry.kind === "client" ? "/obdesign" : "/#projects"}
+          href={entry.kind === "client" ? "/obdesign" : "/#work"}
           className="text-sm text-fg-faint hover:text-fg"
         >
-          {entry.kind === "client" ? "← The studio" : "← Projects"}
+          {entry.kind === "client" ? "← The studio" : "← My work"}
         </Link>
         <Link
           href={`/work/${next.slug}`}

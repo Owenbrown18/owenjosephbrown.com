@@ -12,17 +12,17 @@ A middleware sniffs terminal user agents and rewrites the root to an ANSI-colour
 
 ## What's in here
 
-- **A live WebGL hero.** The brand's forest gradient rendered as a fragment shader: value-noise fbm drifts the gradient centre, a soft light follows the pointer. DPR-clamped, 30fps-capped, paused offscreen, killed under `prefers-reduced-motion`, and it bails to a plain CSS gradient on software rasterizers.
-- **⌘K command palette** (cmdk): navigation, case studies, theme, and a couple of easter eggs.
+- **A live WebGL page.** The brand's forest gradient rendered as a fragment shader behind the whole landing page: value-noise fbm drifts the gradient centre, a soft light follows the pointer. DPR-clamped, 30fps-capped, paused offscreen, killed under `prefers-reduced-motion`, and it bails to a plain CSS gradient on software rasterizers.
+- **One-page landing** with numbered anchor nav: expertise, work (featured projects + a marquee of nine client sites), experience, real client testimonials, contact.
 - **Case studies as typed MDX.** Frontmatter validated with Zod at build time; unit tests assert every referenced image exists on disk. Code blocks via rehype-pretty-code and Shiki.
 - **Dynamic OG images** per page with `next/og` on the brand card.
 - **No-JS-first motion.** Scroll reveals are CSS scroll-driven animations behind `@supports`; nothing on the page depends on JavaScript to be readable.
 
 ## Stack
 
-Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · MDX (`next-mdx-remote-client` + gray-matter + Zod) · next-themes · cmdk · Vercel
+Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · MDX (`next-mdx-remote-client` + gray-matter + Zod) · Vercel
 
-No animation libraries, no UI kit. The shader, palette styling, marquee, and prose styles are hand-rolled; total client JS stays small.
+No animation libraries, no UI kit, no theme machinery: one dark theme, hand-rolled shader, marquee, and prose styles; total client JS stays small.
 
 ## Running it
 

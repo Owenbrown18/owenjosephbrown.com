@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const pages = [
-  { path: "/", h1: /software people actually/i },
+  { path: "/", h1: /owen brown/i },
   { path: "/obdesign", h1: /obdesign/i },
   { path: "/work/grain", h1: /^grain$/i },
   { path: "/work/leadgen", h1: /lead generation pipeline/i },
@@ -48,6 +48,6 @@ test("studio page links through to a case study", async ({ page }) => {
 
 test("landing page reaches the studio page", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: /step inside the studio/i }).click();
+  await page.getByRole("link", { name: /view the studio/i }).click();
   await expect(page).toHaveURL(/\/obdesign/);
 });

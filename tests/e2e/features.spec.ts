@@ -1,27 +1,24 @@
 import { expect, test } from "@playwright/test";
 
-test("command palette opens with ⌘K and navigates", async ({ page }) => {
+test("numbered anchor nav scrolls to sections", async ({ page }) => {
   await page.goto("/");
-  await page.keyboard.press("ControlOrMeta+k");
-  const input = page.getByPlaceholder(/type a command/i);
-  await expect(input).toBeVisible();
-  await input.fill("resume");
-  await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/resume/);
-});
-
-test("theme defaults to dark and the toggle flips it", async ({ page }) => {
-  await page.goto("/");
-  const html = page.locator("html");
-  await expect(html).toHaveAttribute("data-theme", "dark");
-  await page.getByRole("button", { name: /switch to light theme/i }).click();
-  await expect(html).toHaveAttribute("data-theme", "light");
-  // Survives navigation.
   await page
     .getByRole("navigation", { name: "Primary" })
-    .getByRole("link", { name: "About" })
+    .getByRole("link", { name: /contact/i })
     .click();
-  await expect(html).toHaveAttribute("data-theme", "light");
+  await expect(page).toHaveURL(/#contact/);
+  await expect(
+    page.getByRole("heading", { name: /let.s talk/i }),
+  ).toBeInViewport();
+});
+
+test("resume link in the nav reaches the resume page", async ({ page }) => {
+  await page.goto("/");
+  await page
+    .getByRole("navigation", { name: "Primary" })
+    .getByRole("link", { name: /resume/i })
+    .click();
+  await expect(page).toHaveURL(/\/resume/);
 });
 
 test("curl user agent gets the ANSI resume at the root", async ({
@@ -79,13 +76,13 @@ test("reduced motion still shows all home content", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: /real work, for real people/i }),
+    page.getByRole("heading", { name: /my expertise/i }),
   ).toBeVisible();
   await expect(
     page.getByRole("group", { name: /client websites/i }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: /built from zero/i }),
+    page.getByRole("heading", { name: /where i.ve worked/i }),
   ).toBeVisible();
 });
 
