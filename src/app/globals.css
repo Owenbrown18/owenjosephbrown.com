@@ -186,6 +186,33 @@
   margin-left: calc(50% - 50vw);
 }
 
+/* One continuous darkness pass over the WHOLE page.
+   Per-section overlays each clip to their own box, so wherever two
+   sections meet their gradients disagree and you see a hard seam. A single
+   page-height gradient can't seam by construction. */
+.page-grade {
+  position: absolute;
+  inset: 0;
+  z-index: -5;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 55% 12% at 50% 22%,
+      rgba(123, 164, 158, 0.07),
+      transparent 70%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.06) 16%,
+      rgba(0, 0, 0, 0.34) 38%,
+      rgba(0, 0, 0, 0.46) 52%,
+      rgba(0, 0, 0, 0.3) 66%,
+      rgba(0, 0, 0, 0.08) 80%,
+      transparent 94%
+    );
+}
+
 /* Scroll progress hairline: the one piece of persistent chrome, so you
    always know how far through the page you are. Compositor-only. */
 .scroll-progress {
@@ -221,16 +248,24 @@
    or under prefers-reduced-motion. */
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    /* The hero drifts up and dissolves as you leave it. */
+    /* The hero drifts up and dissolves as you leave it. Driven by the root
+       scroll timeline, not view(): the hero is already on screen at load,
+       so a view() exit phase resolves unpredictably and reverses badly on
+       the way back up. Scroll position maps 1:1 and is symmetric. */
     .hero-parallax {
       animation: hero-depart linear both;
-      animation-timeline: view();
-      animation-range: exit-crossing 0% exit 100%;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+      will-change: transform, opacity;
     }
     @keyframes hero-depart {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
       to {
-        transform: translateY(-14%);
-        opacity: 0.25;
+        transform: translateY(-12%);
+        opacity: 0.15;
       }
     }
 

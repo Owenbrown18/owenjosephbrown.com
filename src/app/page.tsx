@@ -65,6 +65,7 @@ export default function HomePage() {
       <div className="forest-ground fixed inset-0 -z-10">
         <ForestCanvas />
       </div>
+      <div aria-hidden className="page-grade" />
       <div aria-hidden className="scroll-progress" />
 
       {/* 01 · Hero */}
@@ -105,10 +106,6 @@ export default function HomePage() {
 
       {/* 02 · Expertise: the page's one open, lighter clearing. */}
       <section id="expertise" className="relative">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-[5] bg-[radial-gradient(ellipse_60%_70%_at_50%_40%,rgba(123,164,158,0.07),transparent)]"
-        />
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute -top-16 right-[2%] select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
@@ -146,14 +143,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 03 · Work */}
+      {/* 03 · Work — the deep point of the page's one continuous grade. */}
       <section id="work" className="relative">
-        {/* The tunnel: the ground deepens toward black through the projects
-            so the imagery carries the light. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-[5] bg-gradient-to-b from-transparent via-black/40 to-transparent"
-        />
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
@@ -343,10 +334,6 @@ export default function HomePage() {
 
       {/* 04 · About: comes back up out of the tunnel. */}
       <section id="about" className="relative">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-[5] bg-gradient-to-b from-black/35 via-transparent to-transparent"
-        />
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
