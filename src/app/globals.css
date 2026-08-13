@@ -22,7 +22,7 @@
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);
 
-  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-display: var(--font-bricolage), system-ui, sans-serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
 }
 
@@ -61,9 +61,9 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    letter-spacing: -0.04em;
-    line-height: 0.98;
-    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    font-weight: 800;
     color: var(--fg);
   }
 
@@ -176,6 +176,46 @@
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--fg-muted);
+  }
+}
+
+/* Full-bleed helper: break out of the container to the viewport edges. */
+.fullbleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+/* Scroll parallax for big imagery: two opposing drifts so stacked photos
+   move against each other. CSS scroll-driven only; static without support
+   or under prefers-reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .parallax-a {
+      animation: parallax-a linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+    .parallax-b {
+      animation: parallax-b linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+    @keyframes parallax-a {
+      from {
+        transform: translateY(7%);
+      }
+      to {
+        transform: translateY(-7%);
+      }
+    }
+    @keyframes parallax-b {
+      from {
+        transform: translateY(-4%);
+      }
+      to {
+        transform: translateY(5%);
+      }
+    }
   }
 }
 

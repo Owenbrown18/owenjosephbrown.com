@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ObdesignPage() {
   return (
-    <div className="container-site py-16 sm:py-24">
+    <div className="container-site pt-32 pb-16 sm:pt-36 sm:pb-24">
       <header className="max-w-[52rem]">
         <div className="sage-bar mb-7" />
         <p className="eyebrow">The studio · June 2025 – present</p>

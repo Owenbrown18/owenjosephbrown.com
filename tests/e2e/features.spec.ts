@@ -81,9 +81,7 @@ test("reduced motion still shows all home content", async ({ page }) => {
   await expect(
     page.getByRole("group", { name: /client websites/i }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: /where i.ve worked/i }),
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: /^grain$/i })).toBeVisible();
 });
 
 test("resume page carries the real facts", async ({ page }) => {

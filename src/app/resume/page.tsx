@@ -54,7 +54,7 @@ function EntryBlock({ entry }: { entry: ResumeEntry }) {
 
 export default function ResumePage() {
   return (
-    <div className="container-site max-w-4xl py-16 sm:py-20 print:py-0">
+    <div className="container-site max-w-4xl pt-32 pb-16 sm:pt-36 sm:pb-20 print:py-0">
       <header className="flex flex-wrap items-end justify-between gap-6">
         <div>
           <h1 className="text-[clamp(2.5rem,6vw,3.5rem)]">{identity.name}</h1>

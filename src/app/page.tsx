@@ -28,84 +28,26 @@ const expertise = [
   {
     num: "01",
     title: "Full-stack web",
-    sub: "Next.js, TypeScript, Astro",
-    copy: "Nine production sites built, shipped, and maintained for paying clients: custom code, git-based CMS, DNS, performance budgets, the whole surface.",
+    sub: "Next.js · TypeScript · Astro",
+    copy: "Nine production sites built, shipped, and maintained for paying clients. Custom code, git-based CMS, DNS, performance budgets: the whole surface.",
   },
   {
     num: "02",
     title: "Mobile",
-    sub: "React Native, Expo",
+    sub: "React Native · Expo",
     copy: "Building grain, a full-stack iOS app, solo: camera pipeline, GPU film shader, offline upload queue. Startup frontend experience at Aperture AI.",
   },
   {
     num: "03",
     title: "Systems & data",
-    sub: "Python, Postgres, Supabase",
-    copy: "A ~3,900-line acquisition pipeline instrumented to revenue, and server-enforced app logic: row-level security, locked transactions, security-definer RPCs.",
-  },
-];
-
-const experience = [
-  {
-    role: "Founder & Web Developer",
-    org: "OBdesign",
-    url: "https://www.obwebdesign.ca",
-    urlLabel: "obwebdesign.ca",
-    period: "June 2025 – present",
-    location: "Salt Spring Island & Victoria, BC",
-    copy: "Run a one-person web studio: nine production sites for BC businesses, custom-coded and client-editable, plus the Python pipeline that finds the clients. Roughly 7% of first cold emails become paying projects.",
-    chips: ["TypeScript", "Next.js", "Astro", "Tailwind", "Keystatic", "Vercel", "Python"],
-  },
-  {
-    role: "Developer",
-    org: "Aperture AI",
-    period: "May – December 2025",
-    location: "Victoria, BC (5-person startup team)",
-    copy: "Cross-platform React Native frontend for an AI photography assistant: authentication flows, asynchronous API requests, caching, onboarding and settings UI.",
-    chips: ["React Native", "Expo", "OpenAI API", "Supabase"],
-  },
-  {
-    role: "Business Operator",
-    org: "Scholars Edge Painting",
-    period: "December 2023 – September 2024",
-    location: "Salt Spring Island & Victoria, BC",
-    copy: "Built and ran a service business to $80,000+ in revenue at nineteen: client acquisition, scheduling, hiring, and delivery with a team of four across 20+ projects.",
-    chips: [],
-  },
-  {
-    role: "BSEng, Software Engineering (co-op)",
-    org: "University of Victoria",
-    period: "September 2023 – 2029",
-    location: "Victoria, BC",
-    copy: "Current term: operating systems, software architecture, and security engineering. Four co-op work terms ahead, the first in Spring 2027.",
-    chips: [],
-  },
-];
-
-const testimonials = [
-  {
-    quote:
-      "The entire experience was outstanding from start to finish. The process was seamless, his communication was excellent, and the attention to detail he put into every aspect of the site was exceptional.",
-    name: "Dan Smith",
-    title: "Grain Construction",
-  },
-  {
-    quote:
-      "Owen was brilliant. He held my hand and was incredibly patient and helpful. He built two wonderful websites for me with a shop on and booking system too.",
-    name: "Lisa Sliwowska",
-    title: "Figs & Honey",
-  },
-  {
-    quote:
-      "Looks absolutely AMAZING and we are very happy with it. Thank you once again very much for your kind help and assistance with this exciting project.",
-    name: "David & Dave",
-    title: "Daves' Bakery",
+    sub: "Python · Postgres · Supabase",
+    copy: "A ~3,900-line acquisition pipeline instrumented to revenue, and server-enforced app logic: row-level security and locked transactions.",
   },
 ];
 
 export default function HomePage() {
   return (
-    <div className="relative">
+    <div className="relative overflow-x-clip">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
@@ -118,25 +60,27 @@ export default function HomePage() {
 
       {/* 01 · Hero */}
       <section id="home" className="relative">
-        <div className="container-site flex min-h-[calc(100svh-3.5rem)] flex-col justify-center py-20 text-center">
+        <div className="container-site flex min-h-[100svh] flex-col justify-center pb-14 pt-28 text-center">
           <div className="hero-stage">
             <p className="eyebrow !text-sage">
               Salt Spring Island, BC · UVic software engineering
             </p>
-            <h1 className="mx-auto mt-8 text-[clamp(3.5rem,12vw,10rem)] font-extrabold uppercase leading-[0.9] text-white/95">
+            <h1 className="mx-auto mt-7 text-[clamp(3.5rem,13vw,11rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-white/95">
               Owen Brown
             </h1>
-            <p className="mt-8 text-[clamp(0.8rem,1.8vw,1.05rem)] font-medium uppercase tracking-[0.3em] text-white/70">
+            <p className="mt-7 text-[clamp(0.78rem,1.7vw,1rem)] font-medium uppercase tracking-[0.3em] text-white/70">
               Software engineer, web & app developer.
             </p>
-            <p className="mt-6 text-sm text-sage">
+            <p className="mt-5 text-sm text-sage">
               Open to a Spring 2027 co-op · Victoria or remote
             </p>
           </div>
 
-          <div className="mt-auto pt-16">
-            <p className="eyebrow !text-white/40">Real sites for real businesses</p>
-            <p className="mx-auto mt-3 max-w-[70ch] text-sm leading-relaxed text-white/45">
+          <div className="mt-auto pt-14">
+            <p className="eyebrow !text-white/40">
+              Real sites for real businesses
+            </p>
+            <p className="mx-auto mt-3 max-w-[72ch] text-sm leading-relaxed text-white/45">
               {clientSites.map((s, i) => (
                 <span key={s.slug}>
                   <span className="whitespace-nowrap">{s.name}</span>
@@ -150,25 +94,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 02 · Expertise */}
-      <section id="expertise" className="relative border-t border-white/10">
-        <div className="container-site py-20 sm:py-28">
-          <div className="reveal-up">
-            <div className="sage-bar mb-7" />
-            <p className="eyebrow !text-sage">02 · Expertise</p>
-            <h2 className="mt-4 text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
-              My expertise.
+      {/* 02 · Expertise: an open list, not cards. */}
+      <section id="expertise" className="relative">
+        <div className="container-site pb-6 pt-14 sm:pt-20">
+          <div className="reveal-up flex items-end justify-between gap-6">
+            <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
+              My expertise<span className="text-sage">.</span>
             </h2>
+            <p className="eyebrow hidden !text-white/40 sm:block">02</p>
           </div>
-          <div className="mt-12 grid gap-px overflow-hidden border border-white/10 bg-white/10 md:grid-cols-3">
+          <div className="mt-10 grid gap-x-12 gap-y-10 md:grid-cols-3">
             {expertise.map((item) => (
-              <div key={item.num} className="reveal-up bg-forest/90 p-8 sm:p-10">
-                <p className="text-xs font-bold text-sage">{item.num}</p>
-                <h3 className="mt-4 font-display text-2xl font-bold text-white/95">
-                  {item.title}
-                </h3>
+              <div
+                key={item.num}
+                className="reveal-up border-t border-white/15 pt-6"
+              >
+                <div className="flex items-baseline justify-between">
+                  <h3 className="font-display text-2xl font-bold text-white/95">
+                    {item.title}
+                  </h3>
+                  <span className="text-xs font-bold text-sage">
+                    {item.num}
+                  </span>
+                </div>
                 <p className="mt-1 text-sm text-white/50">{item.sub}</p>
-                <p className="mt-5 text-sm leading-relaxed text-white/70">
+                <p className="mt-4 text-sm leading-relaxed text-white/70">
                   {item.copy}
                 </p>
               </div>
@@ -178,229 +128,215 @@ export default function HomePage() {
       </section>
 
       {/* 03 · Work */}
-      <section id="work" className="relative border-t border-white/10">
-        <div className="container-site py-20 sm:py-28">
-          <div className="reveal-up max-w-[52rem]">
-            <div className="sage-bar mb-7" />
-            <p className="eyebrow !text-sage">03 · Work</p>
-            <h2 className="mt-4 text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
-              My work.
+      <section id="work" className="relative">
+        <div className="container-site pt-24 sm:pt-32">
+          <div className="reveal-up flex items-end justify-between gap-6">
+            <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
+              My work<span className="text-sage">.</span>
             </h2>
-            <p className="mt-6 max-w-[56ch] text-white/70">
-              Shipped products for real users: nine client businesses run on
-              sites I built, and my own products carry the deeper engineering.
-              Every case study covers the problem, the decisions, and what
-              happened after launch.
-            </p>
+            <p className="eyebrow hidden !text-white/40 sm:block">03</p>
           </div>
-
-          {/* Featured: grain */}
-          <div className="mt-14 reveal-up overflow-hidden border border-white/10">
-            <div className="grid md:grid-cols-[1.1fr_1fr]">
-              <div className="p-8 sm:p-12">
-                <p className="eyebrow !text-sage">Featured project</p>
-                <h3 className="mt-4 font-display text-[clamp(2rem,4vw,3rem)] font-bold text-white/95">
-                  grain
-                </h3>
-                <p className="mt-4 max-w-[46ch] text-white/70">
-                  A shared film camera for iOS. Friends join a roll, shoot
-                  blind, and nobody sees a photo until it gets developed.
-                  Server-authoritative Postgres, a GPU film shader at capture,
-                  and an upload queue that survives dead signal.
-                </p>
-                <p className="mt-7">
-                  <Link
-                    href="/work/grain"
-                    className="link-underline font-display text-xl font-bold text-white/95"
-                  >
-                    View project →
-                  </Link>
-                </p>
-              </div>
-              <div className="flex items-end gap-3 px-8 pt-4 sm:px-10">
-                {["home_roll", "new_roll_qr", "waiting"].map((shot) => (
-                  <Image
-                    key={shot}
-                    src={`/images/grain/${shot}.png`}
-                    alt=""
-                    width={260}
-                    height={563}
-                    className="h-auto w-full border border-white/15"
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Featured: the studio */}
-          <div className="mt-8 reveal-up overflow-hidden border border-white/10">
-            <div className="p-8 sm:p-12">
-              <p className="eyebrow !text-sage">The studio</p>
-              <h3 className="mt-4 font-display text-[clamp(2rem,4vw,3rem)] font-bold text-white/95">
-                OBdesign<span className="text-sage">.</span>
-              </h3>
-              <p className="mt-4 max-w-[52ch] text-white/70">
-                Every site below is a paying client’s business running on my
-                code. Custom builds, client-editable, deployed and maintained.
-              </p>
-            </div>
-            <div className="pb-4">
-              <SiteMarquee />
-            </div>
-            <div className="p-8 pt-2 sm:px-12">
-              <Link
-                href="/obdesign"
-                className="link-underline font-display text-xl font-bold text-white/95"
-              >
-                View the studio →
-              </Link>
-            </div>
-          </div>
-
-          {/* Leadgen, slim */}
-          <div className="mt-8 reveal-up border border-white/10 p-8 sm:p-12">
-            <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
-              <div>
-                <p className="eyebrow !text-sage">Systems</p>
-                <h3 className="mt-3 font-display text-2xl font-bold text-white/95">
-                  Lead generation pipeline
-                </h3>
-                <p className="mt-3 max-w-[52ch] text-sm text-white/70">
-                  The ~3,900-line Python system that finds the studio’s
-                  clients, instrumented all the way to revenue.
-                </p>
-              </div>
-              <Link
-                href="/work/leadgen"
-                className="link-underline font-display text-xl font-bold text-white/95"
-              >
-                View project →
-              </Link>
-            </div>
-          </div>
+          <p className="reveal-up mt-5 max-w-[56ch] text-white/70">
+            Real businesses run on this work. Each piece links to a full case
+            study: the problem, the decisions, and what happened after launch.
+          </p>
         </div>
-      </section>
 
-      {/* 04 · Experience */}
-      <section id="experience" className="relative border-t border-white/10">
-        <div className="container-site py-20 sm:py-28">
-          <div className="reveal-up">
-            <div className="sage-bar mb-7" />
-            <p className="eyebrow !text-sage">04 · Experience</p>
-            <h2 className="mt-4 text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
-              Where I’ve worked.
-            </h2>
-          </div>
-          <div className="mt-12">
-            {experience.map((job) => (
-              <div
-                key={job.org}
-                className="reveal-up border-t border-white/10 py-10 first:border-t-0"
-              >
-                <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-baseline">
-                  <h3 className="font-display text-2xl font-bold text-white/95">
-                    {job.role}{" "}
-                    <span className="text-white/50">
-                      @{" "}
-                      {job.url ? (
-                        <a
-                          href={job.url}
-                          rel="noopener"
-                          className="underline decoration-sage decoration-[1.5px] underline-offset-4 hover:text-white"
-                        >
-                          {job.org}
-                        </a>
-                      ) : (
-                        job.org
-                      )}
-                    </span>
-                  </h3>
-                  <p className="text-sm tabular-nums text-white/55">
-                    {job.period}
-                  </p>
-                </div>
-                <p className="mt-1 text-sm text-white/45">{job.location}</p>
-                <p className="mt-4 max-w-[62ch] text-white/70">{job.copy}</p>
-                {job.chips.length > 0 && (
-                  <p className="mt-5 flex flex-wrap gap-2">
-                    {job.chips.map((chip) => (
-                      <span key={chip} className="chip !text-white/60">
-                        {chip}
-                      </span>
-                    ))}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
+        {/* The studio, full bleed and photo-first. */}
+        <div className="container-site relative z-10 mt-16">
+          <p className="eyebrow !text-sage">The studio</p>
+          <h3 className="mt-3 font-display text-[clamp(2.75rem,8vw,6rem)] font-extrabold leading-[0.9] text-white/95">
+            OBdesign<span className="text-sage">.</span>
+          </h3>
+          <p className="mt-5 max-w-[52ch] text-white/70">
+            My one-person web studio. Nine production sites for BC businesses,
+            every one custom-coded and editable by its owner. Roughly 7% of
+            the studio’s first cold emails become paying projects, found by a
+            pipeline I wrote.
+          </p>
         </div>
-      </section>
 
-      {/* Testimonials */}
-      <section className="relative border-t border-white/10">
-        <div className="container-site py-20 sm:py-28">
-          <div className="reveal-up">
-            <div className="sage-bar mb-7" />
-            <p className="eyebrow !text-sage">Kind words</p>
-            <h2 className="mt-4 max-w-[20ch] text-[clamp(2rem,4.5vw,3.25rem)] text-white/95">
-              From the people paying for it.
-            </h2>
-          </div>
-          <div className="mt-12 grid gap-10 md:grid-cols-3">
-            {testimonials.map((t) => (
-              <figure key={t.name} className="reveal-up">
-                <blockquote className="border-l-2 border-sage pl-5 font-display text-lg leading-snug text-white/85">
-                  “{t.quote}”
-                </blockquote>
-                <figcaption className="mt-4 pl-5 text-sm text-white/55">
-                  {t.name} · {t.title}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+        {/* Mobile: stacked, full width. */}
+        <div className="container-site mt-8 space-y-4 sm:hidden">
+          <Image
+            src="/images/work/grain-construction.png"
+            alt="Grain Construction website"
+            width={1200}
+            height={750}
+            className="h-auto w-full border border-white/15"
+          />
+          <Image
+            src="/images/work/figs-and-honey.png"
+            alt="Figs & Honey website"
+            width={900}
+            height={563}
+            className="h-auto w-full border border-white/15"
+          />
         </div>
-      </section>
 
-      {/* Brief about */}
-      <section id="about" className="relative border-t border-white/10">
-        <div className="container-site grid gap-10 py-20 sm:py-28 md:grid-cols-[auto_1fr] md:gap-14">
-          <div className="reveal-up">
+        {/* Desktop: staggered full-bleed collage with opposing parallax. */}
+        <div className="fullbleed relative mt-[-1.5rem] hidden h-[clamp(380px,52vw,680px)] sm:mt-[-3rem] sm:block">
+          <div className="parallax-a absolute left-[3%] top-[8%] w-[54%] border border-white/15 shadow-2xl">
             <Image
-              src="/images/about/owen-brown.jpg"
-              alt="Owen Brown"
-              width={220}
-              height={275}
-              className="h-auto w-[180px] border border-white/15 object-cover md:w-[220px]"
+              src="/images/work/grain-construction.png"
+              alt="Grain Construction website"
+              width={1200}
+              height={750}
+              className="h-auto w-full object-cover"
             />
           </div>
-          <div className="reveal-up max-w-[58ch]">
-            <div className="sage-bar mb-7" />
-            <p className="eyebrow !text-sage">About</p>
-            <h2 className="mt-4 text-[clamp(2rem,4.5vw,3rem)] text-white/95">
-              A ferry ride from everything.
-            </h2>
-            <p className="mt-5 text-white/70">
-              I grew up on Salt Spring Island and study software engineering at
-              UVic. At nineteen I ran a painting business to $80,000 in
-              revenue; now the studio funds my degree and the projects sharpen
-              the engineering. I like shipping more than I like starting.
-            </p>
-            <p className="mt-6">
-              <Link
-                href="/about"
-                className="link-underline font-display text-xl font-bold text-white/95"
-              >
-                See more about me →
-              </Link>
-            </p>
+          <div className="parallax-b absolute right-[4%] top-[24%] z-10 w-[38%] border border-white/15 shadow-2xl">
+            <Image
+              src="/images/work/figs-and-honey.png"
+              alt="Figs & Honey website"
+              width={900}
+              height={563}
+              className="h-auto w-full object-cover"
+            />
+          </div>
+          <div className="parallax-a absolute bottom-0 left-[32%] w-[32%] border border-white/15 shadow-2xl">
+            <Image
+              src="/images/work/daves-bakery.png"
+              alt="Daves' Bakery website"
+              width={900}
+              height={563}
+              className="h-auto w-full object-cover"
+            />
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <SiteMarquee />
+        </div>
+
+        <div className="container-site mt-8">
+          <Link
+            href="/obdesign"
+            className="link-underline font-display text-xl font-bold text-white/95"
+          >
+            View the studio →
+          </Link>
+        </div>
+
+        {/* grain, the featured project. */}
+        <div className="container-site mt-28 sm:mt-36">
+          <div className="grid items-center gap-12 md:grid-cols-[1.1fr_1fr]">
+            <div className="reveal-up">
+              <p className="eyebrow !text-sage">Featured project</p>
+              <h3 className="mt-3 font-display text-[clamp(2.75rem,8vw,6rem)] font-extrabold leading-[0.9] text-white/95">
+                grain
+              </h3>
+              <p className="mt-5 max-w-[46ch] text-white/70">
+                A shared film camera for iOS. Friends join a roll, shoot blind
+                with no preview, and nobody sees a photo until the roll gets
+                developed. Server-authoritative Postgres, a Kodak-style film
+                shader on the GPU at capture, and an upload queue that
+                survives dead signal.
+              </p>
+              <p className="mt-7">
+                <Link
+                  href="/work/grain"
+                  className="link-underline font-display text-xl font-bold text-white/95"
+                >
+                  View project →
+                </Link>
+              </p>
+            </div>
+            <div className="relative grid grid-cols-3 items-end gap-4">
+              <div className="parallax-b">
+                <Image
+                  src="/images/grain/home_roll.png"
+                  alt="grain home screen with an active roll"
+                  width={260}
+                  height={563}
+                  className="h-auto w-full border border-white/15 shadow-2xl"
+                />
+              </div>
+              <div className="parallax-a mb-10">
+                <Image
+                  src="/images/grain/new_roll_qr.png"
+                  alt="A roll's QR share code"
+                  width={260}
+                  height={563}
+                  className="h-auto w-full border border-white/15 shadow-2xl"
+                />
+              </div>
+              <div className="parallax-b mb-4">
+                <Image
+                  src="/images/grain/waiting.png"
+                  alt="The waiting room before a roll is developed"
+                  width={260}
+                  height={563}
+                  className="h-auto w-full border border-white/15 shadow-2xl"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* The pipeline, one editorial line. */}
+        <div className="container-site mt-24">
+          <div className="reveal-up flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3 border-t border-white/15 pt-8">
+            <div>
+              <h3 className="font-display text-2xl font-bold text-white/95">
+                Lead generation pipeline
+              </h3>
+              <p className="mt-2 max-w-[52ch] text-sm text-white/60">
+                The ~3,900-line Python system that finds the studio’s clients,
+                instrumented all the way to revenue.
+              </p>
+            </div>
+            <Link
+              href="/work/leadgen"
+              className="link-underline font-display text-lg font-bold text-white/95"
+            >
+              View project →
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* 05 · Contact */}
-      <section id="contact" className="relative overflow-hidden border-t border-white/10">
-        <div className="container-site relative py-24 text-center sm:py-32">
-          <p className="eyebrow !text-sage">05 · Contact</p>
+      {/* About, conversational. */}
+      <section id="about" className="relative">
+        <div className="container-site max-w-4xl py-24 sm:py-32">
+          <p className="reveal-up eyebrow !text-sage">About</p>
+          <p className="reveal-up mt-6 text-[clamp(1.15rem,2.2vw,1.5rem)] leading-relaxed text-white/80">
+            I grew up on Salt Spring Island and study software engineering at
+            UVic. At nineteen I ran a painting business to $80,000 in revenue.
+            Now{" "}
+            <a
+              href="https://www.obwebdesign.ca"
+              rel="noopener"
+              className="font-semibold text-white underline decoration-sage decoration-2 underline-offset-4 hover:decoration-white"
+            >
+              the studio
+            </a>{" "}
+            funds my degree and{" "}
+            <Link
+              href="/work/grain"
+              className="font-semibold text-white underline decoration-sage decoration-2 underline-offset-4 hover:decoration-white"
+            >
+              the projects
+            </Link>{" "}
+            sharpen the engineering. I like shipping more than I like
+            starting, and I’d rather show you a live URL than a slide about
+            one.
+          </p>
+          <p className="reveal-up mt-8">
+            <Link
+              href="/about"
+              className="link-underline font-display text-xl font-bold text-white/95"
+            >
+              See more about me →
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      {/* 04 · Contact */}
+      <section id="contact" className="relative overflow-hidden">
+        <div className="container-site relative pb-10 pt-10 text-center sm:pt-16">
+          <p className="eyebrow !text-sage">04 · Contact</p>
           <h2 className="mx-auto mt-5 max-w-[16ch] text-[clamp(2.75rem,7vw,5rem)] font-extrabold text-white/95">
             Let’s talk.
           </h2>
@@ -432,7 +368,7 @@ export default function HomePage() {
           </div>
           <p
             aria-hidden
-            className="pointer-events-none mx-auto mt-16 select-none font-display text-[clamp(8rem,28vw,22rem)] font-black leading-[0.7] text-white/[0.04]"
+            className="pointer-events-none mx-auto mt-14 select-none font-display text-[clamp(8rem,28vw,22rem)] font-black leading-[0.72] text-white/[0.04]"
           >
             OB<span className="text-sage/10">.</span>
           </p>

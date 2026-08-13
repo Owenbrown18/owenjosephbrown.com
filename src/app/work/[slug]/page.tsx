@@ -40,7 +40,7 @@ export default async function WorkEntryPage({
   const next = entries[(index + 1) % entries.length];
 
   return (
-    <article className="container-site py-16 sm:py-24">
+    <article className="container-site pt-32 pb-16 sm:pt-36 sm:pb-24">
       <header className="max-w-[52rem]">
         <p className="eyebrow">
           {kindLabel[entry.kind]} · {entry.year}

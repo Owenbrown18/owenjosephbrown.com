@@ -14,9 +14,12 @@ export async function ogCard({
   title: string;
   subtitle: string;
 }) {
-  const [fraunces, inter] = await Promise.all([
+  const [bricolage, inter] = await Promise.all([
     readFile(
-      join(process.cwd(), "src/assets/fonts/fraunces-latin-700-normal.woff"),
+      join(
+        process.cwd(),
+        "src/assets/fonts/bricolage-grotesque-latin-800-normal.woff",
+      ),
     ),
     readFile(
       join(process.cwd(), "src/assets/fonts/inter-latin-400-normal.woff"),
@@ -41,7 +44,7 @@ export async function ogCard({
         <div
           style={{
             display: "flex",
-            fontFamily: "Fraunces",
+            fontFamily: "Bricolage",
             fontSize: 34,
             color: "rgba(255,255,255,0.92)",
           }}
@@ -60,7 +63,7 @@ export async function ogCard({
           />
           <div
             style={{
-              fontFamily: "Fraunces",
+              fontFamily: "Bricolage",
               fontSize: title.length > 26 ? 64 : 84,
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
@@ -100,7 +103,7 @@ export async function ogCard({
     {
       ...OG_SIZE,
       fonts: [
-        { name: "Fraunces", data: fraunces, weight: 700 as const },
+        { name: "Bricolage", data: bricolage, weight: 800 as const },
         { name: "Inter", data: inter, weight: 400 as const },
       ],
     },
