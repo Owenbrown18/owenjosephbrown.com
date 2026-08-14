@@ -25,6 +25,7 @@ uniform vec2 u_res;
 uniform float u_time;
 uniform vec2 u_pointer; // 0..1, y up
 uniform float u_scroll; // 0..1 page progress
+uniform float u_dpr;    // device pixels per CSS pixel
 
 const vec3 FOREST = vec3(0.043, 0.122, 0.114); // #0b1f1d
 const vec3 MID    = vec3(0.118, 0.227, 0.216); // #1e3a37
@@ -54,18 +55,19 @@ float fbm(vec2 p) {
   return v;
 }
 
-// Sparse drifting specks: one candidate per grid cell, floating slowly
-// upward, each twinkling on its own phase.
-float fireflies(vec2 p, float t, float scale) {
-  vec2 cell = p * scale;
-  cell.y -= t * 0.12;
-  vec2 id = floor(cell);
-  vec2 f = fract(cell);
-  float keep = step(0.62, hash(id + 3.1));
-  vec2 dotPos = 0.2 + 0.6 * vec2(hash(id), hash(id + 7.3));
-  float tw = 0.35 + 0.65 * (0.5 + 0.5 * sin(t * (0.6 + hash(id) * 1.4) + hash(id + 7.3) * 6.28));
-  float d = length(f - dotPos);
-  return smoothstep(0.045, 0.0, d) * tw * keep;
+// Anti-aliased grid lines, measured in PIXELS so weight is identical at
+// any aspect or DPR. Deliberately derivative-free: because the input is
+// already gl_FragCoord, the distance to the nearest line is exact, so
+// this needs no OES_standard_derivatives extension (fwidth is not core in
+// WebGL 1 and would silently fail to compile on some devices).
+// Thickness is the feather width in device pixels.
+float gridLines(vec2 px, float cell, float thickness) {
+  // Distance to the nearest line on each axis, in device pixels.
+  vec2 f = abs(fract(px / cell - 0.5) - 0.5) * cell;
+  vec2 m = 1.0 - smoothstep(0.0, thickness, f);
+  // Union the axes premultiplied rather than with min(): min() sums both
+  // lines at every crossing, so intersections bloom into visible blobs.
+  return mix(m.x, 1.0, m.y);
 }
 
 void main() {
@@ -106,11 +108,28 @@ void main() {
   float glow = exp(-distance(p, m) * 3.2);
   col += SAGE * glow * 0.07;
 
-  // Fireflies: quiet, and only where the page opens up — the hero and
-  // the contact end. The work tunnel stays clean.
-  float fw = max(smoothstep(0.3, 0.02, u_scroll), smoothstep(0.72, 0.96, u_scroll));
-  col += SAGE * fireflies(p, u_time, 5.0) * 0.14 * fw;
-  col += vec3(0.9) * fireflies(p + 17.0, u_time * 0.75, 9.0) * 0.05 * fw;
+  // The grid: a drafting plane sitting behind the page. It drifts with
+  // scroll so it reads as a real backdrop rather than a decal stuck to
+  // the glass, and it is nearly invisible until the pointer passes over
+  // it — the reveal is the effect, not the grid itself.
+  // The scroll offset is floored to a whole device pixel: a fractional
+  // offset makes the whole grid crawl between pixel rows as you scroll,
+  // which reads as shimmer. Cells are 48/240 CSS px so they land on the
+  // 8px spacing scale the layout is built from.
+  vec2 gpx = gl_FragCoord.xy - vec2(0.0, floor(u_scroll * u_res.y * 0.6));
+  float minor = gridLines(gpx, 24.0 * u_dpr, 0.75 * u_dpr);
+  float major = gridLines(gpx, 120.0 * u_dpr, 1.1 * u_dpr);
+
+  // Kill the grid well before the edges. Every production grid worth
+  // copying is masked off-centre so it never meets a viewport boundary —
+  // an edge-to-edge grid is the loudest "tiled background" tell.
+  float mask = 1.0 - smoothstep(0.28, 0.92, d);
+  float spot = exp(-distance(p, m) * 2.4);
+  float quiet = 1.0 - 0.45 * smoothstep(0.34, 0.5, u_scroll)
+                    * smoothstep(0.72, 0.56, u_scroll); // calmer in the tunnel
+
+  col += SAGE * minor * (0.030 + 0.075 * spot) * mask * quiet;
+  col += SAGE * major * (0.050 + 0.110 * spot) * mask * quiet;
 
   // Dither to kill banding on the dark ramp.
   col += (hash(gl_FragCoord.xy + fract(u_time)) - 0.5) / 255.0;
@@ -142,9 +161,8 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reducedMotion = motionQuery.matches;
 
     const gl =
       canvas.getContext("webgl", { antialias: false, alpha: false }) ??
@@ -190,6 +208,7 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     const uTime = gl.getUniformLocation(program, "u_time");
     const uPointer = gl.getUniformLocation(program, "u_pointer");
     const uScroll = gl.getUniformLocation(program, "u_scroll");
+    const uDpr = gl.getUniformLocation(program, "u_dpr");
 
     let width = 0;
     let height = 0;
@@ -207,13 +226,14 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     };
 
     // Pointer easing: the shader gets a smoothed position, never raw events.
+    // The canvas is fixed to the viewport, so viewport size IS its rect —
+    // measuring it per event would force a synchronous layout on every
+    // pointer move for a number we already know.
     const target = { x: 0.25, y: 0.7 };
     const eased = { x: 0.25, y: 0.7 };
     const onPointer = (e: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      if (rect.height === 0) return;
-      target.x = (e.clientX - rect.left) / rect.width;
-      target.y = 1 - (e.clientY - rect.top) / rect.height;
+      target.x = e.clientX / window.innerWidth;
+      target.y = 1 - e.clientY / window.innerHeight;
     };
     window.addEventListener("pointermove", onPointer, { passive: true });
 
@@ -244,6 +264,7 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       gl.uniform1f(uTime, (performance.now() - start) / 1000);
       gl.uniform2f(uPointer, eased.x, eased.y);
       gl.uniform1f(uScroll, easedScroll);
+      gl.uniform1f(uDpr, dpr);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
@@ -264,6 +285,7 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     gl.uniform1f(uTime, 12.0);
     gl.uniform2f(uPointer, eased.x, eased.y);
     gl.uniform1f(uScroll, 0);
+    gl.uniform1f(uDpr, dpr);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 
     const io = new IntersectionObserver(
@@ -278,9 +300,25 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     };
     document.addEventListener("visibilitychange", onVisibility);
 
+    // Honour the preference if it changes mid-session, rather than only at
+    // mount. Turning it on freezes the field on its current frame; turning
+    // it off starts the loop again.
+    const onMotionPref = (e: MediaQueryListEvent) => {
+      reducedMotion = e.matches;
+      if (reducedMotion) {
+        running = false;
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+      } else {
+        setRunning(!document.hidden);
+      }
+    };
+    motionQuery.addEventListener("change", onMotionPref);
+
     return () => {
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
+      motionQuery.removeEventListener("change", onMotionPref);
       window.removeEventListener("pointermove", onPointer);
       running = false;
       if (raf) cancelAnimationFrame(raf);

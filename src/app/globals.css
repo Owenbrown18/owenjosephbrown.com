@@ -213,6 +213,69 @@
     );
 }
 
+/* Film grain. An inline feTurbulence data URI, so it costs zero network
+   requests and rasterises once. Kept low enough to feel like paper stock
+   rather than an effect. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .grain {
+    /* Stepped, not smooth: discrete jumps read as film, a smooth slide
+       reads as a texture sliding around. Transform-only, so it stays on
+       the compositor. */
+    animation: grain-shift 6s steps(8, end) infinite;
+  }
+  @keyframes grain-shift {
+    0% {
+      transform: translate(-4%, -6%);
+    }
+    50% {
+      transform: translate(-8%, -2%);
+    }
+    100% {
+      transform: translate(-4%, -6%);
+    }
+  }
+  .grain {
+    /* oversize so the drift never exposes an edge */
+    inset: -10%;
+  }
+}
+
+/* Diagonal hatch in the dead gutters either side of the content column.
+   Marks the area outside the page the way a technical drawing marks its
+   margin. Only visible once the viewport is wider than the column. */
+.gutter-hatch {
+  position: fixed;
+  inset: 0;
+  z-index: -4;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    315deg,
+    rgba(123, 164, 158, 0.07) 0 1px,
+    transparent 0 6px
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black 0 calc(50% - 620px),
+    transparent calc(50% - 620px) calc(50% + 620px),
+    black calc(50% + 620px) 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    black 0 calc(50% - 620px),
+    transparent calc(50% - 620px) calc(50% + 620px),
+    black calc(50% + 620px) 100%
+  );
+}
+
 /* Scroll progress hairline: the one piece of persistent chrome, so you
    always know how far through the page you are. Compositor-only. */
 .scroll-progress {
