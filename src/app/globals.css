@@ -516,9 +516,9 @@
     .prose-ob h2,
     .prose-ob h3,
     .anim-heading {
-      animation: heading-rise 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: heading-rise 1s cubic-bezier(0.4, 0, 0.5, 1) both;
       animation-timeline: view();
-      animation-range: entry 5% entry 40%;
+      animation-range: cover 3% cover 38%;
     }
     @keyframes heading-rise {
       from {
@@ -541,9 +541,9 @@
     .prose-ob > table,
     .prose-ob > pre,
     .anim-copy {
-      animation: copy-lift 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: copy-lift 0.85s cubic-bezier(0.4, 0, 0.5, 1) both;
       animation-timeline: view();
-      animation-range: entry 0% entry 38%;
+      animation-range: cover 3% cover 34%;
     }
     @keyframes copy-lift {
       from {
@@ -563,9 +563,9 @@
     }
     .prose-ob img,
     .anim-image {
-      animation: image-wipe 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: image-wipe 1.1s cubic-bezier(0.4, 0, 0.5, 1) both;
       animation-timeline: view();
-      animation-range: entry 0% entry 50%;
+      animation-range: cover 3% cover 42%;
     }
     @keyframes image-wipe {
       from {
@@ -584,9 +584,9 @@
     .pipeline-step,
     .stat,
     .anim-row {
-      animation: copy-lift 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: copy-lift 0.7s cubic-bezier(0.4, 0, 0.5, 1) both;
       animation-timeline: view();
-      animation-range: entry 0% entry 35%;
+      animation-range: cover 3% cover 32%;
     }
   }
 }
