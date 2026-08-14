@@ -108,14 +108,14 @@ export default function HomePage() {
 
       {/* 02 · Expertise: the page's one open, lighter clearing. */}
       <SectionRule num="02" />
-      <section id="expertise" className="relative">
+      <section id="expertise" className="section-pad relative">
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute -top-16 right-[2%] select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
         >
           02
         </p>
-        <div className="container-site pb-6 pt-14 sm:pt-20">
+        <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               My expertise<span className="text-sage">.</span>
@@ -148,14 +148,14 @@ export default function HomePage() {
 
       {/* 03 · Work — the deep point of the page's one continuous grade. */}
       <SectionRule num="03" />
-      <section id="work" className="relative">
+      <section id="work" className="section-pad relative">
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
         >
           03
         </p>
-        <div className="container-site pt-24 sm:pt-32">
+        <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               My work<span className="text-sage">.</span>
@@ -249,7 +249,7 @@ export default function HomePage() {
         </div>
 
         {/* grain, the featured project. */}
-        <div className="container-site mt-28 sm:mt-36">
+        <div className="container-site mt-24 sm:mt-28">
           <div className="grid items-center gap-12 md:grid-cols-[1.1fr_1fr]">
             <div className="reveal-up">
               <p className="eyebrow !text-sage">Featured project</p>
@@ -338,14 +338,14 @@ export default function HomePage() {
 
       {/* 04 · About: comes back up out of the tunnel. */}
       <SectionRule num="04" />
-      <section id="about" className="relative">
+      <section id="about" className="section-pad relative">
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
         >
           04
         </p>
-        <div className="container-site pt-24 sm:pt-32">
+        <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               About me<span className="text-sage">.</span>
@@ -401,8 +401,8 @@ export default function HomePage() {
 
       {/* 05 · Contact */}
       <SectionRule num="05" />
-      <section id="contact" className="relative overflow-hidden">
-        <div className="container-site relative pb-10 pt-20 text-center sm:pt-28">
+      <section id="contact" className="section-pad relative overflow-hidden">
+        <div className="container-site relative text-center">
           <p className="eyebrow !text-sage">05 · Contact</p>
           <h2 className="mx-auto mt-5 max-w-[16ch] text-[clamp(2.75rem,7vw,5rem)] font-extrabold text-white/95">
             Let’s talk.

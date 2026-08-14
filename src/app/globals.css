@@ -249,6 +249,12 @@
   }
 }
 
+/* One padding value for every section, so the rhythm down the page is
+   even and the breaks all get the same air. */
+.section-pad {
+  padding-block: clamp(7rem, 13vw, 12rem);
+}
+
 /* Section break: the number at the content edge, hairline running out to
    the viewport edge. Laid out as a flex row rather than knocking the line
    out behind the number — the page grade means there is no single solid
