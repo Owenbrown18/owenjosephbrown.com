@@ -69,7 +69,7 @@ export default function ObdesignPage() {
             <a href={site.url} rel="noopener" className="group block">
               <div className="overflow-hidden border border-line bg-surface">
                 <Image
-                  src={`/images/work/${site.slug}.png`}
+                  src={`/images/work/${site.slug}.webp`}
                   alt={`${site.name} website on desktop`}
                   width={840}
                   height={525}

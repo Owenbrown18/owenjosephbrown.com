@@ -20,7 +20,7 @@ function Half({ hidden = false }: { hidden?: boolean }) {
         >
           <div className="overflow-hidden border border-white/15 bg-forest">
             <Image
-              src={`/images/work/${site.slug}.png`}
+              src={`/images/work/${site.slug}.webp`}
               alt={hidden ? "" : `${site.name} website`}
               width={420}
               height={263}

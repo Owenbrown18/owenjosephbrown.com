@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# test + image working artifacts
+/test-results/
+/playwright-report/
+.imgtmp/

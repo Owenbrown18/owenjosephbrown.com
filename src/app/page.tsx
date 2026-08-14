@@ -193,14 +193,14 @@ export default function HomePage() {
         {/* Mobile: stacked, full width. */}
         <div className="container-site mt-8 space-y-4 sm:hidden">
           <Image
-            src="/images/work/grain-construction.png"
+            src="/images/work/grain-construction.webp"
             alt="Grain Construction website"
             width={1200}
             height={750}
             className="h-auto w-full border border-white/15"
           />
           <Image
-            src="/images/work/figs-and-honey.png"
+            src="/images/work/figs-and-honey.webp"
             alt="Figs & Honey website"
             width={900}
             height={563}
@@ -216,7 +216,7 @@ export default function HomePage() {
           />
           <div className="parallax-a absolute left-[3%] top-[8%] w-[54%] border border-white/15 shadow-2xl">
             <Image
-              src="/images/work/grain-construction.png"
+              src="/images/work/grain-construction.webp"
               alt="Grain Construction website"
               width={1200}
               height={750}
@@ -225,7 +225,7 @@ export default function HomePage() {
           </div>
           <div className="parallax-b absolute right-[4%] top-[24%] z-10 w-[38%] border border-white/15 shadow-2xl">
             <Image
-              src="/images/work/figs-and-honey.png"
+              src="/images/work/figs-and-honey.webp"
               alt="Figs & Honey website"
               width={900}
               height={563}
@@ -234,7 +234,7 @@ export default function HomePage() {
           </div>
           <div className="parallax-a absolute bottom-0 left-[32%] w-[32%] border border-white/15 shadow-2xl">
             <Image
-              src="/images/work/daves-bakery.png"
+              src="/images/work/daves-bakery.webp"
               alt="Daves' Bakery website"
               width={900}
               height={563}
@@ -288,7 +288,7 @@ export default function HomePage() {
               <div className="parallax-b">
                 <PhoneFrame>
                   <Image
-                    src="/images/grain/home_roll.png"
+                    src="/images/grain/home_roll.webp"
                     alt="grain home screen with an active roll"
                     width={260}
                     height={563}
@@ -299,7 +299,7 @@ export default function HomePage() {
               <div className="parallax-a mb-10">
                 <PhoneFrame>
                   <Image
-                    src="/images/grain/new_roll_qr.png"
+                    src="/images/grain/new_roll_qr.webp"
                     alt="A roll's QR share code"
                     width={260}
                     height={563}
@@ -310,7 +310,7 @@ export default function HomePage() {
               <div className="parallax-b mb-4">
                 <PhoneFrame>
                   <Image
-                    src="/images/grain/waiting.png"
+                    src="/images/grain/waiting.webp"
                     alt="The waiting room before a roll is developed"
                     width={260}
                     height={563}
