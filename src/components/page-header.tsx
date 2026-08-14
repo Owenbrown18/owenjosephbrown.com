@@ -29,7 +29,7 @@ export function PageHeader({
     <header className="max-w-[52rem]">
       <div className="sage-bar mb-7" />
       <p className="eyebrow">{eyebrow}</p>
-      <h1 className="mt-4 text-[clamp(2.75rem,7vw,5rem)] text-fg">{title}</h1>
+      <h1 className="anim-heading mt-4 text-[clamp(2.75rem,7vw,5rem)] text-fg">{title}</h1>
       {summary && (
         <p className="mt-5 max-w-[52ch] text-lg text-fg-muted">{summary}</p>
       )}

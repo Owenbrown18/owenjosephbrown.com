@@ -128,7 +128,7 @@ export default function HomePage() {
         </p>
         <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
-            <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
+            <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               My expertise<span className="text-sage">.</span>
             </h2>
             <p className="eyebrow hidden !text-white/40 sm:block">02</p>
@@ -168,7 +168,7 @@ export default function HomePage() {
         </p>
         <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
-            <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
+            <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               My work<span className="text-sage">.</span>
             </h2>
             <p className="eyebrow hidden !text-white/40 sm:block">03</p>
@@ -182,7 +182,7 @@ export default function HomePage() {
         {/* The studio, full bleed and photo-first. */}
         <div className="container-site relative z-10 mt-16">
           <p className="eyebrow !text-sage">The studio</p>
-          <h3 className="mt-3 text-[clamp(2.75rem,8vw,6rem)] leading-[0.95] text-white/95">
+          <h3 className="anim-heading mt-3 text-[clamp(2.75rem,8vw,6rem)] leading-[0.95] text-white/95">
             <ObdesignWordmark />
           </h3>
           <p className="mt-5 max-w-[52ch] text-white/70">
@@ -200,14 +200,14 @@ export default function HomePage() {
             alt="Grain Construction website"
             width={1200}
             height={750}
-            className="h-auto w-full border border-white/15"
+            className="anim-image h-auto w-full border border-white/15"
           />
           <Image
             src="/images/work/figs-and-honey.webp"
             alt="Figs & Honey website"
             width={900}
             height={563}
-            className="h-auto w-full border border-white/15"
+            className="anim-image h-auto w-full border border-white/15"
           />
         </div>
 
@@ -223,7 +223,7 @@ export default function HomePage() {
               alt="Grain Construction website"
               width={1200}
               height={750}
-              className="h-auto w-full object-cover"
+              className="anim-image h-auto w-full object-cover"
             />
           </div>
           <div className="parallax-b absolute right-[4%] top-[24%] z-10 w-[38%] border border-white/15 shadow-2xl">
@@ -232,7 +232,7 @@ export default function HomePage() {
               alt="Figs & Honey website"
               width={900}
               height={563}
-              className="h-auto w-full object-cover"
+              className="anim-image h-auto w-full object-cover"
             />
           </div>
           <div className="parallax-a absolute bottom-0 left-[32%] w-[32%] border border-white/15 shadow-2xl">
@@ -241,7 +241,7 @@ export default function HomePage() {
               alt="Daves' Bakery website"
               width={900}
               height={563}
-              className="h-auto w-full object-cover"
+              className="anim-image h-auto w-full object-cover"
             />
           </div>
         </div>
@@ -295,7 +295,7 @@ export default function HomePage() {
                     alt="grain home screen with an active roll"
                     width={260}
                     height={563}
-                    className="h-auto w-full"
+                    className="anim-image h-auto w-full"
                   />
                 </PhoneFrame>
               </div>
@@ -306,7 +306,7 @@ export default function HomePage() {
                     alt="A roll's QR share code"
                     width={260}
                     height={563}
-                    className="h-auto w-full"
+                    className="anim-image h-auto w-full"
                   />
                 </PhoneFrame>
               </div>
@@ -317,7 +317,7 @@ export default function HomePage() {
                     alt="The waiting room before a roll is developed"
                     width={260}
                     height={563}
-                    className="h-auto w-full"
+                    className="anim-image h-auto w-full"
                   />
                 </PhoneFrame>
               </div>
@@ -325,24 +325,68 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* The pipeline, one editorial line. */}
-        <div className="container-site mt-24">
-          <div className="reveal-up flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3 border-t border-white/15 pt-8">
+        {/* The pipeline, shown rather than described. */}
+        <div className="container-site mt-28 border-t border-white/15 pt-16 sm:mt-36">
+          <div className="grid items-center gap-12 md:grid-cols-[1fr_1.15fr] md:gap-16">
             <div>
-              <h3 className="font-display text-2xl font-bold text-white/95">
+              <p className="eyebrow !text-sage">Systems</p>
+              <h3 className="anim-heading mt-3 text-[clamp(2rem,4.5vw,3rem)] text-white/95">
                 Lead generation pipeline
               </h3>
-              <p className="mt-2 max-w-[52ch] text-sm text-white/60">
-                The ~3,900-line Python system that finds the studio’s clients,
-                instrumented all the way to revenue.
+              <p className="mt-5 max-w-[46ch] text-white/70">
+                The ~3,900-line Python system that finds the studio’s clients:
+                it scrapes, scores, and drafts, then tracks every outcome back
+                to revenue. I run the whole operation from one dashboard it
+                generates.
+              </p>
+              <dl className="mt-8 grid max-w-[26rem] grid-cols-3 gap-4 border-t border-white/15 pt-5">
+                {[
+                  { v: "942", l: "leads scored" },
+                  { v: "~7%", l: "convert to paid" },
+                  { v: "5", l: "pipeline stages" },
+                ].map((s) => (
+                  <div key={s.l}>
+                    <dt className="font-display text-2xl font-bold text-white/95">
+                      {s.v}
+                    </dt>
+                    <dd className="mt-1 text-xs leading-snug text-white/50">
+                      {s.l}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-8">
+                <Link
+                  href="/work/leadgen"
+                  className="link-underline font-display text-xl font-bold text-white/95"
+                >
+                  View project →
+                </Link>
               </p>
             </div>
-            <Link
-              href="/work/leadgen"
-              className="link-underline font-display text-lg font-bold text-white/95"
-            >
-              View project →
-            </Link>
+
+            {/* Two stacked captures, offset so they read as one interface
+                rather than a pair of unrelated screenshots. */}
+            <div className="relative">
+              <div className="parallax-b overflow-hidden border border-white/15 shadow-2xl">
+                <Image
+                  src="/images/leadgen/dashboard.webp"
+                  alt="The leads dashboard: every lead scored and tagged with the problem found on its site"
+                  width={1500}
+                  height={940}
+                  className="anim-image h-auto w-full"
+                />
+              </div>
+              <div className="parallax-a relative z-10 -mt-14 ml-auto w-[62%] overflow-hidden border border-white/15 shadow-2xl sm:-mt-20">
+                <Image
+                  src="/images/leadgen/detail.webp"
+                  alt="A single lead: detected issue, contact routes, drafted email, and outcome buttons"
+                  width={1500}
+                  height={940}
+                  className="anim-image h-auto w-full"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -358,7 +402,7 @@ export default function HomePage() {
         </p>
         <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
-            <h2 className="text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
+            <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               About me<span className="text-sage">.</span>
             </h2>
             <p className="eyebrow hidden !text-white/40 sm:block">04</p>
@@ -371,7 +415,7 @@ export default function HomePage() {
                 alt="Owen Brown"
                 width={760}
                 height={950}
-                className="aspect-[4/5] w-full border border-white/15 object-cover shadow-2xl"
+                className="anim-image aspect-[4/5] w-full border border-white/15 object-cover shadow-2xl"
               />
             </div>
             <div className="reveal-up">

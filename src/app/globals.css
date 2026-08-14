@@ -497,6 +497,100 @@
   }
 }
 
+/* ---------------------------------------------------------------
+   Motion vocabulary.
+
+   Not one reveal applied to everything — each element type gets the
+   move that suits it: headings rise out from behind a clip, images
+   wipe open and settle out of a slight overscale, body copy just
+   lifts. Rows need no stagger logic because each one carries its own
+   view() timeline, so they fire in sequence as they enter naturally.
+
+   All of it is scroll-driven CSS: no JS, no hydration flash, only
+   transform/opacity/clip-path so it stays on the compositor. Wrapped
+   in @supports so browsers without scroll timelines simply render the
+   finished state rather than blank content.
+   --------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .prose-ob h2,
+    .prose-ob h3,
+    .anim-heading {
+      animation: heading-rise 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 40%;
+    }
+    @keyframes heading-rise {
+      from {
+        opacity: 0;
+        transform: translateY(0.4em);
+        clip-path: inset(0 0 100% 0);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+        clip-path: inset(-15% 0 -25% 0);
+      }
+    }
+
+    /* Body copy: a lift, nothing more. */
+    .prose-ob > p,
+    .prose-ob > ul,
+    .prose-ob > ol,
+    .prose-ob > blockquote,
+    .prose-ob > table,
+    .prose-ob > pre,
+    .anim-copy {
+      animation: copy-lift 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 38%;
+    }
+    @keyframes copy-lift {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* Images wipe open and settle. The paragraph MDX wraps them in is
+       excluded, or the picture animates twice. */
+    .prose-ob p:has(img) {
+      animation: none;
+    }
+    .prose-ob img,
+    .anim-image {
+      animation: image-wipe 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 50%;
+    }
+    @keyframes image-wipe {
+      from {
+        opacity: 0;
+        clip-path: inset(0 0 100% 0);
+        transform: scale(1.04);
+      }
+      to {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+        transform: none;
+      }
+    }
+
+    /* Rows: no delays needed, each carries its own timeline. */
+    .pipeline-step,
+    .stat,
+    .anim-row {
+      animation: copy-lift 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
 /* Scroll reveal: CSS scroll-driven where supported, static everywhere else.
    No JS, no hydration flash, dies under prefers-reduced-motion. */
 @media (prefers-reduced-motion: no-preference) {

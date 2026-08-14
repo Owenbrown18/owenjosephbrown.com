@@ -78,7 +78,7 @@ export default async function WorkEntryPage({
             fill
             priority
             sizes="(max-width: 900px) 100vw, 832px"
-            className="object-cover object-top"
+            className="anim-image object-cover object-top"
           />
         </div>
       )}

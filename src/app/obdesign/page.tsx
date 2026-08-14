@@ -74,7 +74,7 @@ export default function ObdesignPage() {
                   width={840}
                   height={525}
                   priority={i < 2}
-                  className="h-auto w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
+                  className="anim-image h-auto w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
                 />
               </div>
             </a>
