@@ -85,9 +85,12 @@ export default function HomePage() {
           </div>
 
           <div className="hero-parallax absolute inset-x-0 bottom-10">
+            {/* Desktop only: on a phone the hero is tall enough that this
+                collided with the subtitle, and a touch device does not need
+                telling that a page scrolls. */}
             <a
               href="#expertise"
-              className="scroll-cue group mx-auto mb-9 flex w-fit flex-col items-center gap-2"
+              className="scroll-cue group mx-auto mb-9 hidden w-fit flex-col items-center gap-2 sm:flex"
               aria-label="Scroll to my expertise"
             >
               <span className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white/35 transition-colors group-hover:text-white/70">

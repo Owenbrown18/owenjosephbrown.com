@@ -15,11 +15,7 @@ OBdesign's clients are small businesses on Vancouver Island, and small businesse
 
 Five stages, run from the command line:
 
-1. **Scrape.** Pull businesses for a region and niche from Google Maps: name, site, phone, reviews.
-2. **Analyze.** Visit the business's website (if one exists) and assess it: platform, age signals, mobile behaviour, obvious problems. Domain registration data comes over RDAP and gets cached, because a domain registered in 2009 that still serves a table-based layout tells you something.
-3. **Discover.** Find the owner's real email. This runs on the Tavily search API rather than scraping search engines, which block datacentre traffic silently. Cost is about 1.4 credits per lead, budgeted against a monthly quota.
-4. **Validate.** Suppression lists (already contacted, chains, wrong niche, asked to be removed), dedupe, and sanity checks before a lead is allowed to become an email.
-5. **Draft.** Write a personalized first email referencing what the analysis actually found, and save it to Gmail as a draft via the API. Nothing sends automatically; I read and send every one by hand.
+<Pipeline steps="Scrape: businesses for a region and niche from Google Maps — name, site, phone, reviews | Analyze: visit the site and assess platform, age signals, mobile behaviour, obvious problems. Domain registration comes over RDAP and gets cached, because a 2009 domain still serving a table layout tells you something | Discover: find the owner's real email through the Tavily search API rather than scraping search engines, which block datacentre traffic silently — about 1.4 credits per lead against a monthly quota | Validate: suppression lists (already contacted, chains, wrong niche, asked to be removed), dedupe, and sanity checks before a lead can become an email | Draft: write a personalized first email referencing what the analysis actually found and save it to Gmail via the API. Nothing sends automatically; I read and send every one by hand" />
 
 State lives in flat JSON files under version control: contacted, suppressed, outcomes, removed. Boring, inspectable, and diffable, which matters more than a database when the operator is also the developer.
 
@@ -27,9 +23,9 @@ State lives in flat JSON files under version control: contacted, suppressed, out
 
 Every send gets an outcome recorded, so the funnel math is real money, not marketing metrics. The numbers that came out surprised me:
 
-- Roughly **7% of first cold emails convert to a paying project**. Not replies. Paying projects.
-- **Follow-ups are worth nothing.** Around fifty follow-ups sent, zero replies. Every client the pipeline has ever produced came from a first email. The system no longer drafts follow-ups at all.
-- At the studio's average deal size, one sent email carries an expected value of about **$60**, which reframed the whole business: the bottleneck was never leads, it was sends.
+<StatRow stats="~7%: of first cold emails convert to a paying project. Not replies — paying projects | 0: replies from roughly fifty follow-ups, which is why the system no longer drafts them | ~$60: expected value of a single sent email at the studio's average deal size" />
+
+Those three numbers reframed the whole business. The bottleneck was never finding leads, it was sending. And every client the pipeline has ever produced came from a first email, so the follow-up logic was deleted rather than tuned.
 
 ## The bug that taught me the most
 

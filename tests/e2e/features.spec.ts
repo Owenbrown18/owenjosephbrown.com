@@ -99,3 +99,35 @@ test("resume page carries identity and a route to the document", async ({
   // page has to carry a real route to the document in HTML.
   await expect(page.getByRole("link", { name: /download/i })).toBeVisible();
 });
+
+test.describe("mobile", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("hamburger exposes every section, and closes properly", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const sheet = page.locator("#mobile-nav");
+    await expect(sheet).toBeHidden();
+
+    await page.getByRole("button", { name: /open menu/i }).click();
+    await expect(sheet).toBeVisible();
+
+    // All five sections must be reachable — the old rail silently dropped
+    // Expertise and About on narrow screens.
+    for (const label of ["home", "expertise", "work", "about", "contact"]) {
+      await expect(sheet.getByRole("link", { name: label })).toBeVisible();
+    }
+
+    await page.keyboard.press("Escape");
+    await expect(sheet).toBeHidden();
+  });
+
+  test("scroll cue and progress bar stay off small screens", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await expect(page.locator(".scroll-cue")).toBeHidden();
+    await expect(page.locator(".scroll-progress")).toBeHidden();
+  });
+});

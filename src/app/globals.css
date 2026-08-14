@@ -255,6 +255,34 @@
   padding-block: clamp(7rem, 13vw, 12rem);
 }
 
+/* Mobile menu button: two bars that cross into an X. */
+.menu-toggle {
+  position: relative;
+  display: flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-right: -0.5rem;
+}
+.menu-toggle > span {
+  display: block;
+  height: 1.5px;
+  width: 22px;
+  background: rgba(255, 255, 255, 0.85);
+  transition:
+    transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease;
+}
+.menu-toggle[data-open] > span:first-child {
+  transform: translateY(3.75px) rotate(45deg);
+}
+.menu-toggle[data-open] > span:last-child {
+  transform: translateY(-3.75px) rotate(-45deg);
+}
+
 /* Scroll cue: a hairline with a dot that falls down it, so the hero says
    there is more below without adding a chevron everyone has seen. */
 .scroll-cue-track {
@@ -358,8 +386,13 @@
 }
 
 /* Scroll progress hairline: the one piece of persistent chrome, so you
-   always know how far through the page you are. Compositor-only. */
+   always know how far through the page you are. Compositor-only.
+   Desktop only: on a phone the collapsing URL bar changes the scrollable
+   height mid-scroll, so the timeline's range keeps recalculating and the
+   bar visibly snaps backwards. Not fixable from here — the browser chrome
+   owns that height. */
 .scroll-progress {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -374,6 +407,11 @@
     var(--accent)
   );
   z-index: 60;
+}
+@media (min-width: 640px) {
+  .scroll-progress {
+    display: block;
+  }
 }
 @supports (animation-timeline: scroll()) {
   .scroll-progress {
@@ -571,6 +609,72 @@
   .marquee-track {
     animation: none;
   }
+}
+
+/* Pipeline rail — the stages of a system, drawn rather than screenshotted */
+.pipeline {
+  list-style: none;
+  padding: 0;
+  margin-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 0.25rem 1rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--line);
+  margin-top: 0;
+}
+.pipeline-num {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent-text);
+  padding-top: 0.3rem;
+}
+.pipeline-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--fg);
+}
+.pipeline-note {
+  grid-column: 2;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+
+/* Pulled-out numbers */
+.stat-row {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+@media (min-width: 640px) {
+  .stat-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.stat-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+.stat-label {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
 }
 
 /* Phone-screenshot rows in case studies */

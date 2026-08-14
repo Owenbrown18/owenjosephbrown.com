@@ -7,6 +7,10 @@ import { useEffect, useRef, useState } from "react";
  * Nav that gets out of the way: transparent and floating at the top of the
  * page, hides as you scroll down, and drops back in (with a ground behind
  * it, so it stays readable over content) the moment you scroll up.
+ *
+ * Below `sm` the links collapse into a sheet — five numbered items plus a
+ * resume button do not fit on a phone, and quietly dropping two of them
+ * meant Expertise and About were unreachable there.
  */
 const anchors = [
   { num: "01", label: "home", href: "/#home" },
@@ -19,8 +23,10 @@ const anchors = [
 export function Header() {
   const [hidden, setHidden] = useState(false);
   const [atTop, setAtTop] = useState(true);
+  const [open, setOpen] = useState(false);
   const lastY = useRef(0);
   const queued = useRef(false);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     lastY.current = window.scrollY;
@@ -28,22 +34,18 @@ export function Header() {
     const read = () => {
       queued.current = false;
       const y = window.scrollY;
-      const top = y < 40;
-      setAtTop(top);
+      setAtTop(y < 40);
 
-      // Ignore jitter and the rubber-band region so the bar doesn't flicker.
       const delta = y - lastY.current;
       if (Math.abs(delta) > 6 && y > 0) {
         setHidden(delta > 0 && y > 120);
         lastY.current = y;
-      } else if (top) {
+      } else if (y < 40) {
         setHidden(false);
         lastY.current = y;
       }
     };
 
-    // Read in a frame rather than in the event: scroll fires faster than
-    // we can paint, and reading layout in the handler is wasted work.
     const onScroll = () => {
       if (queued.current) return;
       queued.current = true;
@@ -54,16 +56,28 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Note: Tailwind v4 compiles -translate-y-full to the `translate`
-  // property, not `transform`, so the transition list below must name
-  // `translate` or the bar snaps instead of sliding.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    // Stop the page scrolling behind the sheet.
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    panelRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   return (
     <header
-      data-hidden={hidden ? "" : undefined}
       className={`fixed inset-x-0 top-0 z-50 transition-[translate,background-color,border-color] duration-300 ease-out ${
-        hidden ? "-translate-y-full" : "translate-y-0"
+        hidden && !open ? "-translate-y-full" : "translate-y-0"
       } ${
-        atTop
+        atTop && !open
           ? "border-b border-transparent bg-transparent"
           : "border-b border-white/10 bg-forest/80 backdrop-blur-md"
       }`}
@@ -73,22 +87,24 @@ export function Header() {
           href="/#home"
           className="whitespace-nowrap font-display text-lg font-bold tracking-[-0.02em] text-white/95"
         >
-          <span className="md:hidden">
+          <span className="sm:hidden">
             OB<span className="text-accent">.</span>
           </span>
-          <span className="hidden md:inline">
+          <span className="hidden sm:inline">
             Owen Brown<span className="text-accent">.</span>
           </span>
         </Link>
 
-        <nav aria-label="Primary" className="flex items-center">
-          {anchors.map((item, i) => (
+        {/* Desktop: the full rail. */}
+        <nav
+          aria-label="Primary"
+          className="hidden items-center sm:flex"
+        >
+          {anchors.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`px-2 py-1.5 text-[13px] text-white/60 transition-colors hover:text-white sm:px-3 ${
-                i === 1 || i === 3 ? "hidden sm:block" : ""
-              }`}
+              className="px-2 py-1.5 text-[13px] text-white/60 transition-colors hover:text-white sm:px-3 sm:text-sm"
             >
               <span aria-hidden className="nav-num">
                 {item.num}
@@ -99,6 +115,51 @@ export function Header() {
           <Link
             href="/resume"
             className="ml-2 rounded-full border border-white/20 px-4 py-1.5 text-[13px] text-white/80 transition-colors hover:border-white/60 hover:text-white"
+          >
+            resume
+          </Link>
+        </nav>
+
+        {/* Mobile: one button. */}
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          aria-label={open ? "Close menu" : "Open menu"}
+          className="menu-toggle sm:hidden"
+          data-open={open ? "" : undefined}
+        >
+          <span aria-hidden />
+          <span aria-hidden />
+        </button>
+      </div>
+
+      {/* The sheet */}
+      <div
+        id="mobile-nav"
+        ref={panelRef}
+        hidden={!open}
+        className="border-t border-white/10 bg-forest/95 backdrop-blur-md sm:hidden"
+      >
+        <nav aria-label="Primary" className="container-site py-4">
+          {anchors.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className="flex items-baseline gap-3 border-b border-white/10 py-4 text-lg text-white/85 last:border-b-0"
+            >
+              <span aria-hidden className="nav-num !text-sm">
+                {item.num}
+              </span>
+              {item.label}
+            </Link>
+          ))}
+          <Link
+            href="/resume"
+            onClick={() => setOpen(false)}
+            className="mt-4 block rounded-full border border-white/25 py-3 text-center text-sm text-white/90"
           >
             resume
           </Link>
