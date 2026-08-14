@@ -95,5 +95,7 @@ test("resume page carries identity and a route to the document", async ({
   // PDF, since nothing in the embed is crawlable or readable by a screen
   // reader.
   await expect(page.getByText(/Spring 2027 co-op/i).first()).toBeVisible();
-  await expect(page.getByText(/curl owenjosephbrown\.com/i)).toBeVisible();
+  // The PDF itself is invisible to crawlers and screen readers, so the
+  // page has to carry a real route to the document in HTML.
+  await expect(page.getByRole("link", { name: /download/i })).toBeVisible();
 });

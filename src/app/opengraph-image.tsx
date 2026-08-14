@@ -9,6 +9,6 @@ export default function Image() {
   return ogCard({
     title: "I build software people actually use.",
     subtitle:
-      "UVic software engineering student. Nine production client sites, an iOS app, and the pipeline that finds the clients.",
+      "UVic software engineering student. 10+ production client sites, an iOS app, and the pipeline that finds the clients.",
   });
 }

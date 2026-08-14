@@ -37,7 +37,7 @@ const expertise = [
     num: "01",
     title: "Full-stack web",
     sub: "Next.js · TypeScript · Astro",
-    copy: "Nine production sites built, shipped, and maintained for paying clients. Custom code, git-based CMS, DNS, performance budgets: the whole surface.",
+    copy: "10+ production sites built, shipped, and maintained for paying clients, generating $20,000+ in revenue. Custom code, git-based CMS, DNS, performance budgets: the whole surface.",
   },
   {
     num: "02",
@@ -183,7 +183,7 @@ export default function HomePage() {
             <ObdesignWordmark />
           </h3>
           <p className="mt-5 max-w-[52ch] text-white/70">
-            My one-person web studio. Nine production sites for BC businesses,
+            My one-person web studio. Over ten production sites for BC businesses,
             every one custom-coded and editable by its owner. Roughly 7% of
             the studio’s first cold emails become paying projects, found by a
             pipeline I wrote.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * The brand's forest gradient, rendered live: a slow noise field drifting
@@ -180,6 +181,18 @@ function compile(
 
 export function ForestCanvas({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const pathname = usePathname();
+  // The canvas lives in the layout, so it never remounts on a client-side
+  // navigation. Anything page-specific has to be re-read on route change
+  // or the new page inherits the old one's settings.
+  const resyncRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    // Wait a frame so the incoming page has actually committed before we
+    // measure its section breaks.
+    const id = requestAnimationFrame(() => resyncRef.current?.());
+    return () => cancelAnimationFrame(id);
+  }, [pathname]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -237,7 +250,7 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     const uTunnel = gl.getUniformLocation(program, "u_tunnel");
     // The page-grade layer only exists on the landing page, so it is
     // the honest marker for "this page has a tunnel".
-    const tunnel = document.querySelector(".page-grade") ? 1 : 0;
+    let tunnel = document.querySelector(".page-grade") ? 1 : 0;
 
     // Section breaks feed the horizon seams. Their document positions are
     // measured once (and on resize) rather than every frame, so the loop
@@ -335,20 +348,32 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
 
     // One static frame so the canvas is never blank (also the
     // reduced-motion end state).
-    resize();
-    measureSeams();
-    updateSeams();
-    gl.uniform2f(uRes, width, height);
-    gl.uniform1f(uTime, 12.0);
-    gl.uniform2f(uPointer, eased.x, eased.y);
-    gl.uniform1f(uScroll, 0);
-    gl.uniform1f(uDpr, dpr);
-    gl.uniform1fv(uSeams, seams);
-    gl.uniform1f(uTunnel, tunnel);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    const drawStaticFrame = () => {
+      resize();
+      updateSeams();
+      gl.uniform2f(uRes, width, height);
+      gl.uniform1f(uTime, 12.0);
+      gl.uniform2f(uPointer, eased.x, eased.y);
+      gl.uniform1f(uScroll, scrollProgress());
+      gl.uniform1f(uDpr, dpr);
+      gl.uniform1fv(uSeams, seams);
+      gl.uniform1f(uTunnel, tunnel);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    };
 
-    // Layout changes move the breaks; re-measure rather than trusting the
-    // first read.
+    measureSeams();
+    drawStaticFrame();
+
+    // Called on every route change: the new page has its own breaks, and
+    // may not be the landing page at all.
+    resyncRef.current = () => {
+      tunnel = document.querySelector(".page-grade") ? 1 : 0;
+      easedScroll = scrollProgress();
+      measureSeams();
+      updateSeams();
+      if (!running) drawStaticFrame();
+    };
+
     const onResize = () => measureSeams();
     window.addEventListener("resize", onResize, { passive: true });
 

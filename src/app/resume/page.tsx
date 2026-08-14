@@ -52,10 +52,15 @@ export default function ResumePage() {
             ),
           },
           {
-            label: "Terminal",
-            wide: true,
+            label: "LinkedIn",
             value: (
-              <code className="text-fg">curl owenjosephbrown.com</code>
+              <a
+                href={identity.linkedin}
+                rel="me noopener"
+                className="link-underline text-fg"
+              >
+                owenbrown18
+              </a>
             ),
           },
           {

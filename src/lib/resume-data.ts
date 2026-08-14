@@ -91,7 +91,7 @@ export const projects: ResumeEntry[] = [
 export const education = {
   org: "University of Victoria",
   credential: "BSEng, Software Engineering (co-op)",
-  period: "September 2023 – present (graduating 2029 with four co-op work terms)",
+  period: "September 2023 – April 2028 (expected)",
   location: "Victoria, BC",
   detail:
     "Current term: operating systems (CSC 360), software architecture (SENG 350), security engineering (SENG 360)",

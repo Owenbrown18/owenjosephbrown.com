@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/page-header";
 export const metadata: Metadata = {
   title: "OBdesign — the studio",
   description:
-    "Nine production websites for BC businesses, every one custom-coded and client-editable. The studio side of Owen Brown.",
+    "10+ production websites for BC businesses, every one custom-coded and client-editable. The studio side of Owen Brown.",
 };
 
 export default function ObdesignPage() {
@@ -22,7 +22,7 @@ export default function ObdesignPage() {
         }
         meta={[
           { label: "Role", value: "Founder & web developer" },
-          { label: "Sites live", value: "Nine, all in production" },
+          { label: "Sites shipped", value: "10+, generating $20,000+" },
           {
             label: "Stack",
             value: "Next.js · Astro · TypeScript · Keystatic",
@@ -50,7 +50,7 @@ export default function ObdesignPage() {
             edits their own content without touching code.
           </p>
           <p>
-            The numbers I actually track: nine production sites live, roughly
+            The numbers I actually track: 10+ sites shipped and $20,000+ in revenue, roughly
             7% of first cold emails converting to paying projects (found by{" "}
             <Link href="/work/leadgen" className="link-underline text-fg">
               a pipeline I wrote

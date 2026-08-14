@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     template: "%s — Owen Brown",
   },
   description:
-    "Software engineering student at UVic and founder of OBdesign. I build and ship production software for real businesses: nine live client sites, an iOS app, and the pipeline that finds the clients.",
+    "Software engineering student at UVic and founder of OBdesign. I build and ship production software for real businesses: 10+ live client sites, an iOS app, and the pipeline that finds the clients.",
   authors: [{ name: "Owen Brown", url: "https://owenjosephbrown.com" }],
   openGraph: {
     type: "website",
