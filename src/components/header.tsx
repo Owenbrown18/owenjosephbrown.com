@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 /**
- * Floating nav: no bar, no border, no background. It sits over the forest
- * at the top of the page and scrolls away with it, tamalsen-style.
- * Anchors are absolute (/#id) so they work from every page.
+ * Nav that gets out of the way: transparent and floating at the top of the
+ * page, hides as you scroll down, and drops back in (with a ground behind
+ * it, so it stays readable over content) the moment you scroll up.
  */
 const anchors = [
   { num: "01", label: "home", href: "/#home" },
@@ -14,8 +17,54 @@ const anchors = [
 ];
 
 export function Header() {
+  const [hidden, setHidden] = useState(false);
+  const [atTop, setAtTop] = useState(true);
+  const lastY = useRef(0);
+  const queued = useRef(false);
+
+  useEffect(() => {
+    lastY.current = window.scrollY;
+
+    const read = () => {
+      queued.current = false;
+      const y = window.scrollY;
+      const top = y < 40;
+      setAtTop(top);
+
+      // Ignore jitter and the rubber-band region so the bar doesn't flicker.
+      const delta = y - lastY.current;
+      if (Math.abs(delta) > 6 && y > 0) {
+        setHidden(delta > 0 && y > 120);
+        lastY.current = y;
+      } else if (top) {
+        setHidden(false);
+        lastY.current = y;
+      }
+    };
+
+    // Read in a frame rather than in the event: scroll fires faster than
+    // we can paint, and reading layout in the handler is wasted work.
+    const onScroll = () => {
+      if (queued.current) return;
+      queued.current = true;
+      requestAnimationFrame(read);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
+    <header
+      data-hidden={hidden ? "" : undefined}
+      className={`fixed inset-x-0 top-0 z-50 transition-[transform,background-color,border-color] duration-300 ease-out ${
+        hidden ? "-translate-y-full" : "translate-y-0"
+      } ${
+        atTop
+          ? "border-b border-transparent bg-transparent"
+          : "border-b border-white/10 bg-forest/80 backdrop-blur-md"
+      }`}
+    >
       <div className="container-site flex h-20 items-center justify-between">
         <Link
           href="/#home"

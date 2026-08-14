@@ -249,6 +249,61 @@
   }
 }
 
+/* Section break: the number at the content edge, hairline running out to
+   the viewport edge. Laid out as a flex row rather than knocking the line
+   out behind the number — the page grade means there is no single solid
+   colour to knock out with, so a "matching" swatch shows as a box. */
+.section-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding-left: max(1.5rem, calc(50% - 600px));
+}
+@media (min-width: 768px) {
+  .section-rule {
+    padding-left: max(2.5rem, calc(50% - 600px));
+  }
+}
+.section-rule-num {
+  flex: none;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--accent-text);
+}
+.section-rule-line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(123, 164, 158, 0.3),
+    rgba(123, 164, 158, 0.3) 75%,
+    transparent
+  );
+  transform-origin: left center;
+}
+/* The line draws itself in as the break enters view. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .section-rule-line {
+      animation: rule-draw 1s linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    @keyframes rule-draw {
+      from {
+        transform: scaleX(0);
+        opacity: 0;
+      }
+      to {
+        transform: scaleX(1);
+        opacity: 1;
+      }
+    }
+  }
+}
+
 /* Scroll progress hairline: the one piece of persistent chrome, so you
    always know how far through the page you are. Compositor-only. */
 .scroll-progress {

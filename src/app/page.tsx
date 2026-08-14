@@ -10,6 +10,7 @@ import {
   MailIcon,
   ObdesignWordmark,
 } from "@/components/icons";
+import { SectionRule } from "@/components/section-rule";
 import { clientSites } from "@/lib/sites";
 import { identity } from "@/lib/resume-data";
 
@@ -106,6 +107,7 @@ export default function HomePage() {
       </section>
 
       {/* 02 · Expertise: the page's one open, lighter clearing. */}
+      <SectionRule num="02" />
       <section id="expertise" className="relative">
         <p
           aria-hidden
@@ -145,6 +147,7 @@ export default function HomePage() {
       </section>
 
       {/* 03 · Work — the deep point of the page's one continuous grade. */}
+      <SectionRule num="03" />
       <section id="work" className="relative">
         <p
           aria-hidden
@@ -334,6 +337,7 @@ export default function HomePage() {
       </section>
 
       {/* 04 · About: comes back up out of the tunnel. */}
+      <SectionRule num="04" />
       <section id="about" className="relative">
         <p
           aria-hidden
@@ -396,6 +400,7 @@ export default function HomePage() {
       </section>
 
       {/* 05 · Contact */}
+      <SectionRule num="05" />
       <section id="contact" className="relative overflow-hidden">
         <div className="container-site relative pb-10 pt-20 text-center sm:pt-28">
           <p className="eyebrow !text-sage">05 · Contact</p>
