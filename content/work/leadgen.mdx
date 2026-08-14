@@ -1,40 +1,58 @@
 ---
 title: "Lead generation pipeline"
 kind: "systems"
-summary: "The ~3,900-line Python system that finds OBdesign's clients: scraping, analysis, email discovery, and drafting, instrumented all the way to revenue."
+summary: "The ~3,900-line Python system that finds OBdesign's clients, plus the dashboard I run the whole operation from: scoring, issue detection, outreach, and outcomes tracked to revenue."
 year: "2026"
 timeline: "2026 – present"
 role: "Sole developer & operator"
 stack: ["Python", "Google Maps scraping", "Tavily Search API", "Gmail API", "RDAP"]
+hero: "/images/leadgen/dashboard.webp"
+heroAlt: "The OBdesign leads dashboard: 942 leads with scores, detected issues, and pipeline status"
 order: 2
 ---
 
-OBdesign's clients are small businesses on Vancouver Island, and small businesses don't come to you. The pipeline is the system I built to go to them: it scrapes, qualifies, and drafts so that my only manual job is the judgment call and the send button.
+OBdesign's clients are small businesses on Vancouver Island, and small businesses don't come to you. This is the system I built to go to them. It scrapes, scores, and drafts, so the only thing left for me is the judgment call and the send button.
+
+It has produced most of the client work on this site. Today it holds **942 qualified leads** across the Island, and I run the whole operation from one screen.
 
 ## The pipeline
 
-Five stages, run from the command line:
-
 <Pipeline steps="Scrape: businesses for a region and niche from Google Maps — name, site, phone, reviews | Analyze: visit the site and assess platform, age signals, mobile behaviour, obvious problems. Domain registration comes over RDAP and gets cached, because a 2009 domain still serving a table layout tells you something | Discover: find the owner's real email through the Tavily search API rather than scraping search engines, which block datacentre traffic silently — about 1.4 credits per lead against a monthly quota | Validate: suppression lists (already contacted, chains, wrong niche, asked to be removed), dedupe, and sanity checks before a lead can become an email | Draft: write a personalized first email referencing what the analysis actually found and save it to Gmail via the API. Nothing sends automatically; I read and send every one by hand" />
 
-State lives in flat JSON files under version control: contacted, suppressed, outcomes, removed. Boring, inspectable, and diffable, which matters more than a database when the operator is also the developer.
+The bulk of it is two modules: the pipeline itself, and a separate domain-status checker that does the RDAP lookups and the "is this site actually broken" verification, because that logic got fiddly enough to deserve its own module.
+
+State lives in flat JSON files under version control: contacted, suppressed, outcomes, removed. Boring, inspectable, and diffable, which matters more than a database when the operator is also the developer and every bug costs real outreach.
+
+## The dashboard
+
+Scraping is the easy half. The hard half is deciding who to contact this morning, and that needs a human looking at real signal, fast. So the pipeline writes a self-contained dashboard: one HTML file, no server, no build step, that I open locally and work straight out of.
+
+![The leads dashboard: search, pipeline filters, and every lead scored and tagged with its detected problem](/images/leadgen/dashboard.webp)
+
+Every row is a lead with its **score**, its region, and the specific problem the analyzer found: an expired security certificate, a domain that now resolves to a parking page, a site that takes six seconds to load, a 404, no mobile viewport. Those aren't categories I typed in. They're what the analyzer observed on the live site, and they're the reason the first line of a cold email can be specific instead of generic.
+
+The tabs across the top are the actual pipeline state: **335 ready to draft, 20 drafted, 163 contacted**, and the segments underneath split leads by how they're best reached, including 316 with a phone number and no usable email.
+
+![A single lead: the detected issue, contact routes, the drafted outreach email, and outcome buttons](/images/leadgen/detail.webp)
+
+Opening a lead gives me everything needed to make the call in one place, and then the part that matters most: **outcome buttons**. Replied, won, lost, bounced. That single row of buttons is what turns the whole thing from a mailing list into an instrument.
 
 ## Instrumented to revenue, not to opens
 
-Every send gets an outcome recorded, so the funnel math is real money, not marketing metrics. The numbers that came out surprised me:
+Because every send gets an outcome recorded, the funnel math is real money rather than marketing metrics. The numbers surprised me:
 
 <StatRow stats="~7%: of first cold emails convert to a paying project. Not replies — paying projects | 0: replies from roughly fifty follow-ups, which is why the system no longer drafts them | ~$60: expected value of a single sent email at the studio's average deal size" />
 
-Those three numbers reframed the whole business. The bottleneck was never finding leads, it was sending. And every client the pipeline has ever produced came from a first email, so the follow-up logic was deleted rather than tuned.
+Those three numbers reframed the business. The bottleneck was never finding leads, it was sending. Every client the pipeline has ever produced came from a first email, so the follow-up logic was deleted rather than tuned, which is the sort of decision you can only make with outcome data attached.
 
 ## The bug that taught me the most
 
-The analyzer originally generated a "hook" for each lead: the specific problem with their website that the email would open with. An audit of flagged leads found that **about 97% of those hooks were wrong**. The analyzer was pattern-matching its way into confident claims about sites it hadn't verified, and I nearly sent personalized emails built on invented problems.
+The analyzer originally generated a "hook" for each lead: the specific problem with their website that the email would open with. An audit of flagged leads found that **about 97% of those hooks were wrong**. The analyzer was pattern-matching its way into confident claims about sites it hadn't verified, and I was one send away from emailing local business owners about problems that didn't exist.
 
-The fix was philosophical as much as technical: the drafter may only assert what the analyzer verifiably observed, and anything inferred gets softened or cut. "No website found" still requires human confirmation before it's usable, because a business with only a Facebook page and a business with a site the scraper missed look identical from the data.
+The fix was philosophical as much as technical. The drafter may now only assert what the analyzer verifiably observed; anything inferred gets softened or cut. "No website found" still requires human confirmation, because a business with only a Facebook page and a business whose site the scraper failed to reach look identical in the data.
 
-That rule (claims must trace to evidence) now applies to everything the system writes, and honestly, to everything I write.
+That rule, that a claim has to trace to evidence, is now the thing I check hardest in anything automated I build. It's also why nothing in this system sends on its own.
 
-## Why this project matters to me
+## What I'd change
 
-It's not a portfolio piece that simulates a business problem. It funds my degree. The pipeline found and helped close most of the client work on this site, and its funnel numbers decide how I spend my mornings.
+The flat-file state is at its limit. It's survived 942 leads because a single operator on a single machine never hits a write conflict, but the moment this runs anywhere else it needs a real database and proper migrations. The scoring weights are hand-tuned and would be better learned from the outcome data I'm already collecting, which is the next thing I want to build.
