@@ -131,3 +131,15 @@ test.describe("mobile", () => {
     await expect(page.locator(".scroll-progress")).toBeHidden();
   });
 });
+
+test("desktop shows the full nav rail and no hamburger", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+  // The toggle's display lives in CSS; an unlayered rule once beat
+  // Tailwind's sm:hidden and left a hamburger sitting on the desktop bar.
+  await expect(page.locator(".menu-toggle")).toBeHidden();
+  const rail = page.getByRole("navigation", { name: "Primary" }).first();
+  for (const label of ["home", "expertise", "work", "about", "contact"]) {
+    await expect(rail.getByRole("link", { name: label })).toBeVisible();
+  }
+});

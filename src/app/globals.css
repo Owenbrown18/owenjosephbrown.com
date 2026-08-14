@@ -255,32 +255,34 @@
   padding-block: clamp(7rem, 13vw, 12rem);
 }
 
-/* Mobile menu button: two bars that cross into an X. */
-.menu-toggle {
-  position: relative;
-  display: flex;
-  height: 2.75rem;
-  width: 2.75rem;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin-right: -0.5rem;
-}
-.menu-toggle > span {
-  display: block;
-  height: 1.5px;
-  width: 22px;
-  background: rgba(255, 255, 255, 0.85);
-  transition:
-    transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.2s ease;
-}
-.menu-toggle[data-open] > span:first-child {
-  transform: translateY(3.75px) rotate(45deg);
-}
-.menu-toggle[data-open] > span:last-child {
-  transform: translateY(-3.75px) rotate(-45deg);
+@layer components {
+  /* Mobile menu button: two bars that cross into an X. */
+  .menu-toggle {
+    position: relative;
+    display: flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-right: -0.5rem;
+  }
+  .menu-toggle > span {
+    display: block;
+    height: 1.5px;
+    width: 22px;
+    background: rgba(255, 255, 255, 0.85);
+    transition:
+      transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s ease;
+  }
+  .menu-toggle[data-open] > span:first-child {
+    transform: translateY(3.75px) rotate(45deg);
+  }
+  .menu-toggle[data-open] > span:last-child {
+    transform: translateY(-3.75px) rotate(-45deg);
+  }
 }
 
 /* Scroll cue: a hairline with a dot that falls down it, so the hero says
