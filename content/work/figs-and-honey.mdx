@@ -1,41 +1,64 @@
 ---
 title: "Figs & Honey"
 kind: "client"
-summary: "Replacing a hacked, decade-old WordPress site with a nine-page custom build: booking, a shop, and a journal the owner runs herself."
+summary: "A compromised WordPress site replaced with a ten-route Next.js build wiring four third-party systems together, delivered across a six-week engagement with a lot of moving scope."
 year: "2026"
-timeline: "6 weeks"
-role: "Design, build, integrations, deploy"
-stack: ["Next.js", "TypeScript", "Keystatic CMS", "Square", "Mailchimp", "Turnstile"]
+timeline: "6 weeks · signed June 25, live August 8"
+role: "Design, build, integrations, DNS cutover"
+stack: ["Next.js 16", "React 19", "TypeScript", "Tailwind 4", "Keystatic", "Square", "Mailchimp", "Turnstile"]
 liveUrl: "https://figsandhoney.com"
 hero: "/images/work/figs-and-honey.webp"
 heroAlt: "Figs & Honey website hero on desktop"
 order: 4
 ---
 
-Figs & Honey is a Salt Spring Island spa run by a practitioner with over twenty years in the field. Her website hadn't kept pace: an aging WordPress build that looked dated and, worse, had been quietly compromised. Spam links were being injected into her contact page without her knowledge.
+Figs & Honey is a Salt Spring Island spa run by a practitioner with twenty-five years in the field, plus a winter studio in Victoria. It's the largest build I've delivered, and the one that taught me the most about running an engagement rather than just writing code.
 
-![The previous Figs & Honey WordPress site](/images/work/figs-and-honey/old-site.webp)
+## Replace, don't remediate
 
-Cleaning a hacked WordPress install is a gamble that it stays clean. We replaced the platform entirely instead: a static-rendered Next.js build has no plugin surface for the old problems to crawl back through.
+The existing site was a dated WordPress install, and a friend of the owner who audits systems had found something worse: it was **compromised**, quietly injecting spam links into the contact page.
 
-## Nine pages, three integrations, one editor
+That's a fork in the road. Cleaning a hacked WordPress install means removing what you can find, patching, and then hoping. You inherit the plugin surface, the unknown backdoor, and the responsibility. I chose to replace the platform outright: a fresh statically-rendered Next.js build has no plugin surface for the old problems to crawl back through, and the compromise couldn't follow it.
 
-The site covers everything the business actually does: treatments, weddings, retreats, coaching, gift certificates, an online shop, a journal, and contact. The interesting part is how much of it the owner operates herself.
+![The previous compromised WordPress site](/images/work/figs-and-honey/old-site.webp)
 
-![The treatments page with Square booking](/images/work/figs-and-honey/treatments.webp)
+That decision cost more up front than a cleanup would have. It was still the right call, because the alternative was signing up to guarantee a system I hadn't built and couldn't fully see.
 
-- **Booking** goes straight into Square Appointments. One calendar across every service, so double-bookings can't happen. The site links deep into specific services rather than dumping visitors at a generic booking page.
-- **The shop** is a Keystatic collection: each product is an entry with a photo, description, price, and a Square checkout link. Adding a new balm is a CMS edit, not a developer request.
-- **The journal** is a posts collection with the same editing flow, and Mailchimp signup grows her list from the site.
-- **Forms** are spam-protected properly: honeypot plus Cloudflare Turnstile verified server-side, which matters on a site whose previous life involved injected spam.
+## Four systems, none of them mine
 
-This build carries the largest Keystatic schema I've shipped (a 673-line config), which taught me how to structure singletons and collections so the CMS editor reads in the same order as the page. Numbered section labels, `itemLabel` on every array so entries read by name, and seeded defaults so no field ever opens blank.
+The interesting engineering here isn't the pages, it's the integration surface. A one-person spa needs booking, payments, a mailing list, and spam protection, and none of those should be things I build or hold.
 
-![The Figs & Honey online shop](/images/work/figs-and-honey/shop.webp)
+<Pipeline steps="Booking: Square Appointments, embedded, reserve-only — one calendar behind every treatment so double-booking is structurally impossible rather than merely unlikely | Payments: each shop product carries a Square payment link, so checkout happens on Square's hosted page and no card data ever touches the site | Content: Keystatic, a git-based CMS — the journal and every shop item are entries the owner edits herself | Mailing list: Mailchimp embed, because she already used it and switching tools is a cost with no benefit | Forms: Formspree with a honeypot and Cloudflare Turnstile verified server-side, on a site whose previous life involved injected spam" />
 
-## The result
+The rule I held to: **the site owns presentation, the specialists own the risk.** Product descriptions and photography live in the CMS where they're part of the design; only the checkout hands off to Square. That keeps PCI scope at zero, and it means a payment provider change is a link swap rather than a rebuild.
 
-figsandhoney.com runs fast and clean with none of the old platform's baggage: no plugins to patch, no compromised code, and forms that don't leak spam. The owner writes her own journal posts, stocks her own shop, and takes bookings through one calendar.
+![The treatments page, with Square booking behind every service](/images/work/figs-and-honey/booking.webp)
+
+The shop is the same shape. Adding a product is a CMS entry with a photo, description, price and a checkout link, so she stocks her own shelves without a developer in the loop.
+
+![The shop, with every product editable by the owner](/images/work/figs-and-honey/shop-live.webp)
+
+## Two bugs worth writing down
+
+**A logo that looked clipped, and wasn't.** The wordmark rendered with its edges shaved. The obvious suspect was CSS clipping in the nav, and the obvious fix would have been padding until it looked fine. Measuring the source file instead showed the ink ran off all four edges of the artwork itself, 26px on the left, 16px at the bottom, with the flourish ending in a flat cut. Nothing in my code was wrong. The asset was. I asked for a clean export, cropped it to the artwork plus 4% breathing room, and produced two recolours for light and dark grounds. Padding would have shipped a permanently lopsided logo and hidden the real cause.
+
+**A layout bug that wasn't where it looked.** Body copy in one section appeared "inconsistently cut off". It was measurable rather than a matter of taste: within the same column, the label, heading and buttons ran at 697px while the body and credentials ran at 448px, so the paragraph stopped 250px short of everything around it. The same root cause turned up in the header: `max-width` and horizontal padding on the *same element*, so border-box sizing ate the padding out of the content width and left the logo sitting 24px inboard of every section below it. Moving padding to a wrapper fixed the alignment sitewide. When I widened the body I checked the cost rather than just closing the gap: lines land at 60–71 characters, comfortably inside the readable range.
+
+## Managing scope, which was the actual hard part
+
+Six weeks, and the brief moved throughout: a shop appeared mid-build, pages were renamed, the entire contact strategy changed when she told me she could no longer take phone calls, which meant sweeping about ten places across the site where a phone number or a "call" was implied.
+
+Two things kept that from becoming chaos.
+
+**Build once, use everywhere.** When gift certificates needed to appear on both the home page and the shop, I extracted a single component rather than copying the block. Two copies drift; one can't. That sounds obvious until you're on revision nine and the copy in one place is a month behind the other.
+
+**Route enquiries to one place.** Contact buttons originally named channels, and some fired the visitor's mail client, where a message can silently die. Everything now goes to a form that routes by reason. The deliberate exception is booking, which still goes straight to Square, because booking and enquiring are different intents and collapsing them would cost her appointments.
+
+The site went live August 8, on a ten-route build she runs herself.
+
+## What I'd do differently
+
+I made go-live conditional on the client being **"100% happy"**. That sounds generous and it's a mistake, because it has no definition, so the engagement has no defined end and the last 10% can stretch indefinitely. Every job since uses an objective trigger instead: an agreed scope, a fixed revision count, and completion measured against the brief rather than a feeling. Good work still gets done; it just gets done inside a boundary both sides can point at.
 
 > "Owen was brilliant. He held my hand and was incredibly patient and helpful. He built two wonderful websites for me with a shop on and booking system too."
 >
