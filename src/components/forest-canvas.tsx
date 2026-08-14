@@ -114,14 +114,19 @@ void main() {
   float glow = exp(-distance(p, m) * 3.2);
   col += SAGE * glow * 0.07;
 
-  // The grid is pinned to the viewport and a fixed size. Both the
-  // per-section cell resize and the scroll drift are gone: the resize read
-  // as the whole field zooming, and any scroll-linked offset has to be
-  // pixel-snapped to avoid shimmer, which makes it step visibly. Static is
-  // what the premium references do, and it cannot stutter.
+  // Pinned to the viewport, never drifting: any scroll-linked offset has
+  // to be pixel-snapped to avoid shimmer, and that snapping is what made
+  // it step visibly.
+  // The cell does breathe, but only just — 24 to 22px across the work,
+  // and only on the landing page (u_tunnel). The old 26-to-17 range was
+  // wide enough to read as the whole field zooming.
+  float inWork = smoothstep(0.18, 0.40, u_scroll)
+               * (1.0 - smoothstep(0.58, 0.80, u_scroll));
+  float cell = mix(24.0, 22.0, inWork * u_tunnel);
+
   vec2 gpx = gl_FragCoord.xy;
-  float minor = gridLines(gpx, 24.0 * u_dpr, 0.75 * u_dpr);
-  float major = gridLines(gpx, 120.0 * u_dpr, 1.1 * u_dpr);
+  float minor = gridLines(gpx, cell * u_dpr, 0.75 * u_dpr);
+  float major = gridLines(gpx, cell * 5.0 * u_dpr, 1.1 * u_dpr);
 
   // Full-bleed: the grid carries all the way to the edges. Only the
   // faintest falloff into the far corners so it doesn't read as a decal,
