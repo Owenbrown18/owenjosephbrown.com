@@ -249,33 +249,6 @@
   }
 }
 
-/* Diagonal hatch in the dead gutters either side of the content column.
-   Marks the area outside the page the way a technical drawing marks its
-   margin. Only visible once the viewport is wider than the column. */
-.gutter-hatch {
-  position: fixed;
-  inset: 0;
-  z-index: -4;
-  pointer-events: none;
-  background-image: repeating-linear-gradient(
-    315deg,
-    rgba(123, 164, 158, 0.07) 0 1px,
-    transparent 0 6px
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    black 0 calc(50% - 620px),
-    transparent calc(50% - 620px) calc(50% + 620px),
-    black calc(50% + 620px) 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    black 0 calc(50% - 620px),
-    transparent calc(50% - 620px) calc(50% + 620px),
-    black calc(50% + 620px) 100%
-  );
-}
-
 /* Scroll progress hairline: the one piece of persistent chrome, so you
    always know how far through the page you are. Compositor-only. */
 .scroll-progress {

@@ -96,7 +96,9 @@ void main() {
   vec2 orb1 = vec2(0.8 * aspect, 0.68)
     + vec2(sin(t2 * 0.7), cos(t2 * 0.45)) * 0.14;
   float g1 = exp(-distance(p, orb1) * 4.5);
-  col += vec3(0.62, 0.45, 0.26) * g1 * 0.22;
+  // Warm light, kept to a whisper: at full strength it read as a yellow
+  // blob sitting on the page rather than depth in the field.
+  col += vec3(0.52, 0.42, 0.30) * g1 * 0.05;
 
   vec2 orb2 = vec2(0.3 * aspect, 0.3)
     + vec2(cos(t2 * 0.5 + 2.0), sin(t2 * 0.65 + 1.0)) * 0.18;
@@ -120,10 +122,10 @@ void main() {
   float minor = gridLines(gpx, 24.0 * u_dpr, 0.75 * u_dpr);
   float major = gridLines(gpx, 120.0 * u_dpr, 1.1 * u_dpr);
 
-  // Kill the grid well before the edges. Every production grid worth
-  // copying is masked off-centre so it never meets a viewport boundary —
-  // an edge-to-edge grid is the loudest "tiled background" tell.
-  float mask = 1.0 - smoothstep(0.28, 0.92, d);
+  // Full-bleed: the grid carries all the way to the edges. Only the
+  // faintest falloff into the far corners so it doesn't read as a decal,
+  // but never enough to look cut off.
+  float mask = 1.0 - 0.15 * d;
   float spot = exp(-distance(p, m) * 2.4);
   float quiet = 1.0 - 0.45 * smoothstep(0.34, 0.5, u_scroll)
                     * smoothstep(0.72, 0.56, u_scroll); // calmer in the tunnel

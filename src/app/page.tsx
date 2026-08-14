@@ -66,7 +66,6 @@ export default function HomePage() {
         <ForestCanvas />
       </div>
       <div aria-hidden className="page-grade" />
-      <div aria-hidden className="gutter-hatch" />
       <div aria-hidden className="grain" />
       <div aria-hidden className="scroll-progress" />
 
