@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Fraunces, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { Atmosphere } from "@/components/atmosphere";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -63,6 +64,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <Atmosphere />
         <Header />
         <main id="main">{children}</main>
         <Footer />

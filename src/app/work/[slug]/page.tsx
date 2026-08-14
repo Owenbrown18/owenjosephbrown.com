@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Mdx } from "@/components/mdx";
 import { getWorkEntries, getWorkEntry, kindLabel } from "@/lib/content";
+import { PageHeader } from "@/components/page-header";
 
 type Params = { slug: string };
 
@@ -40,45 +41,34 @@ export default async function WorkEntryPage({
   const next = entries[(index + 1) % entries.length];
 
   return (
-    <article className="container-site pt-32 pb-16 sm:pt-36 sm:pb-24">
-      <header className="max-w-[52rem]">
-        <p className="eyebrow">
-          {kindLabel[entry.kind]} · {entry.year}
-        </p>
-        <h1 className="mt-4 text-[clamp(2.75rem,7vw,5rem)]">{entry.title}</h1>
-        <p className="mt-5 max-w-[52ch] text-lg text-fg-muted">
-          {entry.summary}
-        </p>
-      </header>
-
-      <dl className="mt-10 grid max-w-[52rem] grid-cols-2 gap-x-8 gap-y-5 border-y border-line py-6 text-sm sm:grid-cols-4">
-        <div>
-          <dt className="text-xs text-fg-faint">Role</dt>
-          <dd className="mt-1 text-fg">{entry.role}</dd>
-        </div>
-        <div>
-          <dt className="text-xs text-fg-faint">Timeline</dt>
-          <dd className="mt-1 text-fg">{entry.timeline}</dd>
-        </div>
-        <div className="col-span-2">
-          <dt className="text-xs text-fg-faint">Stack</dt>
-          <dd className="mt-1 text-fg">{entry.stack.join(" · ")}</dd>
-        </div>
-        {entry.liveUrl && (
-          <div className="col-span-2 sm:col-span-4">
-            <dt className="sr-only">Live site</dt>
-            <dd>
-              <a
-                href={entry.liveUrl}
-                rel="noopener"
-                className="link-underline font-medium text-fg"
-              >
-                {entry.liveUrl.replace("https://", "")} ↗
-              </a>
-            </dd>
-          </div>
-        )}
-      </dl>
+    <article className="container-site pb-24 pt-36 sm:pt-40">
+      <PageHeader
+        eyebrow={`${kindLabel[entry.kind]} · ${entry.year}`}
+        title={entry.title}
+        summary={entry.summary}
+        meta={[
+          { label: "Role", value: entry.role },
+          { label: "Timeline", value: entry.timeline },
+          { label: "Stack", value: entry.stack.join(" · "), wide: true },
+          ...(entry.liveUrl
+            ? [
+                {
+                  label: "Live",
+                  wide: true,
+                  value: (
+                    <a
+                      href={entry.liveUrl}
+                      rel="noopener"
+                      className="link-underline font-medium text-fg"
+                    >
+                      {entry.liveUrl.replace("https://", "")} ↗
+                    </a>
+                  ),
+                },
+              ]
+            : []),
+        ]}
+      />
 
       {entry.hero && (
         <div className="relative mt-12 aspect-[16/9] max-w-[52rem] overflow-hidden border border-line">

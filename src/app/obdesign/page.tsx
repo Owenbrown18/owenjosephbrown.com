@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { clientSites } from "@/lib/sites";
+import { PageHeader } from "@/components/page-header";
 
 export const metadata: Metadata = {
   title: "OBdesign — the studio",
@@ -11,13 +12,36 @@ export const metadata: Metadata = {
 
 export default function ObdesignPage() {
   return (
-    <div className="container-site pt-32 pb-16 sm:pt-36 sm:pb-24">
-      <header className="max-w-[52rem]">
-        <div className="sage-bar mb-7" />
-        <p className="eyebrow">The studio · June 2025 – present</p>
-        <h1 className="mt-4 text-[clamp(2.75rem,7vw,5rem)]">
-          OBdesign<span className="text-accent">.</span>
-        </h1>
+    <div className="container-site pb-24 pt-36 sm:pt-40">
+      <PageHeader
+        eyebrow="The studio · June 2025 – present"
+        title={
+          <>
+            OBdesign<span className="text-accent">.</span>
+          </>
+        }
+        meta={[
+          { label: "Role", value: "Founder & web developer" },
+          { label: "Sites live", value: "Nine, all in production" },
+          {
+            label: "Stack",
+            value: "Next.js · Astro · TypeScript · Keystatic",
+            wide: true,
+          },
+          {
+            label: "Studio",
+            value: (
+              <a
+                href="https://www.obwebdesign.ca"
+                rel="noopener"
+                className="link-underline font-medium text-fg"
+              >
+                obwebdesign.ca ↗
+              </a>
+            ),
+          },
+        ]}
+      >
         <div className="mt-6 max-w-[58ch] space-y-5 text-fg-muted">
           <p>
             OBdesign is my one-person web studio. Every site below is a real
@@ -37,20 +61,7 @@ export default function ObdesignPage() {
             breaks.
           </p>
         </div>
-        <p className="mt-5 text-sm">
-          <a
-            href="https://www.obwebdesign.ca"
-            rel="noopener"
-            className="link-underline text-fg"
-          >
-            obwebdesign.ca
-          </a>
-          <span className="mx-3 text-fg-faint">·</span>
-          <Link href="/#work" className="link-underline text-fg">
-            Back to the overview
-          </Link>
-        </p>
-      </header>
+      </PageHeader>
 
       <div className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2">
         {clientSites.map((site, i) => (

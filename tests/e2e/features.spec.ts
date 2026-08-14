@@ -84,9 +84,16 @@ test("reduced motion still shows all home content", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /^grain$/i })).toBeVisible();
 });
 
-test("resume page carries the real facts", async ({ page }) => {
+test("resume page carries identity and a route to the document", async ({
+  page,
+}) => {
   await page.goto("/resume");
-  await expect(page.getByText("University of Victoria")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    /owen brown/i,
+  );
+  // The co-op ask has to survive on the page itself, not only inside the
+  // PDF, since nothing in the embed is crawlable or readable by a screen
+  // reader.
   await expect(page.getByText(/Spring 2027 co-op/i).first()).toBeVisible();
-  await expect(page.getByText("OBdesign").first()).toBeVisible();
+  await expect(page.getByText(/curl owenjosephbrown\.com/i)).toBeVisible();
 });

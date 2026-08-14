@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ForestCanvas } from "@/components/forest-canvas";
 import { SiteMarquee } from "@/components/site-marquee";
 import { PhoneFrame } from "@/components/phone-frame";
 import {
@@ -62,13 +61,7 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
 
-      {/* The forest field runs behind the entire page. */}
-      <div className="forest-ground fixed inset-0 -z-10">
-        <ForestCanvas />
-      </div>
       <div aria-hidden className="page-grade" />
-      <div aria-hidden className="grain" />
-      <div aria-hidden className="scroll-progress" />
 
       {/* 01 · Hero */}
       <section id="home" className="relative">
