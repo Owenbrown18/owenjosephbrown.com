@@ -8,17 +8,20 @@ import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  axes: ["opsz", "wdth"],
+  // opsz stays: dropping it changes the glyph widths enough to wrap the
+  // hero name onto two lines. wdth is genuinely unused, so it goes.
+  axes: ["opsz"],
   variable: "--font-bricolage",
   display: "swap",
 });
 
 // Fraunces exists here for exactly one job: the OBdesign wordmark, which
 // per brand spec is never set in another face.
+// Fraunces exists for exactly one word, the OBdesign wordmark. A variable
+// axis costs ~128KB for that; a single static weight is a fraction of it.
 const fraunces = Fraunces({
   subsets: ["latin"],
-  axes: ["opsz"],
-  weight: "variable",
+  weight: "700",
   variable: "--font-fraunces",
   display: "swap",
 });

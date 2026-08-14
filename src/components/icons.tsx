@@ -57,10 +57,13 @@ export function ArrowUpRightIcon({ className = "h-3.5 w-3.5" }: IconProps) {
  */
 export function ObdesignWordmark({ className = "" }: IconProps) {
   return (
+    // Explicit colours rather than a relative opacity: inside an already
+    // faded parent (the footer, for one) a nested opacity multiplies down
+    // to ~25% and fails contrast outright.
     <span className={`font-wordmark font-bold ${className}`}>
-      OB
-      <span className="opacity-45">design</span>
-      <span className="text-accent opacity-100">.</span>
+      <span className="text-white/90">OB</span>
+      <span className="text-white/60">design</span>
+      <span className="text-accent">.</span>
     </span>
   );
 }
