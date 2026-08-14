@@ -356,11 +356,7 @@ export default function HomePage() {
                 alt="Owen Brown"
                 width={760}
                 height={950}
-                className="relative z-10 aspect-[4/5] w-full rounded-3xl object-cover shadow-[0_24px_64px_rgba(0,0,0,0.45)]"
-              />
-              <div
-                aria-hidden
-                className="absolute -bottom-5 -right-5 z-0 h-[65%] w-[65%] rounded-3xl border-2 border-sage/40 bg-sage/10"
+                className="aspect-[4/5] w-full border border-white/15 object-cover shadow-2xl"
               />
             </div>
             <div className="reveal-up">
