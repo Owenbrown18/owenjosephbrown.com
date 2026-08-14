@@ -70,8 +70,11 @@ export default function HomePage() {
             <p className="eyebrow !text-sage">
               Salt Spring Island, BC · UVic software engineering
             </p>
-            <h1 className="mx-auto mt-7 text-[clamp(3.5rem,13vw,11rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-white/95">
-              Owen Brown
+            <h1 className="hero-name mx-auto mt-7 text-[clamp(3.5rem,13vw,11rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-white/95">
+              {/* Split so the two words arrive on a stagger. The full name
+                  stays intact for screen readers and copy-paste. */}
+              <span className="hero-word">Owen</span>{" "}
+              <span className="hero-word">Brown</span>
             </h1>
             <p className="mt-7 text-[clamp(0.78rem,1.7vw,1rem)] font-medium uppercase tracking-[0.3em] text-white/70">
               Software engineer, web & app developer.
@@ -82,6 +85,18 @@ export default function HomePage() {
           </div>
 
           <div className="hero-parallax absolute inset-x-0 bottom-10">
+            <a
+              href="#expertise"
+              className="scroll-cue group mx-auto mb-9 flex w-fit flex-col items-center gap-2"
+              aria-label="Scroll to my expertise"
+            >
+              <span className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white/35 transition-colors group-hover:text-white/70">
+                Scroll
+              </span>
+              <span aria-hidden className="scroll-cue-track">
+                <span className="scroll-cue-dot" />
+              </span>
+            </a>
             <p className="eyebrow !text-white/40">
               Real sites for real businesses
             </p>

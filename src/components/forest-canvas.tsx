@@ -26,6 +26,7 @@ uniform float u_time;
 uniform vec2 u_pointer; // 0..1, y up
 uniform float u_scroll; // 0..1 page progress
 uniform float u_dpr;    // device pixels per CSS pixel
+uniform float u_tunnel; // 1 on the landing page, 0 elsewhere
 // Viewport-space y (0 bottom .. 1 top) of each section break currently on
 // screen. -1 means "not visible", so it contributes nothing.
 uniform float u_seams[4];
@@ -113,32 +114,26 @@ void main() {
   float glow = exp(-distance(p, m) * 3.2);
   col += SAGE * glow * 0.07;
 
-  // The grid: a drafting plane sitting behind the page. It drifts with
-  // scroll so it reads as a real backdrop rather than a decal stuck to
-  // the glass, and it is nearly invisible until the pointer passes over
-  // it — the reveal is the effect, not the grid itself.
-  // The scroll offset is floored to a whole device pixel: a fractional
-  // offset makes the whole grid crawl between pixel rows as you scroll,
-  // which reads as shimmer. Cells are 48/240 CSS px so they land on the
-  // 8px spacing scale the layout is built from.
-  // The grid breathes by section: it tightens through the work, where the
-  // page is densest, and opens back up either side. You don't notice it
-  // directly; moving between sections just feels like changing rooms.
-  float inWork = smoothstep(0.18, 0.36, u_scroll)
-               * (1.0 - smoothstep(0.60, 0.78, u_scroll));
-  float cell = mix(26.0, 17.0, inWork);
-
-  vec2 gpx = gl_FragCoord.xy - vec2(0.0, floor(u_scroll * u_res.y * 0.6));
-  float minor = gridLines(gpx, cell * u_dpr, 0.75 * u_dpr);
-  float major = gridLines(gpx, cell * 5.0 * u_dpr, 1.1 * u_dpr);
+  // The grid is pinned to the viewport and a fixed size. Both the
+  // per-section cell resize and the scroll drift are gone: the resize read
+  // as the whole field zooming, and any scroll-linked offset has to be
+  // pixel-snapped to avoid shimmer, which makes it step visibly. Static is
+  // what the premium references do, and it cannot stutter.
+  vec2 gpx = gl_FragCoord.xy;
+  float minor = gridLines(gpx, 24.0 * u_dpr, 0.75 * u_dpr);
+  float major = gridLines(gpx, 120.0 * u_dpr, 1.1 * u_dpr);
 
   // Full-bleed: the grid carries all the way to the edges. Only the
   // faintest falloff into the far corners so it doesn't read as a decal,
   // but never enough to look cut off.
   float mask = 1.0 - 0.15 * d;
   float spot = exp(-distance(p, m) * 2.4);
-  float quiet = 1.0 - 0.45 * smoothstep(0.34, 0.5, u_scroll)
-                    * smoothstep(0.72, 0.56, u_scroll); // calmer in the tunnel
+  // Only the landing page has a tunnel to be calmer inside. On a project
+  // page this would just read as the grid dimming for no reason, so it is
+  // switched off entirely there.
+  float quiet = 1.0 - u_tunnel * 0.45
+                    * smoothstep(0.34, 0.5, u_scroll)
+                    * smoothstep(0.72, 0.56, u_scroll);
 
   col += SAGE * minor * (0.030 + 0.075 * spot) * mask * quiet;
   col += SAGE * major * (0.050 + 0.110 * spot) * mask * quiet;
@@ -234,6 +229,10 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     const uScroll = gl.getUniformLocation(program, "u_scroll");
     const uDpr = gl.getUniformLocation(program, "u_dpr");
     const uSeams = gl.getUniformLocation(program, "u_seams[0]");
+    const uTunnel = gl.getUniformLocation(program, "u_tunnel");
+    // The page-grade layer only exists on the landing page, so it is
+    // the honest marker for "this page has a tunnel".
+    const tunnel = document.querySelector(".page-grade") ? 1 : 0;
 
     // Section breaks feed the horizon seams. Their document positions are
     // measured once (and on resize) rather than every frame, so the loop
@@ -289,7 +288,6 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
 
     let raf = 0;
     let running = false;
-    let last = 0;
     const start = performance.now();
 
     let easedScroll = 0;
@@ -299,17 +297,16 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       return max > 0 ? window.scrollY / max : 0;
     };
 
-    // The drift is slow; 30fps is indistinguishable and halves the cost.
-    const frame = (now: number) => {
+    // Native frame rate: everything moving is a smooth gradient, and a
+    // half-rate gate showed up as stepping on the slow drifts.
+    const frame = () => {
       raf = 0;
       if (!running) return;
       raf = requestAnimationFrame(frame);
-      if (now - last < 33) return;
-      last = now;
       resize();
-      eased.x += (target.x - eased.x) * 0.09;
-      eased.y += (target.y - eased.y) * 0.09;
-      easedScroll += (scrollProgress() - easedScroll) * 0.12;
+      eased.x += (target.x - eased.x) * 0.05;
+      eased.y += (target.y - eased.y) * 0.05;
+      easedScroll += (scrollProgress() - easedScroll) * 0.07;
       gl.uniform2f(uRes, width, height);
       gl.uniform1f(uTime, (performance.now() - start) / 1000);
       gl.uniform2f(uPointer, eased.x, eased.y);
@@ -317,6 +314,7 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       gl.uniform1f(uDpr, dpr);
       updateSeams();
       gl.uniform1fv(uSeams, seams);
+      gl.uniform1f(uTunnel, tunnel);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
@@ -341,6 +339,7 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     gl.uniform1f(uScroll, 0);
     gl.uniform1f(uDpr, dpr);
     gl.uniform1fv(uSeams, seams);
+    gl.uniform1f(uTunnel, tunnel);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 
     // Layout changes move the breaks; re-measure rather than trusting the
