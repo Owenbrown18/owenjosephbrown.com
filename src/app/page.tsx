@@ -197,6 +197,7 @@ export default function HomePage() {
         <div className="container-site mt-8 space-y-4 sm:hidden">
           <Image
             src="/images/work/grain-construction.webp"
+            sizes="(min-width: 640px) 1px, 100vw"
             alt="Grain Construction website"
             width={1200}
             height={750}
@@ -204,6 +205,7 @@ export default function HomePage() {
           />
           <Image
             src="/images/work/figs-and-honey.webp"
+            sizes="(min-width: 640px) 1px, 100vw"
             alt="Figs & Honey website"
             width={900}
             height={563}
@@ -220,6 +222,7 @@ export default function HomePage() {
           <div className="parallax-a absolute left-[3%] top-[8%] w-[54%] border border-white/15 shadow-2xl">
             <Image
               src="/images/work/grain-construction.webp"
+              sizes="(min-width: 640px) 54vw, 1px"
               alt="Grain Construction website"
               width={1200}
               height={750}
@@ -229,6 +232,7 @@ export default function HomePage() {
           <div className="parallax-b absolute right-[4%] top-[24%] z-10 w-[38%] border border-white/15 shadow-2xl">
             <Image
               src="/images/work/figs-and-honey.webp"
+              sizes="(min-width: 640px) 38vw, 1px"
               alt="Figs & Honey website"
               width={900}
               height={563}
@@ -238,6 +242,7 @@ export default function HomePage() {
           <div className="parallax-a absolute bottom-0 left-[32%] w-[32%] border border-white/15 shadow-2xl">
             <Image
               src="/images/work/daves-bakery.webp"
+              sizes="(min-width: 640px) 32vw, 1px"
               alt="Daves' Bakery website"
               width={900}
               height={563}
@@ -292,6 +297,7 @@ export default function HomePage() {
                 <PhoneFrame>
                   <Image
                     src="/images/grain/home_roll.webp"
+                    sizes="(min-width: 768px) 180px, 30vw"
                     alt="grain home screen with an active roll"
                     width={260}
                     height={563}
@@ -303,6 +309,7 @@ export default function HomePage() {
                 <PhoneFrame>
                   <Image
                     src="/images/grain/new_roll_qr.webp"
+                    sizes="(min-width: 768px) 180px, 30vw"
                     alt="A roll's QR share code"
                     width={260}
                     height={563}
@@ -314,6 +321,7 @@ export default function HomePage() {
                 <PhoneFrame>
                   <Image
                     src="/images/grain/waiting.webp"
+                    sizes="(min-width: 768px) 180px, 30vw"
                     alt="The waiting room before a roll is developed"
                     width={260}
                     height={563}
@@ -371,6 +379,7 @@ export default function HomePage() {
               <div className="parallax-b overflow-hidden border border-white/15 shadow-2xl">
                 <Image
                   src="/images/leadgen/dashboard.webp"
+                  sizes="(min-width: 1280px) 560px, (min-width: 768px) 46vw, 100vw"
                   alt="The leads dashboard: every lead scored and tagged with the problem found on its site"
                   width={1500}
                   height={940}
@@ -380,6 +389,7 @@ export default function HomePage() {
               <div className="parallax-a relative z-10 -mt-14 ml-auto w-[62%] overflow-hidden border border-white/15 shadow-2xl sm:-mt-20">
                 <Image
                   src="/images/leadgen/detail.webp"
+                  sizes="(min-width: 1280px) 350px, (min-width: 768px) 29vw, 62vw"
                   alt="A single lead: detected issue, contact routes, drafted email, and outcome buttons"
                   width={1500}
                   height={940}
@@ -412,6 +422,7 @@ export default function HomePage() {
             <div className="reveal-up relative max-w-[380px]">
               <Image
                 src="/images/about/owen-brown.jpg"
+                sizes="(min-width: 768px) 380px, 100vw"
                 alt="Owen Brown"
                 width={760}
                 height={950}

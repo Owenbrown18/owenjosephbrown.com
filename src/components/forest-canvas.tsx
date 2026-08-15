@@ -198,224 +198,250 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let reducedMotion = motionQuery.matches;
+    // Everything below — context creation, shader compile, first draw —
+    // waits for idle. On a throttled phone this work used to land inside
+    // the hydration burst and was the biggest single block of main-thread
+    // time on the page; the .forest-ground CSS gradient underneath covers
+    // the gap, so deferring costs nothing visually.
+    let cleanup: (() => void) | undefined;
+    let cancelled = false;
+    // Safari shipped requestIdleCallback late; the timeout fallback keeps
+    // the same deferral there.
+    const ric =
+      typeof window.requestIdleCallback === "function"
+        ? window.requestIdleCallback.bind(window)
+        : null;
+    const idleId = ric
+      ? ric(() => (cleanup = init()), { timeout: 2000 })
+      : window.setTimeout(() => (cleanup = init()), 200);
 
-    const gl =
-      canvas.getContext("webgl", { antialias: false, alpha: false }) ??
-      canvas.getContext("experimental-webgl", {
-        antialias: false,
-        alpha: false,
-      });
-    if (!(gl instanceof WebGLRenderingContext)) return;
+    const init = (): (() => void) | undefined => {
+      if (cancelled || !canvas) return;
 
-    // A software rasterizer would burn the main thread on every frame;
-    // the CSS gradient underneath is the better experience there.
-    const dbg = gl.getExtension("WEBGL_debug_renderer_info");
-    if (dbg) {
-      const renderer = String(
-        gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) ?? "",
+      const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      let reducedMotion = motionQuery.matches;
+
+      const gl =
+        canvas.getContext("webgl", { antialias: false, alpha: false }) ??
+        canvas.getContext("experimental-webgl", {
+          antialias: false,
+          alpha: false,
+        });
+      if (!(gl instanceof WebGLRenderingContext)) return;
+
+      // A software rasterizer would burn the main thread on every frame;
+      // the CSS gradient underneath is the better experience there.
+      const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+      if (dbg) {
+        const renderer = String(
+          gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) ?? "",
+        );
+        if (/swiftshader|llvmpipe|software/i.test(renderer)) return;
+      }
+
+      const vs = compile(gl, gl.VERTEX_SHADER, VERT);
+      const fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);
+      if (!vs || !fs) return;
+      const program = gl.createProgram();
+      if (!program) return;
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+      gl.useProgram(program);
+
+      const quad = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array([-1, -1, 3, -1, -1, 3]),
+        gl.STATIC_DRAW,
       );
-      if (/swiftshader|llvmpipe|software/i.test(renderer)) return;
-    }
+      const aPos = gl.getAttribLocation(program, "a_pos");
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
-    const vs = compile(gl, gl.VERTEX_SHADER, VERT);
-    const fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);
-    if (!vs || !fs) return;
-    const program = gl.createProgram();
-    if (!program) return;
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
-    gl.useProgram(program);
+      const uRes = gl.getUniformLocation(program, "u_res");
+      const uTime = gl.getUniformLocation(program, "u_time");
+      const uPointer = gl.getUniformLocation(program, "u_pointer");
+      const uScroll = gl.getUniformLocation(program, "u_scroll");
+      const uDpr = gl.getUniformLocation(program, "u_dpr");
+      const uSeams = gl.getUniformLocation(program, "u_seams[0]");
+      const uTunnel = gl.getUniformLocation(program, "u_tunnel");
+      // The page-grade layer only exists on the landing page, so it is
+      // the honest marker for "this page has a tunnel".
+      let tunnel = document.querySelector(".page-grade") ? 1 : 0;
 
-    const quad = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 3, -1, -1, 3]),
-      gl.STATIC_DRAW,
-    );
-    const aPos = gl.getAttribLocation(program, "a_pos");
-    gl.enableVertexAttribArray(aPos);
-    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-    const uRes = gl.getUniformLocation(program, "u_res");
-    const uTime = gl.getUniformLocation(program, "u_time");
-    const uPointer = gl.getUniformLocation(program, "u_pointer");
-    const uScroll = gl.getUniformLocation(program, "u_scroll");
-    const uDpr = gl.getUniformLocation(program, "u_dpr");
-    const uSeams = gl.getUniformLocation(program, "u_seams[0]");
-    const uTunnel = gl.getUniformLocation(program, "u_tunnel");
-    // The page-grade layer only exists on the landing page, so it is
-    // the honest marker for "this page has a tunnel".
-    let tunnel = document.querySelector(".page-grade") ? 1 : 0;
-
-    // Section breaks feed the horizon seams. Their document positions are
-    // measured once (and on resize) rather than every frame, so the loop
-    // never forces a layout.
-    let seamTops: number[] = [];
-    const measureSeams = () => {
-      seamTops = Array.from(document.querySelectorAll(".section-rule"))
-        .slice(0, 4)
-        .map((el) => el.getBoundingClientRect().top + window.scrollY);
-    };
-    const seams = new Float32Array(4).fill(-1);
-    const updateSeams = () => {
-      const vh = window.innerHeight;
-      for (let i = 0; i < 4; i++) {
-        const top = seamTops[i];
-        if (top === undefined) {
-          seams[i] = -1;
-          continue;
+      // Section breaks feed the horizon seams. Their document positions are
+      // measured once (and on resize) rather than every frame, so the loop
+      // never forces a layout.
+      let seamTops: number[] = [];
+      const measureSeams = () => {
+        seamTops = Array.from(document.querySelectorAll(".section-rule"))
+          .slice(0, 4)
+          .map((el) => el.getBoundingClientRect().top + window.scrollY);
+      };
+      const seams = new Float32Array(4).fill(-1);
+      const updateSeams = () => {
+        const vh = window.innerHeight;
+        for (let i = 0; i < 4; i++) {
+          const top = seamTops[i];
+          if (top === undefined) {
+            seams[i] = -1;
+            continue;
+          }
+          const screenY = top - window.scrollY;
+          // shader y runs bottom-up; -1 parks it offscreen
+          seams[i] = screenY > -40 && screenY < vh + 40 ? 1 - screenY / vh : -1;
         }
-        const screenY = top - window.scrollY;
-        // shader y runs bottom-up; -1 parks it offscreen
-        seams[i] =
-          screenY > -40 && screenY < vh + 40 ? 1 - screenY / vh : -1;
-      }
-    };
+      };
 
-    let width = 0;
-    let height = 0;
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      let width = 0;
+      let height = 0;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
 
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      width = Math.max(1, Math.round(rect.width * dpr));
-      height = Math.max(1, Math.round(rect.height * dpr));
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-        gl.viewport(0, 0, width, height);
-      }
-    };
+      const resize = () => {
+        const rect = canvas.getBoundingClientRect();
+        width = Math.max(1, Math.round(rect.width * dpr));
+        height = Math.max(1, Math.round(rect.height * dpr));
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
+          gl.viewport(0, 0, width, height);
+        }
+      };
 
-    // Pointer easing: the shader gets a smoothed position, never raw events.
-    // The canvas is fixed to the viewport, so viewport size IS its rect —
-    // measuring it per event would force a synchronous layout on every
-    // pointer move for a number we already know.
-    const target = { x: 0.25, y: 0.7 };
-    const eased = { x: 0.25, y: 0.7 };
-    const onPointer = (e: PointerEvent) => {
-      target.x = e.clientX / window.innerWidth;
-      target.y = 1 - e.clientY / window.innerHeight;
-    };
-    window.addEventListener("pointermove", onPointer, { passive: true });
+      // Pointer easing: the shader gets a smoothed position, never raw events.
+      // The canvas is fixed to the viewport, so viewport size IS its rect —
+      // measuring it per event would force a synchronous layout on every
+      // pointer move for a number we already know.
+      const target = { x: 0.25, y: 0.7 };
+      const eased = { x: 0.25, y: 0.7 };
+      const onPointer = (e: PointerEvent) => {
+        target.x = e.clientX / window.innerWidth;
+        target.y = 1 - e.clientY / window.innerHeight;
+      };
+      window.addEventListener("pointermove", onPointer, { passive: true });
 
-    let raf = 0;
-    let running = false;
-    const start = performance.now();
+      let raf = 0;
+      let running = false;
+      const start = performance.now();
 
-    let easedScroll = 0;
-    const scrollProgress = () => {
-      const max =
-        document.documentElement.scrollHeight - window.innerHeight;
-      return max > 0 ? window.scrollY / max : 0;
-    };
+      let easedScroll = 0;
+      const scrollProgress = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        return max > 0 ? window.scrollY / max : 0;
+      };
 
-    // Native frame rate: everything moving is a smooth gradient, and a
-    // half-rate gate showed up as stepping on the slow drifts.
-    const frame = () => {
-      raf = 0;
-      if (!running) return;
-      raf = requestAnimationFrame(frame);
-      resize();
-      eased.x += (target.x - eased.x) * 0.05;
-      eased.y += (target.y - eased.y) * 0.05;
-      easedScroll += (scrollProgress() - easedScroll) * 0.07;
-      gl.uniform2f(uRes, width, height);
-      gl.uniform1f(uTime, (performance.now() - start) / 1000);
-      gl.uniform2f(uPointer, eased.x, eased.y);
-      gl.uniform1f(uScroll, easedScroll);
-      gl.uniform1f(uDpr, dpr);
-      updateSeams();
-      gl.uniform1fv(uSeams, seams);
-      gl.uniform1f(uTunnel, tunnel);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-    };
+      // Native frame rate: everything moving is a smooth gradient, and a
+      // half-rate gate showed up as stepping on the slow drifts.
+      const frame = () => {
+        raf = 0;
+        if (!running) return;
+        raf = requestAnimationFrame(frame);
+        resize();
+        eased.x += (target.x - eased.x) * 0.05;
+        eased.y += (target.y - eased.y) * 0.05;
+        easedScroll += (scrollProgress() - easedScroll) * 0.07;
+        gl.uniform2f(uRes, width, height);
+        gl.uniform1f(uTime, (performance.now() - start) / 1000);
+        gl.uniform2f(uPointer, eased.x, eased.y);
+        gl.uniform1f(uScroll, easedScroll);
+        gl.uniform1f(uDpr, dpr);
+        updateSeams();
+        gl.uniform1fv(uSeams, seams);
+        gl.uniform1f(uTunnel, tunnel);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      };
 
-    const setRunning = (next: boolean) => {
-      if (reducedMotion) return; // static frame only
-      if (next && !running) {
-        running = true;
-        if (!raf) raf = requestAnimationFrame(frame);
-      } else if (!next) {
-        running = false;
-      }
-    };
+      const setRunning = (next: boolean) => {
+        if (reducedMotion) return; // static frame only
+        if (next && !running) {
+          running = true;
+          if (!raf) raf = requestAnimationFrame(frame);
+        } else if (!next) {
+          running = false;
+        }
+      };
 
-    // One static frame so the canvas is never blank (also the
-    // reduced-motion end state).
-    const drawStaticFrame = () => {
-      resize();
-      updateSeams();
-      gl.uniform2f(uRes, width, height);
-      gl.uniform1f(uTime, 12.0);
-      gl.uniform2f(uPointer, eased.x, eased.y);
-      gl.uniform1f(uScroll, scrollProgress());
-      gl.uniform1f(uDpr, dpr);
-      gl.uniform1fv(uSeams, seams);
-      gl.uniform1f(uTunnel, tunnel);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-    };
+      // One static frame so the canvas is never blank (also the
+      // reduced-motion end state).
+      const drawStaticFrame = () => {
+        resize();
+        updateSeams();
+        gl.uniform2f(uRes, width, height);
+        gl.uniform1f(uTime, 12.0);
+        gl.uniform2f(uPointer, eased.x, eased.y);
+        gl.uniform1f(uScroll, scrollProgress());
+        gl.uniform1f(uDpr, dpr);
+        gl.uniform1fv(uSeams, seams);
+        gl.uniform1f(uTunnel, tunnel);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      };
 
-    measureSeams();
-    drawStaticFrame();
-
-    // Called on every route change: the new page has its own breaks, and
-    // may not be the landing page at all.
-    resyncRef.current = () => {
-      tunnel = document.querySelector(".page-grade") ? 1 : 0;
-      easedScroll = scrollProgress();
       measureSeams();
-      updateSeams();
-      if (!running) drawStaticFrame();
-    };
+      drawStaticFrame();
 
-    const onResize = () => measureSeams();
-    window.addEventListener("resize", onResize, { passive: true });
+      // Called on every route change: the new page has its own breaks, and
+      // may not be the landing page at all.
+      resyncRef.current = () => {
+        tunnel = document.querySelector(".page-grade") ? 1 : 0;
+        easedScroll = scrollProgress();
+        measureSeams();
+        updateSeams();
+        if (!running) drawStaticFrame();
+      };
 
-    const io = new IntersectionObserver(
-      ([entry]) => setRunning(entry.isIntersecting),
-      { threshold: 0 },
-    );
-    io.observe(canvas);
+      const onResize = () => measureSeams();
+      window.addEventListener("resize", onResize, { passive: true });
 
-    const onVisibility = () => {
-      if (document.hidden) setRunning(false);
-      else setRunning(true);
-    };
-    document.addEventListener("visibilitychange", onVisibility);
+      const io = new IntersectionObserver(
+        ([entry]) => setRunning(entry.isIntersecting),
+        { threshold: 0 },
+      );
+      io.observe(canvas);
 
-    // Honour the preference if it changes mid-session, rather than only at
-    // mount. Turning it on freezes the field on its current frame; turning
-    // it off starts the loop again.
-    const onMotionPref = (e: MediaQueryListEvent) => {
-      reducedMotion = e.matches;
-      if (reducedMotion) {
+      const onVisibility = () => {
+        if (document.hidden) setRunning(false);
+        else setRunning(true);
+      };
+      document.addEventListener("visibilitychange", onVisibility);
+
+      // Honour the preference if it changes mid-session, rather than only at
+      // mount. Turning it on freezes the field on its current frame; turning
+      // it off starts the loop again.
+      const onMotionPref = (e: MediaQueryListEvent) => {
+        reducedMotion = e.matches;
+        if (reducedMotion) {
+          running = false;
+          if (raf) cancelAnimationFrame(raf);
+          raf = 0;
+        } else {
+          setRunning(!document.hidden);
+        }
+      };
+      motionQuery.addEventListener("change", onMotionPref);
+
+      return () => {
+        io.disconnect();
+        document.removeEventListener("visibilitychange", onVisibility);
+        motionQuery.removeEventListener("change", onMotionPref);
+        window.removeEventListener("resize", onResize);
+        window.removeEventListener("pointermove", onPointer);
         running = false;
         if (raf) cancelAnimationFrame(raf);
-        raf = 0;
-      } else {
-        setRunning(!document.hidden);
-      }
+        gl.deleteProgram(program);
+        gl.deleteShader(vs);
+        gl.deleteShader(fs);
+        gl.deleteBuffer(quad);
+      };
     };
-    motionQuery.addEventListener("change", onMotionPref);
 
     return () => {
-      io.disconnect();
-      document.removeEventListener("visibilitychange", onVisibility);
-      motionQuery.removeEventListener("change", onMotionPref);
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("pointermove", onPointer);
-      running = false;
-      if (raf) cancelAnimationFrame(raf);
-      gl.deleteProgram(program);
-      gl.deleteShader(vs);
-      gl.deleteShader(fs);
-      gl.deleteBuffer(quad);
+      cancelled = true;
+      if (ric) window.cancelIdleCallback(idleId);
+      else window.clearTimeout(idleId);
+      cleanup?.();
     };
   }, []);
 
