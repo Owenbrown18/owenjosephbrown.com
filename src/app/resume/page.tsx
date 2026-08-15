@@ -4,7 +4,12 @@ import { join } from "node:path";
 import Link from "next/link";
 import { identity } from "@/lib/resume-data";
 import { PageHeader } from "@/components/page-header";
-import { ArrowUpRightIcon, MailIcon } from "@/components/icons";
+import {
+  ArrowUpRightIcon,
+  GitHubIcon,
+  LinkedInIcon,
+  MailIcon,
+} from "@/components/icons";
 
 export const metadata: Metadata = {
   title: "Resume",
@@ -45,8 +50,9 @@ export default function ResumePage() {
               <a
                 href={identity.github}
                 rel="me noopener"
-                className="link-underline text-fg"
+                className="link-underline inline-flex items-center gap-2 text-fg"
               >
+                <GitHubIcon className="h-3.5 w-3.5" />
                 Owenbrown18
               </a>
             ),
@@ -57,8 +63,9 @@ export default function ResumePage() {
               <a
                 href={identity.linkedin}
                 rel="me noopener"
-                className="link-underline text-fg"
+                className="link-underline inline-flex items-center gap-2 text-fg"
               >
+                <LinkedInIcon className="h-3.5 w-3.5" />
                 owenbrown18
               </a>
             ),
