@@ -498,120 +498,78 @@
 }
 
 /* ---------------------------------------------------------------
-   Motion vocabulary.
+   Motion vocabulary — IntersectionObserver + transitions.
 
-   Not one reveal applied to everything — each element type gets the
-   move that suits it: headings rise out from behind a clip, images
-   wipe open and settle out of a slight overscale, body copy just
-   lifts. Rows need no stagger logic because each one carries its own
-   view() timeline, so they fire in sequence as they enter naturally.
+   Each element type still gets its own move (headings rise out of a
+   clip, images wipe open, copy lifts). The trigger is plain JS adding
+   .is-revealed, because the CSS scroll-driven version of this did not
+   work in a real browser.
 
-   All of it is scroll-driven CSS: no JS, no hydration flash, only
-   transform/opacity/clip-path so it stays on the compositor. Wrapped
-   in @supports so browsers without scroll timelines simply render the
-   finished state rather than blank content.
+   .reveal-init is added by JS, never by the server, so if the script
+   never runs nothing is ever hidden.
    --------------------------------------------------------------- */
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .prose-ob h2,
-    .prose-ob h3,
-    .anim-heading {
-      animation: heading-rise 1s cubic-bezier(0.4, 0, 0.5, 1) both;
-      animation-timeline: view();
-      animation-range: cover 3% cover 38%;
-    }
-    @keyframes heading-rise {
-      from {
-        opacity: 0;
-        transform: translateY(0.4em);
-        clip-path: inset(0 0 100% 0);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-        clip-path: inset(-15% 0 -25% 0);
-      }
-    }
+.reveal-init {
+  will-change: opacity, transform;
+}
 
-    /* Body copy: a lift, nothing more. */
-    .prose-ob > p,
-    .prose-ob > ul,
-    .prose-ob > ol,
-    .prose-ob > blockquote,
-    .prose-ob > table,
-    .prose-ob > pre,
-    .anim-copy {
-      animation: copy-lift 0.85s cubic-bezier(0.4, 0, 0.5, 1) both;
-      animation-timeline: view();
-      animation-range: cover 3% cover 34%;
-    }
-    @keyframes copy-lift {
-      from {
-        opacity: 0;
-        transform: translateY(14px);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
+/* NB: no clip-path in the hidden state. Clipping an element to zero area
+   makes IntersectionObserver report it as not intersecting, so it can
+   never be revealed — the hidden state blocks its own trigger. Opacity and
+   transform only. */
 
-    /* Images wipe open and settle. The paragraph MDX wraps them in is
-       excluded, or the picture animates twice. */
-    .prose-ob p:has(img) {
-      animation: none;
-    }
-    .prose-ob img,
-    .anim-image {
-      animation: image-wipe 1.1s cubic-bezier(0.4, 0, 0.5, 1) both;
-      animation-timeline: view();
-      animation-range: cover 3% cover 42%;
-    }
-    @keyframes image-wipe {
-      from {
-        opacity: 0;
-        clip-path: inset(0 0 100% 0);
-        transform: scale(1.04);
-      }
-      to {
-        opacity: 1;
-        clip-path: inset(0 0 0 0);
-        transform: none;
-      }
-    }
+.anim-heading.reveal-init,
+.prose-ob > h2.reveal-init,
+.prose-ob > h3.reveal-init {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-    /* Rows: no delays needed, each carries its own timeline. */
-    .pipeline-step,
-    .stat,
-    .anim-row {
-      animation: copy-lift 0.7s cubic-bezier(0.4, 0, 0.5, 1) both;
-      animation-timeline: view();
-      animation-range: cover 3% cover 32%;
-    }
+.anim-copy.reveal-init,
+.reveal-up.reveal-init,
+.anim-row.reveal-init,
+[data-reveal].reveal-init,
+.pipeline-step.reveal-init,
+.stat.reveal-init,
+.prose-ob > p.reveal-init,
+.prose-ob > ul.reveal-init,
+.prose-ob > ol.reveal-init,
+.prose-ob > blockquote.reveal-init,
+.prose-ob > pre.reveal-init,
+.prose-ob > table.reveal-init {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.55s ease-out,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.anim-image.reveal-init,
+.prose-ob img.reveal-init {
+  opacity: 0;
+  transform: translateY(26px) scale(1.02);
+  transition:
+    opacity 0.7s ease-out,
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* The state everything lands on. */
+.reveal-init.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 
-/* Scroll reveal: CSS scroll-driven where supported, static everywhere else.
-   No JS, no hydration flash, dies under prefers-reduced-motion. */
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .reveal-up {
-      animation: reveal-up 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 45%;
-    }
-    @keyframes reveal-up {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
-  }
-
   .hero-stage > * {
     animation: hero-rise 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   }

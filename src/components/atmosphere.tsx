@@ -1,4 +1,5 @@
 import { ForestCanvas } from "@/components/forest-canvas";
+import { Reveal } from "@/components/reveal";
 
 /**
  * The site's ground: the live forest field, the grain, and the scroll
@@ -14,6 +15,7 @@ export function Atmosphere() {
       </div>
       <div aria-hidden className="grain" />
       <div aria-hidden className="scroll-progress" />
+      <Reveal />
     </>
   );
 }
