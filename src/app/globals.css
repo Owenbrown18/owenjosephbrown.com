@@ -518,6 +518,15 @@ h3.reveal-init {
   }
 }
 
+/* Outside the motion gate on purpose: the echo's look is not an animation,
+   and under reduced motion it must still be a faint outline rather than
+   falling back to solid inherited text. A browser without text-stroke
+   paints transparent text, i.e. no echo — harmless. */
+.hero-echo {
+  -webkit-text-stroke: 1px rgba(123, 164, 158, 0.28);
+  color: transparent;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .hero-stage > * {
     animation: hero-rise 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
@@ -526,6 +535,19 @@ h3.reveal-init {
      one block, so hand it off to the children. */
   .hero-stage > .hero-name {
     animation: none;
+  }
+  /* The echo fades in after the words have landed, so the entrance stays
+     about the name and the misregistration reads as a settled detail. */
+  .hero-echo {
+    animation: hero-echo-in 1.1s ease-out 0.75s both;
+  }
+  @keyframes hero-echo-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
   .hero-word {
     display: inline-block;
