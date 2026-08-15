@@ -518,13 +518,13 @@
    transform only. */
 
 .anim-heading.reveal-init,
-.prose-ob > h2.reveal-init,
-.prose-ob > h3.reveal-init {
+h2.reveal-init,
+h3.reveal-init {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translateY(16px);
   transition:
-    opacity 0.7s ease-out,
-    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.5s ease-out,
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .anim-copy.reveal-init,
@@ -540,19 +540,19 @@
 .prose-ob > pre.reveal-init,
 .prose-ob > table.reveal-init {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(12px);
   transition:
-    opacity 0.55s ease-out,
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.45s ease-out,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .anim-image.reveal-init,
 .prose-ob img.reveal-init {
   opacity: 0;
-  transform: translateY(26px) scale(1.02);
+  transform: translateY(18px) scale(1.015);
   transition:
-    opacity 0.7s ease-out,
-    transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.55s ease-out,
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* The state everything lands on. */

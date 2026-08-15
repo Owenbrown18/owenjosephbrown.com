@@ -23,8 +23,9 @@ const SELECTOR = [
   ".anim-row",
   "[data-reveal]",
   ".reveal-up",
-  ".prose-ob > h2",
-  ".prose-ob > h3",
+  // Every section heading, so a new one can never be forgotten.
+  "main h2:not(.hero-stage *)",
+  "main h3:not(.hero-stage *)",
   ".prose-ob > p",
   ".prose-ob > ul",
   ".prose-ob > ol",
@@ -63,10 +64,11 @@ export function Reveal() {
         }
       },
       {
-        // Fire a little before the element reaches the bottom edge, so the
-        // motion happens while it is genuinely on screen.
-        rootMargin: "0px 0px -12% 0px",
-        threshold: 0.01,
+        // Trigger slightly BEFORE the element scrolls in. Delaying it made
+        // fast scrolling look like text failing to load, because the copy
+        // was still fading up by the time it was readable.
+        rootMargin: "0px 0px 5% 0px",
+        threshold: 0,
       },
     );
 

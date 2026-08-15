@@ -143,3 +143,42 @@ test("desktop shows the full nav rail and no hamburger", async ({ page }) => {
     await expect(rail.getByRole("link", { name: label })).toBeVisible();
   }
 });
+
+test("every section heading takes part in the reveal system", async ({
+  page,
+}) => {
+  // Headings were previously tagged by hand with class-string matches, so
+  // "Let's talk" and others were silently missed. The selector is
+  // structural now; this stops it drifting again.
+  for (const path of ["/", "/obdesign", "/work/grain"]) {
+    await page.goto(path);
+    await page.waitForTimeout(400);
+    const untagged = await page.evaluate(() =>
+      [...document.querySelectorAll("main h2, main h3")]
+        .filter((h) => !h.closest(".hero-stage"))
+        .filter(
+          (h) =>
+            !h.classList.contains("reveal-init") &&
+            !(h as HTMLElement).dataset.revealed,
+        )
+        .map((h) => h.textContent?.trim().slice(0, 30)),
+    );
+    expect(untagged, `untagged headings on ${path}`).toEqual([]);
+  }
+});
+
+test("no content is left invisible after scrolling a case study", async ({
+  page,
+}) => {
+  await page.goto("/work/figs-and-honey");
+  const height = await page.evaluate(() => document.body.scrollHeight);
+  for (let y = 0; y <= height; y += 600) {
+    await page.evaluate((n) => window.scrollTo(0, n), y);
+    await page.waitForTimeout(90);
+  }
+  await page.waitForTimeout(700);
+  const stuck = await page.evaluate(
+    () => document.querySelectorAll(".reveal-init:not(.is-revealed)").length,
+  );
+  expect(stuck).toBe(0);
+});
