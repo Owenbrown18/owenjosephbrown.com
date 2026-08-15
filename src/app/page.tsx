@@ -70,20 +70,12 @@ export default function HomePage() {
             <p className="eyebrow !text-sage">
               Salt Spring Island, BC · UVic software engineering
             </p>
-            <div className="hero-name relative mt-7">
-              <p
-                aria-hidden
-                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-[53%] -translate-y-[57%] select-none whitespace-nowrap font-display text-[clamp(3.9rem,14.6vw,12.3rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-white/[0.05]"
-              >
-                Owen Brown
-              </p>
-              <h1 className="relative mx-auto text-[clamp(3.5rem,13vw,11rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-white/95">
-                {/* Split so the two words arrive on a stagger. The full name
-                    stays intact for screen readers and copy-paste. */}
-                <span className="hero-word">Owen</span>{" "}
-                <span className="hero-word">Brown</span>
-              </h1>
-            </div>
+            <h1 className="hero-name mx-auto mt-7 text-[clamp(3.5rem,13vw,11rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-white/95">
+              {/* Split so the two words arrive on a stagger. The full name
+                  stays intact for screen readers and copy-paste. */}
+              <span className="hero-word">Owen</span>{" "}
+              <span className="hero-word">Brown</span>
+            </h1>
             <p className="mt-7 text-[clamp(0.78rem,1.7vw,1rem)] font-medium uppercase tracking-[0.3em] text-white/70">
               Software engineer, web & app developer.
             </p>
