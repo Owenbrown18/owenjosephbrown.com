@@ -167,21 +167,42 @@ test("every section heading takes part in the reveal system", async ({
   }
 });
 
-test("no content is left invisible after scrolling a case study", async ({
-  page,
-}) => {
-  await page.goto("/work/figs-and-honey");
-  const height = await page.evaluate(() => document.body.scrollHeight);
-  for (let y = 0; y <= height; y += 600) {
-    await page.evaluate((n) => window.scrollTo(0, n), y);
-    await page.waitForTimeout(90);
-  }
-  await page.waitForTimeout(700);
-  const stuck = await page.evaluate(
-    () => document.querySelectorAll(".reveal-init:not(.is-revealed)").length,
-  );
-  expect(stuck).toBe(0);
-});
+// This test MUST assert computed opacity, not class bookkeeping. The
+// specificity bug (prose hidden at (0,2,1) beating .reveal-init.is-revealed
+// at (0,2,0)) shipped whole case studies as headings with no text while a
+// class-based version of this test stayed green: every element had
+// .is-revealed and still painted at opacity 0.
+for (const path of ["/work/figs-and-honey", "/work/grain"]) {
+  test(`no content is left invisible after scrolling ${path}`, async ({
+    page,
+  }) => {
+    await page.goto(path, { waitUntil: "networkidle" });
+    const height = await page.evaluate(() => document.body.scrollHeight);
+    const ghosts: string[] = [];
+    for (let y = 0; y <= height; y += 600) {
+      await page.evaluate(
+        (n) => window.scrollTo({ top: n, behavior: "instant" }),
+        y,
+      );
+      await page.waitForTimeout(650); // longest opacity transition is 0.55s
+      const invisible = await page.evaluate(() =>
+        [...document.querySelectorAll<HTMLElement>(".reveal-init")]
+          .filter((el) => {
+            const r = el.getBoundingClientRect();
+            return r.top < innerHeight * 0.85 && r.bottom > 0 && r.height > 0;
+          })
+          .filter((el) => parseFloat(getComputedStyle(el).opacity) < 0.9)
+          .map((el) => (el.tagName + "." + el.className).slice(0, 70)),
+      );
+      ghosts.push(...invisible.map((g) => `y=${y} ${g}`));
+    }
+    expect(ghosts, "in-viewport elements painted invisible").toEqual([]);
+    const stuck = await page.evaluate(
+      () => document.querySelectorAll(".reveal-init:not(.is-revealed)").length,
+    );
+    expect(stuck).toBe(0);
+  });
+}
 
 // --- Scroll-linked motion (ScrollMotion) -------------------------------
 // These systems used CSS scroll timelines, which pass headless testing

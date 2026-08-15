@@ -462,18 +462,23 @@ h3.reveal-init {
     transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Every hidden-state selector must stay at specificity (0,2,0) or below:
+   the revealed state below is .reveal-init.is-revealed = (0,2,0) and wins
+   only on source order. .prose-ob > p.reveal-init was (0,2,1), so revealed
+   prose sat at opacity 0 forever — a page of headings with no text under
+   them. :where() zeroes the structural part. */
 .anim-copy.reveal-init,
 .reveal-up.reveal-init,
 .anim-row.reveal-init,
 [data-reveal].reveal-init,
 .pipeline-step.reveal-init,
 .stat.reveal-init,
-.prose-ob > p.reveal-init,
-.prose-ob > ul.reveal-init,
-.prose-ob > ol.reveal-init,
-.prose-ob > blockquote.reveal-init,
-.prose-ob > pre.reveal-init,
-.prose-ob > table.reveal-init {
+:where(.prose-ob > p).reveal-init,
+:where(.prose-ob > ul).reveal-init,
+:where(.prose-ob > ol).reveal-init,
+:where(.prose-ob > blockquote).reveal-init,
+:where(.prose-ob > pre).reveal-init,
+:where(.prose-ob > table).reveal-init {
   opacity: 0;
   transform: translateY(12px);
   transition:
@@ -482,7 +487,7 @@ h3.reveal-init {
 }
 
 .anim-image.reveal-init,
-.prose-ob img.reveal-init {
+:where(.prose-ob img).reveal-init {
   opacity: 0;
   transform: translateY(18px) scale(1.015);
   transition:
