@@ -96,7 +96,7 @@ export async function ogCard({
           }}
         >
           <span>owenjosephbrown.com</span>
-          <span>Software engineer · Salt Spring Island, BC</span>
+          <span>Software engineer · Victoria, BC</span>
         </div>
       </div>
     ),

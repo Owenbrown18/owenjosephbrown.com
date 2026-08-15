@@ -68,7 +68,7 @@ export default function HomePage() {
         <div className="container-site relative flex min-h-[100svh] flex-col items-center justify-center pb-40 pt-24 text-center">
           <div className="hero-stage hero-parallax">
             <p className="eyebrow !text-sage">
-              Salt Spring Island, BC · UVic software engineering
+              Victoria, BC · UVic software engineering
             </p>
             {/* hero-name (the animation-handoff hook) lives on the wrapper
                 so the word-level entrance below stays untouched. */}
