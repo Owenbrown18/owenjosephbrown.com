@@ -182,3 +182,111 @@ test("no content is left invisible after scrolling a case study", async ({
   );
   expect(stuck).toBe(0);
 });
+
+// --- Scroll-linked motion (ScrollMotion) -------------------------------
+// These systems used CSS scroll timelines, which pass headless testing
+// but sit dead in real Safari. They are JS-driven now; these tests pin
+// the behavior in every engine we run.
+
+test("scroll progress bar tracks scroll position", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForTimeout(300);
+  const scaleX = () =>
+    page.evaluate(() => {
+      const el = document.querySelector(".scroll-progress")!;
+      return new DOMMatrix(getComputedStyle(el).transform).a;
+    });
+  expect(await scaleX()).toBeLessThan(0.05);
+  await page.evaluate(() =>
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "instant",
+    }),
+  );
+  await page.waitForTimeout(200);
+  expect(await scaleX()).toBeGreaterThan(0.95);
+});
+
+test("section rules draw in on arrival, stay put once drawn", async ({
+  page,
+}) => {
+  // networkidle: while images are still streaming in, layout can briefly
+  // place a distant rule inside the viewport and legitimately reveal it.
+  await page.goto("/", { waitUntil: "networkidle" });
+  await page.waitForTimeout(400);
+  const lastLine = () =>
+    page.evaluate(() => {
+      const rule = [...document.querySelectorAll(".section-rule")].at(-1)!;
+      const line = rule.querySelector(".section-rule-line")!;
+      return {
+        armed: rule.classList.contains("reveal-init"),
+        scaleX: new DOMMatrix(getComputedStyle(line).transform).a,
+      };
+    });
+  const before = await lastLine();
+  expect(before.armed, "rule container joins the reveal system").toBe(true);
+  expect(before.scaleX, "line starts collapsed while offscreen").toBe(0);
+  await page.evaluate(() =>
+    [...document.querySelectorAll(".section-rule")]
+      .at(-1)!
+      .scrollIntoView({ behavior: "instant", block: "center" }),
+  );
+  await page.waitForTimeout(1500); // 0.1s delay + 1s draw
+  expect((await lastLine()).scaleX, "line fully drawn").toBeGreaterThan(0.99);
+});
+
+test("hero departs across the first viewport of scroll", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForTimeout(300);
+  const hero = () =>
+    page.evaluate(() => {
+      const el = document.querySelector<HTMLElement>(".hero-parallax")!;
+      const s = getComputedStyle(el);
+      return {
+        opacity: parseFloat(s.opacity),
+        y: new DOMMatrix(s.transform).f,
+      };
+    });
+  const top = await hero();
+  expect(top.opacity).toBeGreaterThan(0.9);
+  await page.evaluate(() =>
+    window.scrollTo({ top: window.innerHeight * 1.2, behavior: "instant" }),
+  );
+  await page.waitForTimeout(200);
+  const departed = await hero();
+  expect(departed.opacity, "hero dissolves").toBeLessThan(0.3);
+  expect(departed.y, "hero drifts up").toBeLessThan(top.y);
+});
+
+test("parallax images and lifted headings ride the scroll", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.waitForTimeout(300);
+  const sampleNear = async (selector: string, offset: number) => {
+    return page.evaluate(
+      ([sel, off]) => {
+        const el = document.querySelector<HTMLElement>(sel as string)!;
+        const target =
+          el.getBoundingClientRect().top +
+          window.scrollY -
+          window.innerHeight +
+          (off as number);
+        window.scrollTo({ top: Math.max(0, target), behavior: "instant" });
+        return new Promise<number>((resolve) =>
+          setTimeout(
+            () => resolve(new DOMMatrix(getComputedStyle(el).transform).f),
+            150,
+          ),
+        );
+      },
+      [selector, offset] as const,
+    );
+  };
+  for (const sel of [".parallax-a", ".parallax-b", ".lift"]) {
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    const early = await sampleNear(sel, 150);
+    const late = await sampleNear(sel, 620);
+    expect(late, `${sel} moves as it crosses the viewport`).not.toEqual(early);
+  }
+});

@@ -366,24 +366,22 @@
   );
   transform-origin: left center;
 }
-/* The line draws itself in as the break enters view. */
+/* The line draws itself in as the break enters view. The trigger is the
+   reveal observer watching the CONTAINER — scaling the line itself to
+   zero width would zero its intersection area and block its own trigger,
+   the clip-path lesson again. .reveal-init only ever arrives from JS, so
+   with no script the rule is simply visible. */
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .section-rule-line {
-      animation: rule-draw 1s linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 60%;
-    }
-    @keyframes rule-draw {
-      from {
-        transform: scaleX(0);
-        opacity: 0;
-      }
-      to {
-        transform: scaleX(1);
-        opacity: 1;
-      }
-    }
+  .section-rule.reveal-init .section-rule-line {
+    transform: scaleX(0);
+    opacity: 0;
+    transition:
+      transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s,
+      opacity 0.5s ease-out 0.1s;
+  }
+  .section-rule.reveal-init.is-revealed .section-rule-line {
+    transform: scaleX(1);
+    opacity: 1;
   }
 }
 
@@ -415,85 +413,22 @@
     display: block;
   }
 }
-@supports (animation-timeline: scroll()) {
-  .scroll-progress {
-    animation: progress-grow linear both;
-    animation-timeline: scroll(root);
-  }
-  @keyframes progress-grow {
-    to {
-      transform: scaleX(1);
-    }
-  }
-}
+/* Scaled by ScrollMotion in JS. The CSS scroll(root) timeline version
+   passed headless testing but sat dead in real Safari, pinned at from —
+   the same failure that took down the scroll-driven reveals. */
 
-/* Scroll parallax for big imagery: two opposing drifts so stacked photos
-   move against each other. CSS scroll-driven only; static without support
-   or under prefers-reduced-motion. */
+/* Scroll parallax (hero departure, heading lift, image drifts) is driven
+   by ScrollMotion in JS: per-frame transform/opacity writes on scroll.
+   The CSS view()/scroll() timeline version passed headless but pinned at
+   `from` in real Safari. With no script these sit static and visible. */
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    /* The hero drifts up and dissolves as you leave it. Driven by the root
-       scroll timeline, not view(): the hero is already on screen at load,
-       so a view() exit phase resolves unpredictably and reverses badly on
-       the way back up. Scroll position maps 1:1 and is symmetric. */
-    .hero-parallax {
-      animation: hero-depart linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 100vh;
-      will-change: transform, opacity;
-    }
-    @keyframes hero-depart {
-      from {
-        transform: translateY(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(-12%);
-        opacity: 0.15;
-      }
-    }
-
-    /* Section headings rise slightly slower than the page. */
-    .lift {
-      animation: lift linear both;
-      animation-timeline: view();
-      animation-range: entry 10% cover 45%;
-    }
-    @keyframes lift {
-      from {
-        transform: translateY(28px);
-      }
-      to {
-        transform: none;
-      }
-    }
-
-    .parallax-a {
-      animation: parallax-a linear both;
-      animation-timeline: view();
-      animation-range: cover;
-    }
-    .parallax-b {
-      animation: parallax-b linear both;
-      animation-timeline: view();
-      animation-range: cover;
-    }
-    @keyframes parallax-a {
-      from {
-        transform: translateY(7%);
-      }
-      to {
-        transform: translateY(-7%);
-      }
-    }
-    @keyframes parallax-b {
-      from {
-        transform: translateY(-4%);
-      }
-      to {
-        transform: translateY(5%);
-      }
-    }
+  .lift,
+  .parallax-a,
+  .parallax-b {
+    will-change: transform;
+  }
+  .hero-parallax {
+    will-change: transform, opacity;
   }
 }
 
@@ -553,6 +488,15 @@ h3.reveal-init {
   transition:
     opacity 0.55s ease-out,
     transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* .lift transforms belong to the scroll driver. A transform transition
+   here would smear its per-frame writes into jelly, so on these the
+   reveal contributes opacity only. Must sit after the .reveal-up block:
+   same specificity, source order decides. */
+.lift.reveal-init {
+  transform: none;
+  transition: opacity 0.45s ease-out;
 }
 
 /* The state everything lands on. */

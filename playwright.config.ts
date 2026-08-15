@@ -16,6 +16,10 @@ export default defineConfig({
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    // Owen's daily browser is Safari, and this repo has already shipped
+    // motion that passed Chromium-only testing and failed there. WebKit
+    // is not Safari-release, but it catches the engine class.
+    { name: "webkit", use: { ...devices["Desktop Safari"] } },
     {
       name: "mobile",
       use: { ...devices["iPhone 13"] },

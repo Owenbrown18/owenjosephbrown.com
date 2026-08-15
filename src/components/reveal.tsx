@@ -35,6 +35,9 @@ const SELECTOR = [
   ".prose-ob img",
   ".pipeline-step",
   ".stat",
+  // Observed for the child line's draw-in. The container never transforms,
+  // so its intersection area stays honest while the line scales from zero.
+  ".section-rule",
 ].join(",");
 
 export function Reveal() {
