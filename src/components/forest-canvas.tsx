@@ -7,6 +7,10 @@ import { usePathname } from "next/navigation";
  * The brand's forest gradient, rendered live: a slow noise field drifting
  * through the radial gradient, with a soft light that follows the pointer.
  *
+ * The horizon seams that used to be drawn here from scrollY moved into
+ * SectionRule as DOM glows: a fixed canvas chasing main-thread scrollY
+ * always lags composited scrolling, which read as chop on mobile.
+ *
  * Rules it obeys:
  * - prefers-reduced-motion: renders a single static frame, no loop.
  * - No WebGL: the .forest-ground CSS gradient underneath simply shows.
@@ -28,9 +32,6 @@ uniform vec2 u_pointer; // 0..1, y up
 uniform float u_scroll; // 0..1 page progress
 uniform float u_dpr;    // device pixels per CSS pixel
 uniform float u_tunnel; // 1 on the landing page, 0 elsewhere
-// Viewport-space y (0 bottom .. 1 top) of each section break currently on
-// screen. -1 means "not visible", so it contributes nothing.
-uniform float u_seams[4];
 
 const vec3 FOREST = vec3(0.043, 0.122, 0.114); // #0b1f1d
 const vec3 MID    = vec3(0.118, 0.227, 0.216); // #1e3a37
@@ -144,18 +145,6 @@ void main() {
   col += SAGE * minor * (0.030 + 0.075 * spot) * mask * quiet;
   col += SAGE * major * (0.050 + 0.110 * spot) * mask * quiet;
 
-  // Horizon seams: a soft band of light lying along each section break,
-  // so the boundary is felt in the field itself and not just drawn on top
-  // of it. Constant loop bound — WebGL 1 requires it.
-  float seam = 0.0;
-  for (int i = 0; i < 4; i++) {
-    float sy = u_seams[i];
-    if (sy > -0.5) {
-      seam += exp(-abs(uv.y - sy) * 60.0);
-    }
-  }
-  col += SAGE * seam * 0.06;
-
   // Dither to kill banding on the dark ramp.
   col += (hash(gl_FragCoord.xy + fract(u_time)) - 0.5) / 255.0;
 
@@ -266,35 +255,10 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       const uPointer = gl.getUniformLocation(program, "u_pointer");
       const uScroll = gl.getUniformLocation(program, "u_scroll");
       const uDpr = gl.getUniformLocation(program, "u_dpr");
-      const uSeams = gl.getUniformLocation(program, "u_seams[0]");
       const uTunnel = gl.getUniformLocation(program, "u_tunnel");
       // The page-grade layer only exists on the landing page, so it is
       // the honest marker for "this page has a tunnel".
       let tunnel = document.querySelector(".page-grade") ? 1 : 0;
-
-      // Section breaks feed the horizon seams. Their document positions are
-      // measured once (and on resize) rather than every frame, so the loop
-      // never forces a layout.
-      let seamTops: number[] = [];
-      const measureSeams = () => {
-        seamTops = Array.from(document.querySelectorAll(".section-rule"))
-          .slice(0, 4)
-          .map((el) => el.getBoundingClientRect().top + window.scrollY);
-      };
-      const seams = new Float32Array(4).fill(-1);
-      const updateSeams = () => {
-        const vh = window.innerHeight;
-        for (let i = 0; i < 4; i++) {
-          const top = seamTops[i];
-          if (top === undefined) {
-            seams[i] = -1;
-            continue;
-          }
-          const screenY = top - window.scrollY;
-          // shader y runs bottom-up; -1 parks it offscreen
-          seams[i] = screenY > -40 && screenY < vh + 40 ? 1 - screenY / vh : -1;
-        }
-      };
 
       let width = 0;
       let height = 0;
@@ -348,8 +312,6 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
         gl.uniform2f(uPointer, eased.x, eased.y);
         gl.uniform1f(uScroll, easedScroll);
         gl.uniform1f(uDpr, dpr);
-        updateSeams();
-        gl.uniform1fv(uSeams, seams);
         gl.uniform1f(uTunnel, tunnel);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
       };
@@ -368,18 +330,15 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       // reduced-motion end state).
       const drawStaticFrame = () => {
         resize();
-        updateSeams();
         gl.uniform2f(uRes, width, height);
         gl.uniform1f(uTime, 12.0);
         gl.uniform2f(uPointer, eased.x, eased.y);
         gl.uniform1f(uScroll, scrollProgress());
         gl.uniform1f(uDpr, dpr);
-        gl.uniform1fv(uSeams, seams);
         gl.uniform1f(uTunnel, tunnel);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
       };
 
-      measureSeams();
       drawStaticFrame();
 
       // Called on every route change: the new page has its own breaks, and
@@ -387,13 +346,8 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       resyncRef.current = () => {
         tunnel = document.querySelector(".page-grade") ? 1 : 0;
         easedScroll = scrollProgress();
-        measureSeams();
-        updateSeams();
         if (!running) drawStaticFrame();
       };
-
-      const onResize = () => measureSeams();
-      window.addEventListener("resize", onResize, { passive: true });
 
       const io = new IntersectionObserver(
         ([entry]) => setRunning(entry.isIntersecting),
@@ -426,7 +380,6 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
         io.disconnect();
         document.removeEventListener("visibilitychange", onVisibility);
         motionQuery.removeEventListener("change", onMotionPref);
-        window.removeEventListener("resize", onResize);
         window.removeEventListener("pointermove", onPointer);
         running = false;
         if (raf) cancelAnimationFrame(raf);

@@ -347,6 +347,29 @@
     padding-left: max(2.5rem, calc(50% - 600px));
   }
 }
+.section-rule {
+  position: relative;
+}
+/* Soft band of sage light lying along the break, so the boundary is felt
+   in the field and not just drawn on it. screen blend ≈ the additive
+   light the shader used to contribute. */
+.section-rule-glow {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: min(9rem, 16vh);
+  transform: translateY(-50%);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(123, 164, 158, 0.035) 30%,
+    rgba(123, 164, 158, 0.09) 50%,
+    rgba(123, 164, 158, 0.035) 70%,
+    transparent
+  );
+}
 .section-rule-num {
   flex: none;
   font-family: var(--font-body);

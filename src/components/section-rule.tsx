@@ -7,6 +7,11 @@
 export function SectionRule({ num }: { num: string }) {
   return (
     <div aria-hidden className="fullbleed section-rule">
+      {/* The horizon glow. This used to be drawn in the WebGL field from
+          scrollY, but a fixed canvas chasing main-thread scroll always
+          lags composited scrolling and read as chop on mobile. As a DOM
+          layer it scrolls with the page for free. */}
+      <span className="section-rule-glow" />
       <span className="section-rule-num">{num}</span>
       <span className="section-rule-line" />
     </div>
