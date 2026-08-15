@@ -70,12 +70,20 @@ export default function HomePage() {
             <p className="eyebrow !text-sage">
               Salt Spring Island, BC · UVic software engineering
             </p>
-            <h1 className="hero-name mx-auto mt-7 text-[clamp(3.5rem,13vw,11rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-white/95">
-              {/* Split so the two words arrive on a stagger. The full name
-                  stays intact for screen readers and copy-paste. */}
-              <span className="hero-word">Owen</span>{" "}
-              <span className="hero-word">Brown</span>
-            </h1>
+            <div className="hero-name relative mt-7">
+              <p
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-[53%] -translate-y-[57%] select-none whitespace-nowrap font-display text-[clamp(3.9rem,14.6vw,12.3rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-white/[0.05]"
+              >
+                Owen Brown
+              </p>
+              <h1 className="relative mx-auto text-[clamp(3.5rem,13vw,11rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-white/95">
+                {/* Split so the two words arrive on a stagger. The full name
+                    stays intact for screen readers and copy-paste. */}
+                <span className="hero-word">Owen</span>{" "}
+                <span className="hero-word">Brown</span>
+              </h1>
+            </div>
             <p className="mt-7 text-[clamp(0.78rem,1.7vw,1rem)] font-medium uppercase tracking-[0.3em] text-white/70">
               Software engineer, web & app developer.
             </p>
@@ -131,8 +139,11 @@ export default function HomePage() {
       <section id="expertise" className="section-pad relative">
         <p
           aria-hidden
-          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
+          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(8rem,20vw,14rem)] font-black leading-none text-white/[0.035]"
         >
+          {/* Smaller than its siblings on purpose: this section is the
+              shortest, and at full size the numeral ran into the third
+              column's border. Clearance beats equal font size. */}
           02
         </p>
         <div className="container-site">
@@ -526,12 +537,6 @@ export default function HomePage() {
               <ArrowUpRightIcon />
             </a>
           </div>
-          <p
-            aria-hidden
-            className="pointer-events-none mx-auto mt-14 select-none font-display text-[clamp(8rem,28vw,22rem)] font-black leading-[0.72] text-white/[0.04]"
-          >
-            OB<span className="text-sage/10">.</span>
-          </p>
         </div>
       </section>
     </div>
