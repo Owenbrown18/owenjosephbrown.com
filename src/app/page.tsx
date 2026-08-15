@@ -122,7 +122,7 @@ export default function HomePage() {
       <section id="expertise" className="section-pad relative">
         <p
           aria-hidden
-          className="parallax-b pointer-events-none absolute -top-16 right-[2%] select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
+          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
         >
           02
         </p>
@@ -457,6 +457,12 @@ export default function HomePage() {
       {/* 05 · Contact */}
       <SectionRule num="05" />
       <section id="contact" className="section-pad relative overflow-hidden">
+        <p
+          aria-hidden
+          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
+        >
+          05
+        </p>
         <div className="container-site relative text-center">
           <p className="eyebrow !text-sage">05 · Contact</p>
           <h2 className="mx-auto mt-5 max-w-[16ch] text-[clamp(2.75rem,7vw,5rem)] font-extrabold text-white/95">
