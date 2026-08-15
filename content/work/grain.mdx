@@ -13,7 +13,7 @@ order: 1
 
 Digital photos are instant and endless. Film isn't. grain brings the constraint back: every roll has a fixed number of shots (12, 24, or 36) split evenly across everyone on it. You shoot with no preview and no redo, and when the roll is full the creator develops it. Everyone gets the photos at once, pushed to an Apple Photos album.
 
-The whole app exists to protect one moment: the reveal. That decision shaped the architecture more than any framework choice.
+The whole app exists to protect one moment: the reveal. Almost every technical decision below comes back to that.
 
 <ScreenRow>
   <img src="/images/grain/home_roll.webp" alt="Home screen with an active roll and live film-strip counter" />
@@ -52,7 +52,7 @@ if p_storage_path not like 'rolls/' || p_roll_id || '/%' then
 end if;
 ```
 
-Joining late is the interesting case. Shares are recomputed across all active members inside a single row-locked transaction, accounting for shots people have already used, with the floor-division remainder going to the oldest members. Two people scanning the same QR code at the same instant both get a correct, fair split.
+Joining late is the tricky case. Shares are recomputed across all active members inside a single row-locked transaction, accounting for shots people have already used, with the floor-division remainder going to the oldest members. Two people scanning the same QR code at the same instant both get a correct, fair split.
 
 ## A shutter that never waits for the network
 
@@ -70,11 +70,11 @@ The filter is a multi-pass SkSL pipeline (via `@shopify/react-native-skia`) appl
 
 If the shader fails to compile on a device, the app falls back to a colour matrix rather than shipping an unfiltered frame.
 
-## Decisions I'd defend
+## Decisions I stand by
 
 - **No accounts.** Anonymous Supabase auth with a display name. Signup friction would kill the "scan this QR at a party" loop.
-- **No preview.** The point of the app. It also deletes an entire category of UI.
-- **Server-authoritative everything.** v1 checked creator-only develop in the UI; v2 enforces it in the database. The UI is now just an opinion about state it doesn't own.
+- **No preview.** That's the point of the app. It's also a whole category of UI I never had to build.
+- **Server-authoritative everything.** v1 checked creator-only develop in the UI; v2 enforces it in the database. The UI just displays state it doesn't own.
 
 ## Status
 

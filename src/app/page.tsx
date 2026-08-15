@@ -37,19 +37,19 @@ const expertise = [
     num: "01",
     title: "Full-stack web",
     sub: "Next.js · TypeScript · Astro",
-    copy: "10+ production sites built, shipped, and maintained for paying clients, generating $20,000+ in revenue. Custom code, git-based CMS, DNS, performance budgets: the whole surface.",
+    copy: "I've built and shipped 10+ sites for paying clients, over $20,000 of work so far. I handle all of it myself: the code, the CMS, the domains, the hosting, keeping it fast.",
   },
   {
     num: "02",
     title: "Mobile",
     sub: "React Native · Expo",
-    copy: "Building grain, a full-stack iOS app, solo: camera pipeline, GPU film shader, offline upload queue. Startup frontend experience at Aperture AI.",
+    copy: "I'm building grain, a film camera app for iOS, completely on my own: the camera, the GPU film shader, the offline upload queue. Before that I built frontend at a startup, Aperture AI.",
   },
   {
     num: "03",
     title: "Systems & data",
     sub: "Python · Postgres · Supabase",
-    copy: "A ~3,900-line acquisition pipeline instrumented to revenue, and server-enforced app logic: row-level security and locked transactions.",
+    copy: "I wrote the ~3,900-line Python pipeline that finds my clients and tracks every email through to money in the bank. In my apps the database enforces the rules: row-level security, locked transactions.",
   },
 ];
 
@@ -106,7 +106,16 @@ export default function HomePage() {
             <p className="mx-auto mt-3 max-w-[72ch] px-6 text-sm leading-relaxed text-white/45">
               {clientSites.map((s, i) => (
                 <span key={s.slug}>
-                  <span className="whitespace-nowrap">{s.name}</span>
+                  {/* Live proof beats a label: every name goes to the
+                      real site it stands for. */}
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener"
+                    className="whitespace-nowrap transition-colors hover:text-white"
+                  >
+                    {s.name}
+                  </a>
                   {i < clientSites.length - 1 && (
                     <span className="mx-2 text-white/25">·</span>
                   )}{" "}
@@ -174,8 +183,9 @@ export default function HomePage() {
             <p className="eyebrow hidden !text-white/40 sm:block">03</p>
           </div>
           <p className="reveal-up mt-5 max-w-[56ch] text-white/70">
-            Real businesses run on this work. Each piece links to a full case
-            study: the problem, the decisions, and what happened after launch.
+            Real businesses run on this work. Every piece links to a full case
+            study: what the problem was, what I decided, and what happened
+            after launch.
           </p>
         </div>
 
@@ -186,10 +196,10 @@ export default function HomePage() {
             <ObdesignWordmark />
           </h3>
           <p className="mt-5 max-w-[52ch] text-white/70">
-            My one-person web studio. Over ten production sites for BC businesses,
-            every one custom-coded and editable by its owner. Roughly 7% of
-            the studio’s first cold emails become paying projects, found by a
-            pipeline I wrote.
+            My one-person web studio. Over ten live sites for BC businesses,
+            every one custom-coded and editable by the person who owns it.
+            About 7% of the studio’s cold emails turn into paying projects,
+            and I wrote the pipeline that finds them.
           </p>
         </div>
 
@@ -273,11 +283,12 @@ export default function HomePage() {
                 grain
               </h3>
               <p className="mt-5 max-w-[46ch] text-white/70">
-                A shared film camera for iOS. Friends join a roll, shoot blind
-                with no preview, and nobody sees a photo until the roll gets
-                developed. Server-authoritative Postgres, a Kodak-style film
-                shader on the GPU at capture, and an upload queue that
-                survives dead signal.
+                A shared film camera for iOS. Friends join a roll, shoot with no
+                preview, and nobody sees a single photo until the roll gets
+                developed. The rules live in Postgres where nobody can cheat
+                them, the Kodak-style film look happens on the GPU the moment
+                you shoot, and the upload queue doesn’t care if you have
+                signal.
               </p>
               <p className="mt-7">
                 <Link
@@ -342,10 +353,10 @@ export default function HomePage() {
                 Lead generation pipeline
               </h3>
               <p className="mt-5 max-w-[46ch] text-white/70">
-                The ~3,900-line Python system that finds the studio’s clients:
-                it scrapes, scores, and drafts, then tracks every outcome back
-                to revenue. I run the whole operation from one dashboard it
-                generates.
+                The ~3,900-line Python system that finds my clients. It scrapes,
+                scores, and drafts the emails, then tracks what actually
+                happens to every one of them. I run the whole thing from a
+                dashboard it builds for me.
               </p>
               <dl className="mt-8 grid max-w-[26rem] grid-cols-3 gap-4 border-t border-white/15 pt-5">
                 {[
@@ -441,16 +452,15 @@ export default function HomePage() {
                 >
                   the studio
                 </a>{" "}
-                funds my degree and{" "}
+                pays for my degree, and{" "}
                 <Link
                   href="/work/grain"
                   className="font-semibold text-white underline decoration-sage decoration-2 underline-offset-4 hover:decoration-white"
                 >
                   the projects
                 </Link>{" "}
-                sharpen the engineering. I like shipping more than I like
-                starting, and I’d rather show you a live URL than a slide
-                about one.
+                are where I push the engineering. I finish things. If I say
+                something works, there’s a link where you can try it.
               </p>
               <p className="mt-6 max-w-[52ch] text-white/60">
                 Looking for a Spring 2027 co-op in Victoria or remote. The
@@ -480,8 +490,8 @@ export default function HomePage() {
             Let’s talk.
           </h2>
           <p className="mx-auto mt-5 max-w-[44ch] text-white/70">
-            Hiring for a co-op or internship, or just curious how something
-            here was built? My inbox is open.
+            Hiring for a co-op? Or just want to know how something here was
+            built? Email me, I’ll answer.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
             <a

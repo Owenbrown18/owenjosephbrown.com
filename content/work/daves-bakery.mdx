@@ -12,7 +12,7 @@ heroAlt: "Daves' Bakery website hero on desktop"
 order: 5
 ---
 
-Daves' Bakery has been a Willow Point institution for over thirty years. David and Dave start production at 3:30 every morning. Their website told a different story: a WordPress site they'd built themselves thirteen years earlier, loading over insecure http, stuck on a PHP version their host couldn't upgrade. They'd found the dead end themselves; patching it wasn't worth anyone's time.
+Daves' Bakery has been a Willow Point institution for over thirty years. David and Dave start production at 3:30 every morning. Their website told a different story: a WordPress site they'd built themselves thirteen years earlier, loading over insecure http, stuck on a PHP version their host couldn't upgrade. They'd hit the dead end themselves, and patching it wasn't worth anyone's time.
 
 ![Daves' Bakery's previous WordPress website](/images/work/daves-bakery/old-site.webp)
 
@@ -30,7 +30,7 @@ The counter page lists real prices straight from their Square catalog, the story
 
 ## The cutover is the risky part
 
-Replacing a site is easy. Replacing it without breaking a business's email is the part that rewards paranoia. Before touching anything I pull the full DNS zone (A, MX, TXT, DKIM, SRV, the lot), then change only the apex A record and the `www` CNAME to point at Vercel, leaving every mail record exactly where it was. Their email kept working through the switch, and the old site's press features and order forms all came along to the new home.
+Replacing a site is easy. Replacing it without breaking the business's email is the part I'm paranoid about. Before touching anything I pull the full DNS zone (A, MX, TXT, DKIM, SRV, the lot), then change only the apex A record and the `www` CNAME to point at Vercel, leaving every mail record exactly where it was. Their email kept working through the switch, and the old site's press features and order forms all came along to the new home.
 
 ## The result
 

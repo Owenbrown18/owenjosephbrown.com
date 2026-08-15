@@ -21,7 +21,7 @@ It has produced most of the client work on this site. Today it holds **942 quali
 
 The bulk of it is two modules: the pipeline itself, and a separate domain-status checker that does the RDAP lookups and the "is this site actually broken" verification, because that logic got fiddly enough to deserve its own module.
 
-State lives in flat JSON files under version control: contacted, suppressed, outcomes, removed. Boring, inspectable, and diffable, which matters more than a database when the operator is also the developer and every bug costs real outreach.
+State lives in flat JSON files under version control: contacted, suppressed, outcomes, removed. Boring, easy to inspect, easy to diff. When the operator and the developer are the same person, that beats a database.
 
 ## The dashboard
 
@@ -35,23 +35,23 @@ The tabs across the top are the actual pipeline state: **335 ready to draft, 20 
 
 ![A single lead: the detected issue, contact routes, the drafted outreach email, and outcome buttons](/images/leadgen/detail.webp)
 
-Opening a lead gives me everything needed to make the call in one place, and then the part that matters most: **outcome buttons**. Replied, won, lost, bounced. That single row of buttons is what turns the whole thing from a mailing list into an instrument.
+Opening a lead gives me everything needed to make the call in one place, and then the part that matters most: **outcome buttons**. Replied, won, lost, bounced. That single row of buttons is why I actually know what works and what doesn't.
 
-## Instrumented to revenue, not to opens
+## Tracked to real money, not opens
 
 Because every send gets an outcome recorded, the funnel math is real money rather than marketing metrics. The numbers surprised me:
 
 <StatRow stats="~7%: of first cold emails convert to a paying project. Not replies — paying projects | 0: replies from roughly fifty follow-ups, which is why the system no longer drafts them | ~$60: expected value of a single sent email at the studio's average deal size" />
 
-Those three numbers reframed the business. The bottleneck was never finding leads, it was sending. Every client the pipeline has ever produced came from a first email, so the follow-up logic was deleted rather than tuned, which is the sort of decision you can only make with outcome data attached.
+Those three numbers changed how I run the business. The bottleneck was never finding leads, it was sending. Every client the pipeline has ever produced came from a first email, so I deleted the follow-up logic instead of tuning it. I could only make that call because the outcomes were recorded.
 
 ## The bug that taught me the most
 
 The analyzer originally generated a "hook" for each lead: the specific problem with their website that the email would open with. An audit of flagged leads found that **about 97% of those hooks were wrong**. The analyzer was pattern-matching its way into confident claims about sites it hadn't verified, and I was one send away from emailing local business owners about problems that didn't exist.
 
-The fix was philosophical as much as technical. The drafter may now only assert what the analyzer verifiably observed; anything inferred gets softened or cut. "No website found" still requires human confirmation, because a business with only a Facebook page and a business whose site the scraper failed to reach look identical in the data.
+The fix was a rule, not just code: the drafter may only claim what the analyzer actually observed, and anything inferred gets softened or cut. "No website found" still requires human confirmation, because a business with only a Facebook page and a business whose site the scraper failed to reach look identical in the data.
 
-That rule, that a claim has to trace to evidence, is now the thing I check hardest in anything automated I build. It's also why nothing in this system sends on its own.
+Every claim has to trace back to something the analyzer really saw. That's now the first thing I check in anything automated I build, and it's why nothing in this system sends on its own.
 
 ## What I'd change
 

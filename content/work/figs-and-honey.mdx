@@ -18,19 +18,19 @@ Figs & Honey is a Salt Spring Island spa run by a practitioner with twenty-five 
 
 The existing site was a dated WordPress install, and a friend of the owner who audits systems had found something worse: it was **compromised**, quietly injecting spam links into the contact page.
 
-That's a fork in the road. Cleaning a hacked WordPress install means removing what you can find, patching, and then hoping. You inherit the plugin surface, the unknown backdoor, and the responsibility. I chose to replace the platform outright: a fresh statically-rendered Next.js build has no plugin surface for the old problems to crawl back through, and the compromise couldn't follow it.
+Cleaning a hacked WordPress install means removing what you can find, patching, and then hoping. You inherit the plugin surface, the unknown backdoor, and the responsibility. I chose to replace the platform outright: a fresh statically-rendered Next.js build has no plugin surface for the old problems to crawl back through, and the compromise couldn't follow it.
 
 ![The previous compromised WordPress site](/images/work/figs-and-honey/old-site.webp)
 
-That decision cost more up front than a cleanup would have. It was still the right call, because the alternative was signing up to guarantee a system I hadn't built and couldn't fully see.
+Replacing cost more up front than a cleanup would have. I still think it was the right call. The alternative was promising to keep a hacked system clean when I couldn't see all of it.
 
 ## Four systems, none of them mine
 
-The interesting engineering here isn't the pages, it's the integration surface. A one-person spa needs booking, payments, a mailing list, and spam protection, and none of those should be things I build or hold.
+The hard part wasn't the pages, it was the integrations. A one-person spa needs booking, payments, a mailing list, and spam protection, and none of those should be things I build or hold.
 
 <Pipeline steps="Booking: Square Appointments, embedded, reserve-only — one calendar behind every treatment so double-booking is structurally impossible rather than merely unlikely | Payments: each shop product carries a Square payment link, so checkout happens on Square's hosted page and no card data ever touches the site | Content: Keystatic, a git-based CMS — the journal and every shop item are entries the owner edits herself | Mailing list: Mailchimp embed, because she already used it and switching tools is a cost with no benefit | Forms: Formspree with a honeypot and Cloudflare Turnstile verified server-side, on a site whose previous life involved injected spam" />
 
-The rule I held to: **the site owns presentation, the specialists own the risk.** Product descriptions and photography live in the CMS where they're part of the design; only the checkout hands off to Square. That keeps PCI scope at zero, and it means a payment provider change is a link swap rather than a rebuild.
+The rule I stuck to: **the site handles how things look, the specialists carry the risk.** Product descriptions and photography live in the CMS where they're part of the design; only the checkout hands off to Square. That keeps PCI scope at zero, and it means a payment provider change is a link swap rather than a rebuild.
 
 ![The treatments page, with Square booking behind every service](/images/work/figs-and-honey/booking.webp)
 
@@ -50,7 +50,7 @@ Six weeks, and the brief moved throughout: a shop appeared mid-build, pages were
 
 Two things kept that from becoming chaos.
 
-**Build once, use everywhere.** When gift certificates needed to appear on both the home page and the shop, I extracted a single component rather than copying the block. Two copies drift; one can't. That sounds obvious until you're on revision nine and the copy in one place is a month behind the other.
+**Build once, use everywhere.** When gift certificates needed to appear on both the home page and the shop, I extracted a single component rather than copying the block. Two copies drift apart, one copy can't. That sounds obvious until you're on revision nine and the copy in one place is a month behind the other.
 
 **Route enquiries to one place.** Contact buttons originally named channels, and some fired the visitor's mail client, where a message can silently die. Everything now goes to a form that routes by reason. The deliberate exception is booking, which still goes straight to Square, because booking and enquiring are different intents and collapsing them would cost her appointments.
 
@@ -58,7 +58,7 @@ The site went live August 8, on a ten-route build she runs herself.
 
 ## What I'd do differently
 
-I made go-live conditional on the client being **"100% happy"**. That sounds generous and it's a mistake, because it has no definition, so the engagement has no defined end and the last 10% can stretch indefinitely. Every job since uses an objective trigger instead: an agreed scope, a fixed revision count, and completion measured against the brief rather than a feeling. Good work still gets done; it just gets done inside a boundary both sides can point at.
+I made go-live conditional on the client being **"100% happy"**. That sounds generous. It's a mistake: nobody can define it, so the job has no real end and the last 10% can stretch forever. Every job since uses an objective trigger instead: an agreed scope, a fixed revision count, and completion measured against the brief rather than a feeling. The work is just as good. It just has a finish line both sides agreed to.
 
 > "Owen was brilliant. He held my hand and was incredibly patient and helpful. He built two wonderful websites for me with a shop on and booking system too."
 >

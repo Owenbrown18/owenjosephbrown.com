@@ -12,7 +12,7 @@ heroAlt: "Grain Construction website hero on desktop"
 order: 3
 ---
 
-Grain Construction built its reputation on Salt Spring Island the traditional way: good work, word of mouth, and an Instagram account. No website, ever. When the owners reached out, the timing had a deadline attached. They were printing stickers for the company vehicles, so the domain had to be locked in before anything else. grainconstruction.ca was still available, and it was theirs within days.
+Grain Construction built its reputation on Salt Spring Island the traditional way: good work, word of mouth, and an Instagram account. No website, ever. When the owners reached out there was already a deadline: they were printing stickers for the company vehicles, so the domain had to be locked in before anything else. grainconstruction.ca was still available, and it was theirs within days.
 
 ## The real problem was 300 photos
 
@@ -30,8 +30,8 @@ A four-page Next.js site in TypeScript, deployed on Vercel, using the company's 
 
 Two engineering details from this one that I keep reusing:
 
-- **Keystatic image paths have a shape, and getting it wrong fails silently.** For collections, images store under `directory/<entry-slug>/<file>` and the JSON value must include the slug segment. Seed it flat and the site renders perfectly while the CMS editor shows every image field empty. The site being green proves nothing; I now open the editor and check the collection before any delivery.
-- **Honest empty states.** The testimonial section stayed hidden until real client reviews existed, rather than padding the launch with fakes. It has since earned its content.
+- **Keystatic image paths have a shape, and getting it wrong fails silently.** For collections, images store under `directory/<entry-slug>/<file>` and the JSON value must include the slug segment. Seed it flat and the site renders perfectly while the CMS editor shows every image field empty. A working site proves nothing here. Now I open the CMS editor and check the collection before any delivery.
+- **Honest empty states.** The testimonial section stayed hidden until real client reviews existed, rather than padding the launch with fakes. Real reviews came in after launch, and it's filled in now.
 
 ![A single project gallery page with its full photo set](/images/work/grain-construction/project-page.webp)
 

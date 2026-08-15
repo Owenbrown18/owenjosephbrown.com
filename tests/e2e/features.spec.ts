@@ -246,7 +246,10 @@ test("section rules draw in on arrival, stay put once drawn", async ({
     });
   const before = await lastLine();
   expect(before.armed, "rule container joins the reveal system").toBe(true);
-  expect(before.scaleX, "line starts collapsed while offscreen").toBe(0);
+  // WebKit reports the collapsed matrix as ~4e-6 rather than exactly 0.
+  expect(before.scaleX, "line starts collapsed while offscreen").toBeLessThan(
+    0.01,
+  );
   await page.evaluate(() =>
     [...document.querySelectorAll(".section-rule")]
       .at(-1)!
