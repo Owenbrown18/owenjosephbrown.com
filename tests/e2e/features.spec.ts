@@ -240,11 +240,11 @@ test("the nav rail fills section by section as you scroll", async ({
       behavior: "instant",
     }),
   );
-  await page.waitForTimeout(300);
-  const atBottom = await fills();
-  for (const rail of atBottom) {
-    expect(rail.x, `${rail.section} full at the bottom`).toBeGreaterThan(0.9);
-  }
+  await expect
+    .poll(async () => Math.min(...(await fills()).map((r) => r.x)), {
+      timeout: 5000,
+    })
+    .toBeGreaterThan(0.9);
 });
 
 test("the header stays visible on desktop so the rail is readable", async ({
@@ -287,8 +287,9 @@ test("section rules draw in on arrival, stay put once drawn", async ({
       .at(-1)!
       .scrollIntoView({ behavior: "instant", block: "center" }),
   );
-  await page.waitForTimeout(1500); // 0.1s delay + 1s draw
-  expect((await lastLine()).scaleX, "line fully drawn").toBeGreaterThan(0.99);
+  await expect
+    .poll(async () => (await lastLine()).scaleX, { timeout: 6000 })
+    .toBeGreaterThan(0.99);
 });
 
 test("hero departs across the first viewport of scroll", async ({ page }) => {
@@ -366,13 +367,20 @@ test("every stage piece finishes its entrance visible", async ({ page }) => {
   await page.evaluate(() =>
     document.getElementById("work")!.scrollIntoView({ behavior: "instant" }),
   );
-  await page.waitForTimeout(1500); // longest stagger is 0.27s + 0.7s ease
+  await page.waitForTimeout(400);
   await page.evaluate(() => window.scrollBy({ top: 900, behavior: "instant" }));
-  await page.waitForTimeout(1500);
-  const stuck = await page.evaluate(() =>
-    [...document.querySelectorAll<HTMLElement>("[data-float]")]
-      .filter((el) => parseFloat(getComputedStyle(el).opacity) < 0.9)
-      .map((el) => el.dataset.float + ":" + (el.className || "").slice(0, 40)),
-  );
-  expect(stuck, "float pieces painted invisible").toEqual([]);
+  // Poll: the stagger is 0.27s + 0.7s ease on a Mac, slower on CI.
+  await expect
+    .poll(
+      async () =>
+        page.evaluate(() =>
+          [...document.querySelectorAll<HTMLElement>("[data-float]")]
+            .filter((el) => parseFloat(getComputedStyle(el).opacity) < 0.9)
+            .map(
+              (el) => el.dataset.float + ":" + (el.className || "").slice(0, 40),
+            ),
+        ),
+      { timeout: 6000 },
+    )
+    .toEqual([]);
 });
