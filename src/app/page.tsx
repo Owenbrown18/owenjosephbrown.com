@@ -37,19 +37,19 @@ const expertise = [
     num: "01",
     title: "Full-stack web",
     sub: "Next.js · TypeScript · Astro",
-    copy: "I've built and shipped 10+ sites for paying clients, over $20,000 of work so far. I handle all of it myself: the code, the CMS, the domains, the hosting, keeping it fast.",
+    copy: "I've built and shipped 10+ sites for paying clients, about $20,000 of work so far. I do all of it myself. That's the code, but it's also the CMS, the domain setup, the hosting, and keeping the thing fast once it's live.",
   },
   {
     num: "02",
     title: "Mobile",
     sub: "React Native · Expo",
-    copy: "I'm building grain, a film camera app for iOS, completely on my own: the camera, the GPU film shader, the offline upload queue. Before that I built frontend at a startup, Aperture AI.",
+    copy: "I'm building grain, a film camera app for iOS, on my own. The camera, the film look that runs on the GPU, the upload queue that still works with no signal. Before that I did frontend at a startup called Aperture AI.",
   },
   {
     num: "03",
     title: "Systems & data",
     sub: "Python · Postgres · Supabase",
-    copy: "I wrote the ~3,900-line Python pipeline that finds my clients and tracks every email through to money in the bank. In my apps the database enforces the rules: row-level security, locked transactions.",
+    copy: "I wrote the ~3,900-line Python pipeline that finds my clients and tracks every email through to whether it actually made money. In my apps I let the database enforce the rules instead of trusting the client, with row-level security and locked transactions.",
   },
 ];
 
@@ -200,9 +200,9 @@ export default function HomePage() {
             <p className="eyebrow hidden !text-white/40 sm:block">03</p>
           </div>
           <p className="reveal-up mt-5 max-w-[56ch] text-white/70">
-            Real businesses run on this work. Every piece links to a full case
-            study: what the problem was, what I decided, and what happened
-            after launch.
+            These are real projects with real users. Each one links to a write-up
+            of what the problem actually was and what I did about it. I’ve left
+            in the parts that didn’t go well.
           </p>
         </div>
 
@@ -213,10 +213,10 @@ export default function HomePage() {
             <ObdesignWordmark />
           </h3>
           <p className="mt-5 max-w-[52ch] text-white/70">
-            My one-person web studio. Over ten live sites for BC businesses,
-            every one custom-coded and editable by the person who owns it.
-            About 7% of the studio’s cold emails turn into paying projects,
-            and I wrote the pipeline that finds them.
+            My one-person web studio. Over ten live sites for businesses around
+            BC, all custom-coded, and every one can be edited by the owner
+            without calling me. About 7% of my cold emails turn into paying
+            projects, and I wrote the system that finds them.
           </p>
         </div>
 
@@ -300,11 +300,11 @@ export default function HomePage() {
                 grain
               </h3>
               <p className="mt-5 max-w-[46ch] text-white/70">
-                A shared film camera for iOS. Friends join a roll, shoot with no
-                preview, and nobody sees a single photo until the roll gets
-                developed. The rules live in Postgres where nobody can cheat
-                them, the Kodak-style film look happens on the GPU the moment
-                you shoot, and the upload queue doesn’t care if you have
+                A shared film camera for iOS. Your friends join a roll, everyone
+                shoots with no preview, and nobody sees a photo until the roll
+                gets developed. The rules are enforced down in Postgres, so you
+                can’t cheat them from the app. The film look is done on the GPU
+                as you shoot, and uploads still go through when you’ve got no
                 signal.
               </p>
               <p className="mt-7">
@@ -370,10 +370,11 @@ export default function HomePage() {
                 Lead generation pipeline
               </h3>
               <p className="mt-5 max-w-[46ch] text-white/70">
-                The ~3,900-line Python system that finds my clients. It scrapes,
-                scores, and drafts the emails, then tracks what actually
-                happens to every one of them. I run the whole thing from a
-                dashboard it builds for me.
+                The ~3,900-line Python system that finds my clients. It scrapes
+                businesses, scores them, and drafts the first email. Then it
+                tracks what happened to every one, right through to whether it
+                made me money. I run it all from a dashboard it builds for
+                me.
               </p>
               <dl className="mt-8 grid max-w-[26rem] grid-cols-3 gap-4 border-t border-white/15 pt-5">
                 {[
@@ -459,9 +460,9 @@ export default function HomePage() {
             </div>
             <div className="reveal-up">
               <p className="max-w-[52ch] text-[clamp(1.05rem,1.8vw,1.3rem)] leading-relaxed text-white/75">
-                I grew up on Salt Spring Island and study software engineering
-                at UVic. At nineteen I ran a painting business to $80,000 in
-                revenue. Now{" "}
+                I grew up on Salt Spring Island and I’m studying software
+                engineering at UVic. When I was nineteen I ran a painting
+                business and did $80,000 in revenue. Now{" "}
                 <a
                   href="https://www.obwebdesign.ca"
                   rel="noopener"
@@ -476,8 +477,10 @@ export default function HomePage() {
                 >
                   the projects
                 </Link>{" "}
-                are where I push the engineering. I finish things. If I say
-                something works, there’s a link where you can try it.
+                are where I actually learn the engineering. I’m better at finishing
+                things than starting them, which took me a while to work out.
+                Almost everything on here is live somewhere, so you can go look
+                at it instead of taking my word for it.
               </p>
               <p className="mt-6 max-w-[52ch] text-white/60">
                 Looking for a Spring 2027 co-op in Victoria or remote. The
@@ -507,8 +510,8 @@ export default function HomePage() {
             Let’s talk.
           </h2>
           <p className="mx-auto mt-5 max-w-[44ch] text-white/70">
-            Hiring for a co-op? Or just want to know how something here was
-            built? Email me, I’ll answer.
+            If you’re hiring for a co-op, or you just want to know how something
+            on here works, send me an email. I’ll get back to you.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
             <a

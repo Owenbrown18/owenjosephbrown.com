@@ -1,13 +1,25 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { expect, test } from "@playwright/test";
+
+// Case studies are read off disk rather than listed by hand. The hand-written
+// version silently skipped Whispr the day it was added, which is exactly the
+// page a smoke test exists to catch.
+const workDir = join(process.cwd(), "content/work");
+const caseStudies = readdirSync(workDir)
+  .filter((f) => f.endsWith(".mdx"))
+  .map((file) => {
+    const slug = file.replace(/\.mdx$/, "");
+    const title = /^title:\s*"(.+)"$/m.exec(readFileSync(join(workDir, file), "utf8"))?.[1];
+    if (!title) throw new Error(`${file} has no title in its frontmatter`);
+    // Escape it: real titles contain regex metacharacters like & and '.
+    return { path: `/work/${slug}`, h1: new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i") };
+  });
 
 const pages = [
   { path: "/", h1: /owen brown/i },
   { path: "/obdesign", h1: /obdesign/i },
-  { path: "/work/grain", h1: /^grain$/i },
-  { path: "/work/leadgen", h1: /lead generation pipeline/i },
-  { path: "/work/grain-construction", h1: /grain construction/i },
-  { path: "/work/figs-and-honey", h1: /figs & honey/i },
-  { path: "/work/daves-bakery", h1: /daves' bakery/i },
+  ...caseStudies,
   { path: "/resume", h1: /owen brown/i },
 ];
 

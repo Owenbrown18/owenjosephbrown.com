@@ -67,20 +67,69 @@ export default async function WorkEntryPage({
                 },
               ]
             : []),
+          ...(entry.repoUrl
+            ? [
+                {
+                  label: "Source",
+                  value: (
+                    <a
+                      href={entry.repoUrl}
+                      rel="noopener"
+                      className="link-underline font-medium text-fg"
+                    >
+                      {entry.repoUrl.replace("https://github.com/", "")} ↗
+                    </a>
+                  ),
+                },
+              ]
+            : []),
+          ...(entry.downloadUrl
+            ? [
+                {
+                  label: "Download",
+                  value: (
+                    <a
+                      href={entry.downloadUrl}
+                      rel="noopener"
+                      className="link-underline font-medium text-fg"
+                    >
+                      {entry.downloadLabel ?? "Latest release"} ↗
+                    </a>
+                  ),
+                },
+              ]
+            : []),
         ]}
       />
 
-      {entry.hero && (
-        <div className="relative mt-12 aspect-[16/9] max-w-[52rem] overflow-hidden border border-line">
-          <Image
-            src={entry.hero}
-            alt={entry.heroAlt ?? entry.title}
-            fill
-            priority
-            sizes="(max-width: 900px) 100vw, 832px"
-            className="anim-image object-cover object-top"
+      {entry.heroVideo ? (
+        <div className="anim-image relative mt-12 max-w-[52rem] overflow-hidden border border-line">
+          {/* muted + playsInline are what let this start on its own; a
+              still frame cannot show a five-second interaction. */}
+          <video
+            src={entry.heroVideo}
+            poster={entry.hero}
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label={entry.heroAlt ?? entry.title}
+            className="block h-auto w-full"
           />
         </div>
+      ) : (
+        entry.hero && (
+          <div className="relative mt-12 aspect-[16/9] max-w-[52rem] overflow-hidden border border-line">
+            <Image
+              src={entry.hero}
+              alt={entry.heroAlt ?? entry.title}
+              fill
+              priority
+              sizes="(max-width: 900px) 100vw, 832px"
+              className="anim-image object-cover object-top"
+            />
+          </div>
+        )
       )}
 
       <div className="prose-ob mt-12">

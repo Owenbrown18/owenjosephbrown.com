@@ -17,6 +17,11 @@ export const workFrontmatter = z.object({
   repoUrl: z.string().url().optional(),
   hero: z.string().optional(),
   heroAlt: z.string().optional(),
+  // A looping video hero, for work whose whole point is an interaction a
+  // still frame can't show. `hero` is its poster frame when set.
+  heroVideo: z.string().optional(),
+  downloadUrl: z.string().url().optional(),
+  downloadLabel: z.string().optional(),
   order: z.number().int(),
 });
 

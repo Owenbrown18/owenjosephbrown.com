@@ -1,0 +1,87 @@
+---
+title: "Whispr"
+kind: "product"
+summary: "A dictation app for macOS that runs entirely on your own machine. Hold a hotkey, talk, let go, and the text lands at your cursor. No audio ever leaves the laptop."
+year: "2026"
+timeline: "July – August 2026"
+role: "Sole developer"
+stack: ["Rust", "Tauri v2", "whisper.cpp (Metal)", "Ollama", "React", "TypeScript"]
+repoUrl: "https://github.com/Owenbrown18/whispr"
+downloadUrl: "https://github.com/Owenbrown18/whispr/releases/download/v1.0.0/Whispr_1.0.0_aarch64.dmg"
+downloadLabel: "Whispr 1.0.0 for Apple Silicon (.dmg)"
+heroVideo: "/images/whispr/demo.mp4"
+hero: "/images/whispr/demo-poster.webp"
+heroAlt: "Holding a hotkey, speaking, and the transcribed text appearing at the cursor in a text editor"
+order: 2
+---
+
+Whispr is a dictation app for macOS. You hold a hotkey, talk, let go, and the text shows up wherever your cursor was.
+
+That it runs locally is the whole reason I built it. I was using Wispr Flow, which is a good product, but the cleanup step sends your audio and your transcript off to their servers. I dictate journal entries and half-finished ideas, and I didn't love that. So I built the same two-stage pipeline with nothing leaving the machine. Whisper does the transcription on the GPU, a small model running in Ollama tidies it up, and if Ollama isn't running you just get the raw transcript instead.
+
+<Pipeline steps="Hotkey: hold ⌥Space in any app, or double-tap Control | Capture: cpal records for as long as you hold it | Transcribe: whisper.cpp with Metal, running on the GPU | Clean up: a small local model strips the ums and fixes the punctuation. Optional, and it degrades to the raw transcript if Ollama isn't there | Inject: the text gets pasted at your cursor in whatever app is focused" />
+
+## The bug that only showed up when I wasn't looking
+
+I'd been using Whispr for about a month. Then I opened the history file and every single one of the 45 dictations in it said `injected=false`.
+
+Here is what was actually going on. macOS decides what an unsigned app *is* by hashing its binary. I was rebuilding constantly, and every rebuild changed that hash, so as far as the system was concerned this was a brand new app that had never been granted anything. The permission was gone. But System Settings still showed Whispr sitting in the Accessibility list with its toggle switched on, because that row is keyed to the bundle ID and has no idea the binary underneath it changed.
+
+The part that actually got me is why I never caught it sooner. When you launch the app from a terminal, macOS attributes the permission request to the parent process, so it quietly inherits the terminal's grants and reports that everything is fine. Launching from a shell to read the logs is exactly what I'd been doing every time I went looking. The bug went away whenever I tried to watch it.
+
+| How I launched it | Microphone | Accessibility | Did the paste land |
+| --- | --- | --- | --- |
+| From a terminal, which is how I debugged it | `true` | `true` | Yes |
+| From Finder, which is how I actually used it | `false` | `false` | No |
+
+A clean 1.0.0 build launched from Finder logged `microphone=false accessibility=false`, with Whispr visibly enabled in System Settings the entire time.
+
+Whispr checks for itself now and shows you what it actually got, rather than trusting what the system claims is switched on.
+
+![Whispr's own permissions tab, showing microphone and accessibility both granted](/images/whispr/settings-permissions.webp)
+
+## The number I was trusting was made up
+
+The other half of this one is worse, because it's mine rather than Apple's.
+
+That `injected` field was set from the `is_ok()` of a function that had no way of knowing whether the paste landed. It returned `Ok` if the keystroke got sent. Not if anything received it. So the field I went to when I wanted to know if injection worked was never measuring that at all.
+
+And when injection did fire, it often pasted the wrong thing. I was putting the clipboard back 250ms after sending ⌘V, but apps read the pasteboard asynchronously, so TextEdit would arrive late and paste whatever had been on the clipboard beforehand. It holds for 900ms now and checks `NSPasteboard.changeCount` before restoring, so it can't clobber something you copied while it was working.
+
+If that field had simply been missing I would have gone and checked by hand on day one. Instead it sat there telling me `false` 45 times and I read straight past it. A number that can never come back wrong is worse than no number.
+
+![The transcript card after a dictation, showing that the text was pasted at the cursor, that the AI cleanup ran, and how long each stage took](/images/whispr/settings-general.webp)
+
+## Four other things I had to work out
+
+### Getting a global hotkey without the scary permission
+
+The plan was to use `rdev`, which taps the event stream. That needs Input Monitoring, which is the permission where macOS warns the user that an app can see everything they type. Asking a brand new dictation app for that on first launch is a bad look. `tauri-plugin-global-shortcut` uses Carbon's `RegisterEventHotKey` underneath, which gives you press and release for one specific combination and needs no permission at all. Same feature, one less frightening dialog.
+
+### A crash that was really a threading rule
+
+Every dictation could take the app down. Four crash reports, all identical: `inject_text` into `enigo` into `TSMGetInputSourceProperty` into `dispatch_assert_queue_fail`. `enigo` asks the Text Input Source Manager how to map keys onto your current layout, and those APIs assert that they're being called on the main thread. Mine was on a tokio worker, so the assertion aborted the whole process. The fix hops just the keystroke onto the main thread and waits for it with a timeout. Saving and restoring the clipboard stays on the worker, because there's no reason to tie up the main thread for that.
+
+### Keeping an 8GB machine usable
+
+The Whisper context pins somewhere between half a gig and a gig of unified memory. On a base M1 that's a lot to hold onto for something you use in ten second bursts, so it unloads after a few idle minutes. Ollama's model gets warmed the moment you start recording rather than when you stop, so it's loading while you're still talking.
+
+### The window I couldn't see was the busiest thing running
+
+The little recording HUD stays alive and hidden the whole time the app is open. Its React state started out as "listening", so the infinite CSS animation on the bar just kept running in the background forever, and the shared WebKit GPU process sat at around 6% CPU doing nothing anybody could see. Starting it in an idle state that renders nothing at all took that to zero.
+
+![The recording HUD: a small floating pill that appears while you hold the hotkey](/images/whispr/hud.webp)
+
+![The models tab, with three Whisper models listed by size and one selected](/images/whispr/settings-models.webp)
+
+<StatRow stats="99: tests, 67 in Rust and 32 in the frontend. None of them need a microphone, a GPU or Ollama | 8.07 MB: the whole app | 732ms: to transcribe 7 seconds of audio using base.en | 6%: idle CPU burned by a window nobody could see, now 0" />
+
+## What's still not right
+
+The model it ships with is slow on my machine. A short dictation takes 8 to 10 seconds warm on a base M1, while `base.en` gets through 7 seconds of audio in 732 milliseconds. The README tells you to switch, but honestly the default should just be the fast one.
+
+The hotkey dies. After the app has been running for a while both ⌥Space and the double-tap stop firing, and restarting always fixes it. I've only ever seen it happen with synthetic key events, so it might be an artifact of how I was testing rather than a real fault, but I couldn't reproduce it reliably enough to be sure. It's written up as a known issue rather than fixed, which I'd rather admit than paper over.
+
+It's also unsigned, Apple Silicon only, and has no auto-update. Signing needs an Apple Developer account and I'm not spending the $99 on it yet.
+
+If you do build it yourself, that permission trap will get you too. `tccutil reset Accessibility com.owenbrown.whispr` after a rebuild sorts it, and that's in the README now.
