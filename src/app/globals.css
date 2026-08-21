@@ -901,21 +901,82 @@ h3.reveal-init {
    Project index: every project in an identical frame so the section
    scans like a contents page rather than four bespoke features.
    --------------------------------------------------------------- */
-/* No box. The captures sit straight on the paper and carry their own
-   edges and shadows, so the section reads as work laid out on a desk
-   rather than four framed thumbnails. The aspect ratio stays because it
-   still governs how tall each card is, and overflow stays visible so a
-   composition can break its own bounds if it wants to. */
+/* The box is back, but branded: each project's frame is a small stage in
+   that project's own palette, so the row reads as four little landing
+   pages rather than four screenshots. Artifacts are clipped to the box
+   and carry their own shadows. */
 .project-frame {
   position: relative;
   aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid rgba(15, 35, 32, 0.12);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .project-card:hover .project-frame {
-  /* The whole arrangement lifts together instead of a border lighting. */
   transform: translateY(-4px);
 }
-.project-frame {
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+
+/* Per-project stages. grain is its own cream, the studio sits on sage,
+   Whispr on its dark app forest, leadgen on a cool mist. */
+.frame-grain {
+  background: linear-gradient(165deg, #f7f1e3 0%, #f1e8d2 100%);
+  border-color: rgba(122, 99, 48, 0.22);
+}
+.frame-studio {
+  background: linear-gradient(165deg, #e7efe9 0%, #d7e5dd 100%);
+  border-color: rgba(46, 84, 80, 0.22);
+}
+.frame-whispr {
+  background: linear-gradient(165deg, #1d3b36 0%, #0f2724 100%);
+  border-color: rgba(15, 39, 36, 0.5);
+}
+.frame-leadgen {
+  background: linear-gradient(165deg, #eceeeb 0%, #dfe4df 100%);
+  border-color: rgba(46, 84, 80, 0.16);
+}
+
+/* The pieces inside a stage enter one after another when the card
+   reveals, and float apart slightly on hover. Hidden state exists only
+   once JS has armed the reveal (.reveal-init), so with no script the
+   stage is simply set. */
+@media (prefers-reduced-motion: no-preference) {
+  .project-card.reveal-init [data-float] {
+    opacity: 0;
+    transform: translateY(26px) scale(0.97);
+    transition:
+      opacity 0.55s ease-out,
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .project-card.reveal-init [data-float="2"] {
+    transition-delay: 0.09s;
+  }
+  .project-card.reveal-init [data-float="3"] {
+    transition-delay: 0.18s;
+  }
+  .project-card.reveal-init [data-float="4"] {
+    transition-delay: 0.27s;
+  }
+  .project-card.reveal-init.is-revealed [data-float] {
+    opacity: 1;
+    transform: none;
+  }
+  /* After the entrance, delays would lag the hover response. */
+  .project-card.is-revealed [data-float] {
+    transition-delay: 0s;
+  }
+  /* Uneven lifts, so the hover reads as depth rather than a block move. */
+  .project-card.is-revealed:hover [data-float="1"] {
+    transform: translateY(-7px);
+  }
+  .project-card.is-revealed:hover [data-float="2"] {
+    transform: translateY(-12px);
+  }
+  .project-card.is-revealed:hover [data-float="3"] {
+    transform: translateY(-4px);
+  }
+  .project-card.is-revealed:hover [data-float="4"] {
+    transform: translateY(-9px);
+  }
 }
 
 /* The studio card composes several sites in the one frame: one large

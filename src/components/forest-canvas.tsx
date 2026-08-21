@@ -75,11 +75,16 @@ float patchMask(vec2 docPx) {
   vec2 lo = pos;
   vec2 hi = pos + size;
 
-  // Soft edges so a patch fades in rather than being a cut-out.
-  vec2 e = vec2(0.07);
+  // Wide feather: the fade has to span several grid cells, or the lines
+  // run at full strength right up to the boundary and the patch reads as
+  // a hard cut from white to grid.
+  vec2 e = size * 0.45;
   vec2 a = smoothstep(lo, lo + e, f);
   vec2 b = vec2(1.0) - smoothstep(hi - e, hi, f);
-  return a.x * a.y * b.x * b.y;
+  float m = a.x * a.y * b.x * b.y;
+  // Bias the ramp long at the edges: the eye reads the last 20% of a
+  // linear fade as "still there", so spend more of the patch fading.
+  return m * m;
 }
 
 void main() {
@@ -105,9 +110,9 @@ void main() {
 
     vec3 ink = vec3(1.0) - FOREST;
     // The block itself reads faintly even between the lines.
-    col -= ink * patch * 0.014;
-    col -= ink * minor * patch * (0.085 + 0.070 * spot);
-    col -= ink * major * patch * (0.130 + 0.100 * spot);
+    col -= ink * patch * 0.016;
+    col -= ink * minor * patch * (0.105 + 0.075 * spot);
+    col -= ink * major * patch * (0.155 + 0.105 * spot);
   }
 
   // Dither to kill banding on the flat ground.

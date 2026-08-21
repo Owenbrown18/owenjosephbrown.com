@@ -43,12 +43,16 @@ const personJsonLd = {
  * A slug with no composition here falls back to its hero image, so a new
  * case study still shows up on its own.
  */
-const compositions: Record<string, { frame: string; art: ReactNode }> = {
+const compositions: Record<
+  string,
+  { frame: string; tone: string; art: ReactNode }
+> = {
   grain: {
     frame: "aspect-[5/4]",
+    tone: "frame-grain",
     art: (
       <>
-        <div className="absolute bottom-[3%] left-[5%] w-[29%]">
+        <div data-float={1} className="absolute bottom-[-8%] left-[6%] w-[27%] -rotate-2">
           <PhoneFrame>
             <Image
               src="/images/grain/home_roll.webp"
@@ -60,7 +64,7 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
             />
           </PhoneFrame>
         </div>
-        <div className="absolute bottom-[11%] left-[34%] z-10 w-[31%]">
+        <div data-float={2} className="absolute bottom-[6%] left-[37%] z-10 w-[29%]">
           <PhoneFrame>
             <Image
               src="/images/grain/new_roll_qr.webp"
@@ -72,7 +76,7 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
             />
           </PhoneFrame>
         </div>
-        <div className="absolute bottom-[5%] right-[6%] w-[26%]">
+        <div data-float={3} className="absolute bottom-[-6%] right-[7%] w-[25%] rotate-2">
           <PhoneFrame>
             <Image
               src="/images/grain/waiting.webp"
@@ -89,6 +93,7 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
   },
   whispr: {
     frame: "aspect-[16/11]",
+    tone: "frame-whispr",
     art: (
       <>
         {/* Stills, not the demo video. At card size the video's first
@@ -100,24 +105,28 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
           alt=""
           className="left-[4%] top-[7%] w-[64%] aspect-[16/12]"
           sizes="(min-width: 768px) 540px, 64vw"
+          dataFloat={1}
         />
         <Shot
           src="/images/whispr/settings-models.webp"
           alt=""
           className="right-[3%] top-[22%] z-10 w-[42%] aspect-[16/12]"
           sizes="(min-width: 768px) 360px, 42vw"
+          dataFloat={2}
         />
         <Shot
           src="/images/whispr/hud.webp"
           alt=""
           className="bottom-[9%] left-[17%] z-20 w-[40%] aspect-[560/150]"
           sizes="(min-width: 768px) 340px, 40vw"
+          dataFloat={3}
         />
       </>
     ),
   },
   leadgen: {
     frame: "aspect-[4/3]",
+    tone: "frame-leadgen",
     art: (
       <>
         <Shot
@@ -125,12 +134,14 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
           alt=""
           className="left-[4%] top-[7%] w-[70%] aspect-[16/10]"
           sizes="(min-width: 768px) 580px, 68vw"
+          dataFloat={1}
         />
         <Shot
           src="/images/leadgen/detail.webp"
           alt=""
           className="bottom-[7%] right-[5%] z-10 w-[40%] aspect-[16/13]"
           sizes="(min-width: 768px) 340px, 40vw"
+          dataFloat={2}
         />
       </>
     ),
@@ -251,6 +262,7 @@ export default function HomePage() {
               tags={["Next.js", "Astro", "Keystatic", "Vercel"]}
               blurb="My one-person web studio. Ten live sites for businesses around BC, all custom-coded, each one editable by the owner without calling me."
               linkLabel="View the studio"
+              tone="frame-studio"
             >
               <div aria-hidden className="studio-stack absolute inset-0">
                 {[
@@ -258,8 +270,8 @@ export default function HomePage() {
                   ["figs-and-honey", "Figs & Honey", "380px"],
                   ["daves-bakery", "Daves’ Bakery", "340px"],
                   ["soma-active-health", "Soma Active Health", "300px"],
-                ].map(([slug, name, w]) => (
-                  <div key={slug}>
+                ].map(([slug, name, w], i) => (
+                  <div key={slug} data-float={i + 1}>
                     <Image
                       src={`/images/work/${slug}.webp`}
                       alt={name}
@@ -282,6 +294,7 @@ export default function HomePage() {
                 tags={entry.stack.slice(0, 4)}
                 blurb={entry.summary}
                 frameClass={compositions[entry.slug]?.frame}
+                tone={compositions[entry.slug]?.tone}
               >
                 {compositions[entry.slug]?.art ?? (
                   <FrameShot

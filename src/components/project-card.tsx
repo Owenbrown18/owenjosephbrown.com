@@ -24,6 +24,8 @@ export type ProjectCardProps = {
   linkLabel?: string;
   /** Frames deliberately differ in shape so the row doesn't line up. */
   frameClass?: string;
+  /** The project's own stage colour (frame-grain, frame-studio, ...). */
+  tone?: string;
 };
 
 export function ProjectCard({
@@ -36,6 +38,7 @@ export function ProjectCard({
   children,
   linkLabel = "Case study",
   frameClass = "aspect-[4/3]",
+  tone = "",
 }: ProjectCardProps) {
   return (
     <Link
@@ -43,7 +46,7 @@ export function ProjectCard({
       aria-label={`${title}: ${blurb}`}
       className="project-card reveal-up group block"
     >
-      <div className={`project-frame ${frameClass}`}>{children}</div>
+      <div className={`project-frame ${frameClass} ${tone}`}>{children}</div>
 
       <div className="mt-6 flex items-end justify-between gap-4">
         <span className="font-display text-[clamp(2rem,4vw,2.75rem)] font-extrabold leading-none tracking-[-0.03em] text-white/90">
@@ -95,6 +98,7 @@ export function Shot({
   alt,
   className,
   sizes,
+  dataFloat,
   priority = false,
 }: {
   src: string;
@@ -102,10 +106,13 @@ export function Shot({
   className: string;
   /** Must match the shot's real rendered width, not the frame's. */
   sizes: string;
+  /** Order in the stage's entrance stagger; also the hover-depth group. */
+  dataFloat?: number;
   priority?: boolean;
 }) {
   return (
     <div
+      data-float={dataFloat}
       className={`absolute overflow-hidden border border-white/14 shadow-[0_2px_6px_-2px_rgba(15,35,32,0.12),0_22px_45px_-16px_rgba(15,35,32,0.35)] ${className}`}
     >
       <Image

@@ -339,3 +339,26 @@ test("lifted headings ride the scroll", async ({ page }) => {
     expect(late, `${sel} moves as it crosses the viewport`).not.toEqual(early);
   }
 });
+
+test("every stage piece finishes its entrance visible", async ({ page }) => {
+  // The floats are CHILDREN of the revealed card, hidden by
+  // .project-card.reveal-init [data-float] and shown when the card gains
+  // .is-revealed. The ghost sweep only checks .reveal-init elements
+  // themselves, so a broken handoff here would strand the artwork
+  // invisible while every other test stayed green.
+  await page.goto("/", { waitUntil: "networkidle" });
+  const count = await page.locator("[data-float]").count();
+  expect(count, "stages carry float pieces").toBeGreaterThanOrEqual(10);
+  await page.evaluate(() =>
+    document.getElementById("work")!.scrollIntoView({ behavior: "instant" }),
+  );
+  await page.waitForTimeout(1500); // longest stagger is 0.27s + 0.7s ease
+  await page.evaluate(() => window.scrollBy({ top: 900, behavior: "instant" }));
+  await page.waitForTimeout(1500);
+  const stuck = await page.evaluate(() =>
+    [...document.querySelectorAll<HTMLElement>("[data-float]")]
+      .filter((el) => parseFloat(getComputedStyle(el).opacity) < 0.9)
+      .map((el) => el.dataset.float + ":" + (el.className || "").slice(0, 40)),
+  );
+  expect(stuck, "float pieces painted invisible").toEqual([]);
+});
