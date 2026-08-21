@@ -25,7 +25,8 @@ export default function ResumePage() {
   const hasPdf = existsSync(join(process.cwd(), "public", PDF.slice(1)));
 
   return (
-    <div className="container-site pb-24 pt-36 sm:pt-40">
+    <div className="container-site pb-24 pt-32 sm:pt-36">
+      <div className="sheet sheet-wide">
       <PageHeader
         eyebrow="Resume"
         title={identity.name}
@@ -131,6 +132,7 @@ export default function ResumePage() {
           </p>
         </div>
       )}
+      </div>
     </div>
   );
 }

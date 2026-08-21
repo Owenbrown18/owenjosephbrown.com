@@ -29,6 +29,7 @@ precision highp float;
 uniform vec2 u_res;
 uniform vec2 u_pointer; // 0..1, y up
 uniform float u_dpr;    // device pixels per CSS pixel
+uniform float u_fade;   // 0..1 entrance: the field draws itself in
 
 // Paper, and the green the grid is drawn in.
 const vec3 PAPER  = vec3(0.957, 0.953, 0.937); // #f4f3ef
@@ -75,7 +76,7 @@ void main() {
 
   vec3 col = PAPER;
 
-  float w = field(uv, aspect);
+  float w = field(uv, aspect) * u_fade;
   // A touch of gamma keeps the tails long and the centres honest.
   w = pow(w, 1.3);
 
@@ -201,6 +202,7 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       const uRes = gl.getUniformLocation(program, "u_res");
       const uPointer = gl.getUniformLocation(program, "u_pointer");
       const uDpr = gl.getUniformLocation(program, "u_dpr");
+      const uFade = gl.getUniformLocation(program, "u_fade");
 
       let width = 0;
       let height = 0;
@@ -223,6 +225,9 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       // for a number we already know.
       const target = { x: 0.25, y: 0.7 };
       const eased = { x: 0.25, y: 0.7 };
+      // The field fades in over the first second rather than popping with
+      // the first draw. Under reduced motion it snaps.
+      let fade = reducedMotion ? 1 : 0;
 
       let raf = 0;
       // The field is static and fixed to the viewport, so there is no
@@ -235,17 +240,22 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
         if (reducedMotion) {
           eased.x = target.x;
           eased.y = target.y;
+          fade = 1;
         } else {
           eased.x += (target.x - eased.x) * 0.08;
           eased.y += (target.y - eased.y) * 0.08;
+          fade += (1 - fade) * 0.055;
+          if (fade > 0.999) fade = 1;
         }
         gl.uniform2f(uRes, width, height);
         gl.uniform2f(uPointer, eased.x, eased.y);
         gl.uniform1f(uDpr, dpr);
+        gl.uniform1f(uFade, fade);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
 
         // Keep going only while the pointer is still catching up.
         const settling =
+          fade < 1 ||
           Math.abs(target.x - eased.x) > 0.0008 ||
           Math.abs(target.y - eased.y) > 0.0008;
         if (settling) raf = requestAnimationFrame(draw);

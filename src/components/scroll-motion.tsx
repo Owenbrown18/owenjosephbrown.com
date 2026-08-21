@@ -128,22 +128,6 @@ export function ScrollMotion() {
         });
       }
 
-      // Two opposing drifts so stacked photos move against each other,
-      // scrubbed across the element's full pass through the viewport.
-      const drift = (el: HTMLElement, fromPct: number, toPct: number) => {
-        const m = track(el);
-        job({
-          compute: (y, vh) => clamp01((vh - (m.docTop - y)) / (vh + m.height)),
-          apply: (t) => {
-            const pct = fromPct + (toPct - fromPct) * t;
-            el.style.transform = `translateY(${pct.toFixed(3)}%)`;
-          },
-        });
-      };
-      for (const el of document.querySelectorAll<HTMLElement>(".parallax-a"))
-        drift(el, 7, -7);
-      for (const el of document.querySelectorAll<HTMLElement>(".parallax-b"))
-        drift(el, -4, 5);
     }
 
     if (!jobs.length) return;

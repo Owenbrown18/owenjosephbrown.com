@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 
 export default function ObdesignPage() {
   return (
-    <div className="container-site pb-24 pt-36 sm:pt-40">
+    <div className="container-site pb-24 pt-32 sm:pt-36">
+      <div className="sheet sheet-wide">
       <PageHeader
         eyebrow="The studio · June 2025 – present"
         title={
@@ -122,6 +123,7 @@ export default function ObdesignPage() {
               </Link>
             ))}
         </div>
+      </div>
       </div>
     </div>
   );

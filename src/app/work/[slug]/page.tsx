@@ -41,7 +41,8 @@ export default async function WorkEntryPage({
   const next = entries[(index + 1) % entries.length];
 
   return (
-    <article className="container-site pb-24 pt-36 sm:pt-40">
+    <article className="container-site pb-24 pt-32 sm:pt-36">
+      <div className="sheet">
       <PageHeader
         eyebrow={`${kindLabel[entry.kind]} · ${entry.year}`}
         title={entry.title}
@@ -156,6 +157,7 @@ export default async function WorkEntryPage({
           </span>
         </Link>
       </nav>
+      </div>
     </article>
   );
 }

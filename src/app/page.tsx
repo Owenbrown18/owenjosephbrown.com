@@ -180,8 +180,6 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
 
-      <div aria-hidden className="page-grade" />
-
       {/* 01 · Hero. Left-aligned and editorial: the name, what I do, the
           ways to reach me, then the history as a table rather than a
           paragraph, so a recruiter has it all in the first screen. */}

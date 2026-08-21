@@ -26,8 +26,7 @@ export function PageHeader({
   children?: ReactNode;
 }) {
   return (
-    <header className="max-w-[52rem]">
-      <div className="sage-bar mb-7" />
+    <header>
       <p className="eyebrow">{eyebrow}</p>
       <h1 className="anim-heading mt-4 text-[clamp(2.75rem,7vw,5rem)] text-fg">{title}</h1>
       {summary && (
@@ -38,7 +37,9 @@ export function PageHeader({
         <dl className="mt-10 grid grid-cols-2 gap-x-8 gap-y-5 border-y border-line py-6 text-sm sm:grid-cols-4">
           {meta.map((m) => (
             <div key={m.label} className={m.wide ? "col-span-2" : undefined}>
-              <dt className="text-xs text-fg-faint">{m.label}</dt>
+              <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-fg-faint">
+                {m.label}
+              </dt>
               <dd className="mt-1 break-words text-fg">{m.value}</dd>
             </div>
           ))}

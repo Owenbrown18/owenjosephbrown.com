@@ -36,6 +36,8 @@
 }
 
 :root {
+  /* Motion tokens: one family for the whole site. */
+  --ease-out: var(--ease-out);
   --bg: #f4f3ef;
   --surface: #ebe9e3;
   --fg: rgba(15, 35, 32, 0.94);
@@ -136,13 +138,6 @@
     color: var(--accent-text);
   }
 
-  /* 2px sage rule that introduces a section. */
-  .sage-bar {
-    width: 2.5rem;
-    height: 2px;
-    background: var(--accent);
-  }
-
   /* Sage underline that wipes out on hover (origin left -> right). */
   .link-underline {
     background-image: linear-gradient(var(--accent), var(--accent));
@@ -187,25 +182,41 @@
   }
 }
 
+/* ---------------------------------------------------------------
+   Subpage sheet: every page that isn't the landing page is a centered
+   document that rises into place — the closest honest cousin of the
+   floating-panel feel Owen liked, while staying a real page with a URL,
+   a scrollbar, and working SEO. Widths: default reads like a document;
+   `sheet-wide` for galleries and embeds.
+   --------------------------------------------------------------- */
+.sheet {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 54rem;
+}
+.sheet-wide {
+  max-width: 80rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sheet {
+    animation: sheet-rise 0.85s var(--ease-out) both;
+  }
+  @keyframes sheet-rise {
+    from {
+      opacity: 0;
+      transform: translateY(46px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
 /* Full-bleed helper: break out of the container to the viewport edges. */
 .fullbleed {
   width: 100vw;
   margin-left: calc(50% - 50vw);
-}
-
-/* One continuous darkness pass over the WHOLE page.
-   Per-section overlays each clip to their own box, so wherever two
-   sections meet their gradients disagree and you see a hard seam. A single
-   page-height gradient can't seam by construction. */
-.page-grade {
-  position: absolute;
-  inset: 0;
-  z-index: -5;
-  pointer-events: none;
-  /* Nothing. The page is flat paper now; the field's patches carry all
-     the tone. Kept as a hook because the canvas uses its presence to
-     recognise the landing page. */
-  background: none;
 }
 
 /* Film grain. An inline feTurbulence data URI, so it costs zero network
@@ -281,57 +292,6 @@
   }
 }
 
-/* Scroll cue: a hairline with a dot that falls down it, so the hero says
-   there is more below without adding a chevron everyone has seen. */
-.scroll-cue-track {
-  position: relative;
-  display: block;
-  width: 1px;
-  height: 2.75rem;
-  overflow: hidden;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.18),
-    transparent
-  );
-}
-.scroll-cue-dot {
-  position: absolute;
-  left: -1px;
-  height: 0.85rem;
-  width: 3px;
-  background: var(--accent);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .scroll-cue-dot {
-    animation: scroll-cue-fall 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-  }
-  @keyframes scroll-cue-fall {
-    0% {
-      transform: translateY(-100%);
-      opacity: 0;
-    }
-    35% {
-      opacity: 1;
-    }
-    70%,
-    100% {
-      transform: translateY(2.75rem);
-      opacity: 0;
-    }
-  }
-}
-/* Static fallback: park it at the top so the cue still reads as a mark. */
-@media (prefers-reduced-motion: reduce) {
-  .scroll-cue-dot {
-    top: 0;
-  }
-}
-
-/* Section break: the number at the content edge, hairline running out to
-   the viewport edge. Laid out as a flex row rather than knocking the line
-   out behind the number — the page grade means there is no single solid
-   colour to knock out with, so a "matching" swatch shows as a box. */
 .section-rule {
   display: flex;
   align-items: center;
@@ -375,27 +335,12 @@
     transform: scaleX(0);
     opacity: 0;
     transition:
-      transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s,
+      transform 1s var(--ease-out) 0.1s,
       opacity 0.5s ease-out 0.1s;
   }
   .section-rule.reveal-init.is-revealed .section-rule-line {
     transform: scaleX(1);
     opacity: 1;
-  }
-}
-
-/* Scroll parallax (hero departure, heading lift, image drifts) is driven
-   by ScrollMotion in JS: per-frame transform/opacity writes on scroll.
-   The CSS view()/scroll() timeline version passed headless but pinned at
-   `from` in real Safari. With no script these sit static and visible. */
-@media (prefers-reduced-motion: no-preference) {
-  .lift,
-  .parallax-a,
-  .parallax-b {
-    will-change: transform;
-  }
-  .hero-parallax {
-    will-change: transform, opacity;
   }
 }
 
@@ -426,7 +371,7 @@ h3.reveal-init {
   transform: translateY(16px);
   transition:
     opacity 0.5s ease-out,
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.65s var(--ease-out);
 }
 
 /* Every hidden-state selector must stay at specificity (0,2,0) or below:
@@ -450,7 +395,7 @@ h3.reveal-init {
   transform: translateY(12px);
   transition:
     opacity 0.45s ease-out,
-    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.55s var(--ease-out);
 }
 
 .anim-image.reveal-init,
@@ -459,7 +404,7 @@ h3.reveal-init {
   transform: translateY(18px) scale(1.015);
   transition:
     opacity 0.55s ease-out,
-    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.75s var(--ease-out);
 }
 
 /* .lift transforms belong to the scroll driver. A transform transition
@@ -870,10 +815,13 @@ h3.reveal-init {
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border: 1px solid rgba(15, 35, 32, 0.12);
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    transform 0.45s var(--ease-out),
+    box-shadow 0.45s var(--ease-out);
 }
 .project-card:hover .project-frame {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1.006);
+  box-shadow: 0 26px 54px -26px rgba(15, 35, 32, 0.28);
 }
 
 /* Per-project stages. grain is its own cream, the studio sits on sage,
@@ -929,7 +877,7 @@ h3.reveal-init {
     transform: translateY(26px) scale(0.97);
     transition:
       opacity 0.55s ease-out,
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      transform 0.7s var(--ease-out);
   }
   .project-card.reveal-init [data-float="2"] {
     transition-delay: 0.09s;
@@ -944,10 +892,38 @@ h3.reveal-init {
     opacity: 1;
     transform: none;
   }
-  /* After the entrance, delays would lag the hover response. */
+  /* After the entrance, delays would lag the hover response, and the
+     0.7s entrance duration would smear it. Snappy from here on. */
   .project-card.is-revealed [data-float] {
     transition-delay: 0s;
+    transition-duration: 0.35s, 0.35s;
   }
+  /* The card's text (number, name, chips, meta, blurb) follows the frame
+     in a short cascade instead of arriving as one slab. */
+  .project-card.reveal-init > :not(.project-frame) {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.5s var(--ease-out),
+      transform 0.6s var(--ease-out);
+  }
+  .project-card.reveal-init > :nth-child(3) {
+    transition-delay: 0.06s;
+  }
+  .project-card.reveal-init > :nth-child(4) {
+    transition-delay: 0.12s;
+  }
+  .project-card.reveal-init > :nth-child(5) {
+    transition-delay: 0.18s;
+  }
+  .project-card.reveal-init > :nth-child(6) {
+    transition-delay: 0.24s;
+  }
+  .project-card.reveal-init.is-revealed > :not(.project-frame) {
+    opacity: 1;
+    transform: none;
+  }
+
   /* Uneven lifts, so the hover reads as depth rather than a block move. */
   .project-card.is-revealed:hover [data-float="1"] {
     transform: translateY(-7px);
