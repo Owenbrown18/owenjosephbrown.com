@@ -27,7 +27,7 @@ function Half({ hidden = false }: { hidden?: boolean }) {
               className="h-auto w-[260px] object-cover object-top transition-transform duration-300 group-hover:scale-[1.03] sm:w-[320px]"
             />
           </div>
-          <p className="mt-2 text-xs text-white/55 transition-colors group-hover:text-white/85">
+          <p className="mt-2 text-xs text-white/72 transition-colors group-hover:text-white">
             {site.name}
           </p>
         </Link>

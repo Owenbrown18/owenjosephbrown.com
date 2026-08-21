@@ -227,18 +227,12 @@ export default function HomePage() {
           adding one is a data change rather than a new bespoke block. */}
       <SectionRule num="02" />
       <section id="work" className="section-pad relative">
-        <p
-          aria-hidden
-          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(8rem,20vw,14rem)] font-black leading-none text-white/[0.035]"
-        >
-          02
-        </p>
         <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               Selected work<span className="text-sage">.</span>
             </h2>
-            <p className="eyebrow hidden !text-white/40 sm:block">02</p>
+            <p className="eyebrow hidden sm:block">02</p>
           </div>
           <p className="reveal-up mt-5 max-w-[52ch] text-white/70">
             These are real projects with real users. Each one links to a
@@ -303,7 +297,7 @@ export default function HomePage() {
         {/* Every client site, not just the four in the studio card. The
             index shows depth; this shows breadth. */}
         <div className="mt-20 sm:mt-24">
-          <p className="container-site eyebrow !text-white/40">
+          <p className="container-site eyebrow">
             Ten live sites, and counting
           </p>
           <div className="mt-6">
@@ -315,18 +309,12 @@ export default function HomePage() {
       {/* 03 · About: comes back up out of the tunnel. */}
       <SectionRule num="03" />
       <section id="about" className="section-pad relative">
-        <p
-          aria-hidden
-          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
-        >
-          03
-        </p>
         <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               About me<span className="text-sage">.</span>
             </h2>
-            <p className="eyebrow hidden !text-white/40 sm:block">03</p>
+            <p className="eyebrow hidden sm:block">03</p>
           </div>
 
           <div className="mt-14 grid items-center gap-14 md:grid-cols-[minmax(260px,380px)_1fr] md:gap-20">
@@ -380,12 +368,6 @@ export default function HomePage() {
       {/* 04 · Contact */}
       <SectionRule num="04" />
       <section id="contact" className="section-pad relative overflow-hidden">
-        <p
-          aria-hidden
-          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
-        >
-          04
-        </p>
         <div className="container-site relative text-center">
           <p className="eyebrow !text-sage">04 · Contact</p>
           <h2 className="mx-auto mt-5 max-w-[16ch] text-[clamp(2.75rem,7vw,5rem)] font-extrabold text-white/95">

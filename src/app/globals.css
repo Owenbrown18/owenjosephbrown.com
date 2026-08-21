@@ -164,12 +164,6 @@
   /* The forest gradient, as a static fallback and page ground. */
   .forest-ground {
     background-color: #f4f3ef;
-    background-image: radial-gradient(
-      ellipse 70% 55% at 20% 25%,
-      rgba(123, 164, 158, 0.22) 0%,
-      rgba(123, 164, 158, 0.08) 40%,
-      rgba(244, 243, 239, 0) 78%
-    );
   }
 
   /* Numbered anchor nav, tamalsen-style adapted to the brand. */
@@ -208,14 +202,10 @@
   inset: 0;
   z-index: -5;
   pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(46, 84, 80, 0.03) 20%,
-    rgba(46, 84, 80, 0.06) 45%,
-    rgba(46, 84, 80, 0.04) 70%,
-    transparent 94%
-  );
+  /* Nothing. The page is flat paper now; the field's patches carry all
+     the tone. Kept as a hook because the canvas uses its presence to
+     recognise the landing page. */
+  background: none;
 }
 
 /* Film grain. An inline feTurbulence data URI, so it costs zero network
@@ -367,12 +357,32 @@
   transform: translateY(-50%);
   pointer-events: none;
   mix-blend-mode: multiply;
-  background: linear-gradient(
+  /* A patch of the same grid, anchored to the break. The field's patches
+     are scattered, so without this a section rule could land on blank
+     paper with nothing behind it. Same 24px cell as the shader. */
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      rgba(46, 84, 80, 0.14) 0 1px,
+      transparent 1px 24px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(46, 84, 80, 0.14) 0 1px,
+      transparent 1px 24px
+    );
+  -webkit-mask-image: linear-gradient(
     to bottom,
     transparent,
-    rgba(123, 164, 158, 0.1) 30%,
-    rgba(123, 164, 158, 0.24) 50%,
-    rgba(123, 164, 158, 0.1) 70%,
+    #000 38%,
+    #000 62%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 38%,
+    #000 62%,
     transparent
   );
 }
