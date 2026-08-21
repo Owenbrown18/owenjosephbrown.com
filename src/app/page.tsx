@@ -48,7 +48,7 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
     frame: "aspect-[5/4]",
     art: (
       <>
-        <div className="absolute bottom-[-6%] left-[6%] w-[30%]">
+        <div className="absolute bottom-[3%] left-[5%] w-[29%]">
           <PhoneFrame>
             <Image
               src="/images/grain/home_roll.webp"
@@ -60,7 +60,7 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
             />
           </PhoneFrame>
         </div>
-        <div className="absolute bottom-[5%] left-[35%] z-10 w-[32%]">
+        <div className="absolute bottom-[11%] left-[34%] z-10 w-[31%]">
           <PhoneFrame>
             <Image
               src="/images/grain/new_roll_qr.webp"
@@ -72,7 +72,7 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
             />
           </PhoneFrame>
         </div>
-        <div className="absolute bottom-[-4%] right-[6%] w-[27%]">
+        <div className="absolute bottom-[5%] right-[6%] w-[26%]">
           <PhoneFrame>
             <Image
               src="/images/grain/waiting.webp"

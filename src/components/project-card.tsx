@@ -106,7 +106,7 @@ export function Shot({
 }) {
   return (
     <div
-      className={`absolute overflow-hidden border border-white/20 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.7)] ${className}`}
+      className={`absolute overflow-hidden border border-white/14 shadow-[0_2px_6px_-2px_rgba(15,35,32,0.12),0_22px_45px_-16px_rgba(15,35,32,0.35)] ${className}`}
     >
       <Image
         src={src}
