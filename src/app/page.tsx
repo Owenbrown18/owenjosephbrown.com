@@ -12,6 +12,7 @@ import {
 import { SectionRule } from "@/components/section-rule";
 import { ProjectCard, FrameShot, Shot } from "@/components/project-card";
 import { PhoneFrame } from "@/components/phone-frame";
+import { LaptopFrame } from "@/components/device-frames";
 import { LocalTime } from "@/components/local-time";
 import { ContactForm } from "@/components/contact-form";
 import { identity } from "@/lib/resume-data";
@@ -185,7 +186,8 @@ export default function HomePage() {
           ways to reach me, then the history as a table rather than a
           paragraph, so a recruiter has it all in the first screen. */}
       <section id="home" className="relative">
-        <div className="container-site relative flex min-h-[100svh] flex-col justify-center pb-28 pt-32 sm:pt-36">
+        <div className="container-site relative flex min-h-[100svh] flex-col justify-center pb-24 pt-32 sm:pt-36">
+          <div className="grid items-center gap-14 lg:grid-cols-[1fr_0.92fr] lg:gap-10">
           <div className="hero-stage hero-parallax">
             <div className="hero-name relative">
               {/* The echo: the name once more as a sage outline, offset like
@@ -223,30 +225,121 @@ export default function HomePage() {
 
             <div className="mt-8 flex flex-wrap items-center gap-2">
               {[
-                { label: "Email", href: `mailto:${identity.email}` },
-                { label: "GitHub", href: identity.github },
-                { label: "LinkedIn", href: identity.linkedin },
+                {
+                  label: "Email",
+                  href: `mailto:${identity.email}`,
+                  icon: <MailIcon className="h-3.5 w-3.5" />,
+                },
+                {
+                  label: "GitHub",
+                  href: identity.github,
+                  icon: <GitHubIcon className="h-3.5 w-3.5" />,
+                },
+                {
+                  label: "LinkedIn",
+                  href: identity.linkedin,
+                  icon: <LinkedInIcon className="h-3.5 w-3.5" />,
+                },
               ].map((l) => (
                 <a
                   key={l.label}
                   href={l.href}
                   rel="me noopener"
-                  className="border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75 transition-colors hover:border-sage hover:text-white"
+                  className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75 transition-colors hover:border-sage hover:text-white"
                 >
+                  {l.icon}
                   {l.label}
                 </a>
               ))}
               <Link
                 href="/resume"
-                className="border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75 transition-colors hover:border-sage hover:text-white"
+                className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75 transition-colors hover:border-sage hover:text-white"
               >
                 Résumé
+                <ArrowUpRightIcon />
               </Link>
             </div>
           </div>
 
+          {/* The work, physically: client sites in the studio's laptop
+              frame, grain on a phone, Whispr's pill listening in over it.
+              Loosely circular, allowed to overlap, floating idle. */}
+          <div
+            aria-hidden
+            className="hero-cluster relative mx-auto w-full max-w-[420px] lg:max-w-none"
+          >
+            <span className="hero-cluster__glow" />
+            <div className="cluster-piece absolute left-0 top-[4%] w-[62%]" style={{ "--i": 1 } as React.CSSProperties}>
+              <LaptopFrame url="grainconstruction.ca">
+                <Image
+                  src="/images/work/grain-construction.webp"
+                  alt=""
+                  width={1200}
+                  height={750}
+                  sizes="(min-width: 1024px) 400px, 60vw"
+                  priority
+                />
+              </LaptopFrame>
+            </div>
+            <div className="cluster-piece absolute right-0 top-0 w-[46%]" style={{ "--i": 2 } as React.CSSProperties}>
+              <LaptopFrame url="figsandhoney.com">
+                <Image
+                  src="/images/work/figs-and-honey.webp"
+                  alt=""
+                  width={900}
+                  height={563}
+                  sizes="(min-width: 1024px) 300px, 45vw"
+                  priority
+                />
+              </LaptopFrame>
+            </div>
+            <div className="cluster-piece absolute bottom-[6%] left-[4%] z-[1] w-[46%]" style={{ "--i": 3 } as React.CSSProperties}>
+              <LaptopFrame url="somavictoria.ca">
+                <Image
+                  src="/images/work/soma-active-health.webp"
+                  alt=""
+                  width={900}
+                  height={563}
+                  sizes="(min-width: 1024px) 300px, 45vw"
+                />
+              </LaptopFrame>
+            </div>
+            <div className="cluster-piece cluster-piece--code absolute bottom-[16%] right-[16%] z-[2] w-[44%]" style={{ "--i": 4 } as React.CSSProperties}>
+              <Image
+                src="/images/leadgen/classifier-code.webp"
+                alt=""
+                width={782}
+                height={491}
+                sizes="(min-width: 1024px) 300px, 44vw"
+                className="h-auto w-full"
+              />
+            </div>
+            <div className="cluster-piece cluster-piece--phone absolute bottom-[-2%] right-[2%] z-[3] w-[24%]" style={{ "--i": 5 } as React.CSSProperties}>
+              <PhoneFrame>
+                <Image
+                  src="/images/grain/home_roll.webp"
+                  alt=""
+                  width={260}
+                  height={563}
+                  sizes="(min-width: 1024px) 160px, 24vw"
+                />
+              </PhoneFrame>
+            </div>
+            <div className="cluster-piece absolute left-[30%] top-[42%] z-[4] w-[32%]" style={{ "--i": 6 } as React.CSSProperties}>
+              <Image
+                src="/images/whispr/pill-listening-v2.webp"
+                alt=""
+                width={254}
+                height={64}
+                sizes="(min-width: 1024px) 210px, 32vw"
+                className="h-auto w-full drop-shadow-[0_14px_28px_rgba(15,35,32,0.35)]"
+              />
+            </div>
+          </div>
+          </div>
+
           {/* Place and time, the way a studio site stamps a page. */}
-          <p className="mt-14 text-right font-mono text-xs uppercase tracking-[0.14em] text-white/35">
+          <p className="mt-14 text-right font-mono text-xs uppercase tracking-[0.14em] text-white/75">
             ©2026&nbsp;&nbsp;·&nbsp;&nbsp;Victoria, BC&nbsp;&nbsp;<LocalTime />
           </p>
 
