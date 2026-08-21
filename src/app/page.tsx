@@ -48,38 +48,38 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
     frame: "aspect-[5/4]",
     art: (
       <>
-        <div className="absolute bottom-[-5%] left-[5%] w-[26%]">
+        <div className="absolute bottom-[-6%] left-[6%] w-[30%]">
           <PhoneFrame>
             <Image
               src="/images/grain/home_roll.webp"
               alt=""
               width={260}
               height={563}
-              sizes="(min-width: 768px) 150px, 28vw"
+              sizes="(min-width: 768px) 260px, 30vw"
               className="h-auto w-full"
             />
           </PhoneFrame>
         </div>
-        <div className="absolute bottom-[9%] left-[33%] z-10 w-[24%]">
+        <div className="absolute bottom-[5%] left-[35%] z-10 w-[32%]">
           <PhoneFrame>
             <Image
               src="/images/grain/new_roll_qr.webp"
               alt=""
               width={260}
               height={563}
-              sizes="(min-width: 768px) 140px, 26vw"
+              sizes="(min-width: 768px) 280px, 32vw"
               className="h-auto w-full"
             />
           </PhoneFrame>
         </div>
-        <div className="absolute bottom-[-8%] right-[7%] w-[22%]">
+        <div className="absolute bottom-[-4%] right-[6%] w-[27%]">
           <PhoneFrame>
             <Image
               src="/images/grain/waiting.webp"
               alt=""
               width={260}
               height={563}
-              sizes="(min-width: 768px) 130px, 24vw"
+              sizes="(min-width: 768px) 240px, 27vw"
               className="h-auto w-full"
             />
           </PhoneFrame>
@@ -91,29 +91,27 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
     frame: "aspect-[16/11]",
     art: (
       <>
-        <div className="absolute left-[5%] top-[9%] w-[62%] overflow-hidden border border-white/20 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.7)]">
-          <video
-            src="/images/whispr/demo.mp4"
-            poster="/images/whispr/demo-poster.webp"
-            autoPlay
-            loop
-            muted
-            playsInline
-            aria-hidden
-            className="block h-auto w-full"
-          />
-        </div>
+        {/* Stills, not the demo video. At card size the video's first
+            frame is an empty editor, which reads as a dark rectangle;
+            the settings pane actually shows the product doing its job.
+            The video still leads the case study, where it has room. */}
         <Shot
           src="/images/whispr/settings-general.webp"
           alt=""
-          className="right-[4%] top-[30%] z-10 w-[42%] aspect-[16/11]"
-          sizes="(min-width: 768px) 250px, 45vw"
+          className="left-[4%] top-[7%] w-[64%] aspect-[16/12]"
+          sizes="(min-width: 768px) 540px, 64vw"
+        />
+        <Shot
+          src="/images/whispr/settings-models.webp"
+          alt=""
+          className="right-[3%] top-[22%] z-10 w-[42%] aspect-[16/12]"
+          sizes="(min-width: 768px) 360px, 42vw"
         />
         <Shot
           src="/images/whispr/hud.webp"
           alt=""
-          className="bottom-[8%] left-[22%] z-20 w-[34%] aspect-[560/150]"
-          sizes="(min-width: 768px) 200px, 38vw"
+          className="bottom-[9%] left-[17%] z-20 w-[40%] aspect-[560/150]"
+          sizes="(min-width: 768px) 340px, 40vw"
         />
       </>
     ),
@@ -125,14 +123,14 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
         <Shot
           src="/images/leadgen/dashboard.webp"
           alt=""
-          className="left-[4%] top-[10%] w-[66%] aspect-[16/10]"
-          sizes="(min-width: 768px) 390px, 62vw"
+          className="left-[4%] top-[7%] w-[70%] aspect-[16/10]"
+          sizes="(min-width: 768px) 580px, 68vw"
         />
         <Shot
           src="/images/leadgen/detail.webp"
           alt=""
-          className="bottom-[8%] right-[4%] z-10 w-[46%] aspect-[16/11]"
-          sizes="(min-width: 768px) 270px, 46vw"
+          className="bottom-[7%] right-[5%] z-10 w-[40%] aspect-[16/13]"
+          sizes="(min-width: 768px) 340px, 40vw"
         />
       </>
     ),
@@ -141,26 +139,6 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
 
 const projects = getWorkEntries().filter((e) => e.kind !== "client");
 
-const expertise = [
-  {
-    num: "01",
-    title: "Full-stack web",
-    sub: "Next.js · TypeScript · Astro",
-    copy: "I've built and shipped 10+ sites for paying clients, about $20,000 of work so far. I do all of it myself. That's the code, but it's also the CMS, the domain setup, the hosting, and keeping the thing fast once it's live.",
-  },
-  {
-    num: "02",
-    title: "Mobile",
-    sub: "React Native · Expo",
-    copy: "I'm building grain, a film camera app for iOS, on my own. The camera, the film look that runs on the GPU, the upload queue that still works with no signal. Before that I did frontend at a startup called Aperture AI.",
-  },
-  {
-    num: "03",
-    title: "Systems & data",
-    sub: "Python · Postgres · Supabase",
-    copy: "I wrote the ~3,900-line Python pipeline that finds my clients and tracks every email through to whether it actually made money. In my apps I let the database enforce the rules instead of trusting the client, with row-level security and locked transactions.",
-  },
-];
 
 export default function HomePage() {
   return (
@@ -244,66 +222,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 02 · Expertise: the page's one open, lighter clearing. */}
-      <SectionRule num="02" />
-      <section id="expertise" className="section-pad relative">
-        <p
-          aria-hidden
-          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(8rem,20vw,14rem)] font-black leading-none text-white/[0.035]"
-        >
-          {/* Smaller than its siblings on purpose: this section is the
-              shortest, and at full size the numeral ran into the third
-              column's border. Clearance beats equal font size. */}
-          02
-        </p>
-        <div className="container-site">
-          <div className="reveal-up lift flex items-end justify-between gap-6">
-            <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
-              My expertise<span className="text-sage">.</span>
-            </h2>
-            <p className="eyebrow hidden !text-white/40 sm:block">02</p>
-          </div>
-          <div className="mt-10 grid gap-x-12 gap-y-10 md:grid-cols-3">
-            {expertise.map((item) => (
-              <div
-                key={item.num}
-                className="reveal-up border-t border-white/15 pt-6"
-              >
-                <div className="flex items-baseline justify-between">
-                  <h3 className="font-display text-2xl font-bold text-white/95">
-                    {item.title}
-                  </h3>
-                  <span className="text-xs font-bold text-sage">
-                    {item.num}
-                  </span>
-                </div>
-                <p className="mt-1 text-sm text-white/50">{item.sub}</p>
-                <p className="mt-4 text-sm leading-relaxed text-white/70">
-                  {item.copy}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 03 · Work. An index, not a series of features: every project in
+      {/* 02 · Work. An index, not a series of features: every project in
           an identical frame so the whole body of work is scannable, and so
           adding one is a data change rather than a new bespoke block. */}
-      <SectionRule num="03" />
+      <SectionRule num="02" />
       <section id="work" className="section-pad relative">
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(8rem,20vw,14rem)] font-black leading-none text-white/[0.035]"
         >
-          03
+          02
         </p>
         <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               Selected work<span className="text-sage">.</span>
             </h2>
-            <p className="eyebrow hidden !text-white/40 sm:block">03</p>
+            <p className="eyebrow hidden !text-white/40 sm:block">02</p>
           </div>
           <p className="reveal-up mt-5 max-w-[52ch] text-white/70">
             These are real projects with real users. Each one links to a
@@ -325,10 +260,10 @@ export default function HomePage() {
             >
               <div aria-hidden className="studio-stack absolute inset-0">
                 {[
-                  ["grain-construction", "Grain Construction", "360px"],
-                  ["figs-and-honey", "Figs & Honey", "240px"],
-                  ["daves-bakery", "Daves’ Bakery", "200px"],
-                  ["soma-active-health", "Soma Active Health", "180px"],
+                  ["grain-construction", "Grain Construction", "560px"],
+                  ["figs-and-honey", "Figs & Honey", "380px"],
+                  ["daves-bakery", "Daves’ Bakery", "340px"],
+                  ["soma-active-health", "Soma Active Health", "300px"],
                 ].map(([slug, name, w]) => (
                   <div key={slug}>
                     <Image
@@ -377,21 +312,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 04 · About: comes back up out of the tunnel. */}
-      <SectionRule num="04" />
+      {/* 03 · About: comes back up out of the tunnel. */}
+      <SectionRule num="03" />
       <section id="about" className="section-pad relative">
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
         >
-          04
+          03
         </p>
         <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               About me<span className="text-sage">.</span>
             </h2>
-            <p className="eyebrow hidden !text-white/40 sm:block">04</p>
+            <p className="eyebrow hidden !text-white/40 sm:block">03</p>
           </div>
 
           <div className="mt-14 grid items-center gap-14 md:grid-cols-[minmax(260px,380px)_1fr] md:gap-20">
@@ -442,17 +377,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 05 · Contact */}
-      <SectionRule num="05" />
+      {/* 04 · Contact */}
+      <SectionRule num="04" />
       <section id="contact" className="section-pad relative overflow-hidden">
         <p
           aria-hidden
           className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
         >
-          05
+          04
         </p>
         <div className="container-site relative text-center">
-          <p className="eyebrow !text-sage">05 · Contact</p>
+          <p className="eyebrow !text-sage">04 · Contact</p>
           <h2 className="mx-auto mt-5 max-w-[16ch] text-[clamp(2.75rem,7vw,5rem)] font-extrabold text-white/95">
             Let’s talk.
           </h2>

@@ -76,9 +76,6 @@ test("reduced motion still shows all home content", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: /my expertise/i }),
-  ).toBeVisible();
-  await expect(
     page.getByRole("group", { name: /client websites/i }),
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: /^grain$/i })).toBeVisible();
@@ -113,9 +110,9 @@ test.describe("mobile", () => {
     await page.getByRole("button", { name: /open menu/i }).click();
     await expect(sheet).toBeVisible();
 
-    // All five sections must be reachable — the old rail silently dropped
-    // Expertise and About on narrow screens.
-    for (const label of ["home", "expertise", "work", "about", "contact"]) {
+    // Every section must be reachable — the old rail silently dropped
+    // sections on narrow screens.
+    for (const label of ["home", "work", "about", "contact"]) {
       await expect(sheet.getByRole("link", { name: label })).toBeVisible();
     }
 
@@ -138,7 +135,7 @@ test("desktop shows the full nav rail and no hamburger", async ({ page }) => {
   // Tailwind's sm:hidden and left a hamburger sitting on the desktop bar.
   await expect(page.locator(".menu-toggle")).toBeHidden();
   const rail = page.getByRole("navigation", { name: "Primary" }).first();
-  for (const label of ["home", "expertise", "work", "about", "contact"]) {
+  for (const label of ["home", "work", "about", "contact"]) {
     await expect(rail.getByRole("link", { name: label })).toBeVisible();
   }
 });
@@ -226,7 +223,7 @@ test("the nav rail fills section by section as you scroll", async ({
     );
 
   const atTop = await fills();
-  expect(atTop.length, "one rail per anchor").toBe(5);
+  expect(atTop.length, "one rail per anchor").toBe(4);
   expect(atTop.at(-1)!.x, "last section empty at the top").toBeLessThan(0.05);
 
   await page.evaluate(() =>

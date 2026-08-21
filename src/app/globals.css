@@ -102,14 +102,18 @@
 }
 
 @layer components {
+  /* Near full-bleed with small gutters. The old 1200px cap left roughly a
+     fifth of a large screen empty on each side, which made every section
+     read as a narrow column floating in the middle of the page. Long
+     prose is constrained per-block instead, so line length stays sane. */
   .container-site {
     margin-inline: auto;
-    max-width: 1200px;
-    padding-inline: 1.5rem;
+    max-width: 1800px;
+    padding-inline: 1.25rem;
   }
   @media (min-width: 768px) {
     .container-site {
-      padding-inline: 2.5rem;
+      padding-inline: clamp(2rem, 3.2vw, 3.5rem);
     }
   }
 
@@ -252,7 +256,7 @@
 /* One padding value for every section, so the rhythm down the page is
    even and the breaks all get the same air. */
 .section-pad {
-  padding-block: clamp(7rem, 13vw, 12rem);
+  padding-block: clamp(4rem, 7vw, 7rem);
 }
 
 @layer components {
@@ -892,11 +896,11 @@ h3.reveal-init {
   border: 1px solid rgba(255, 255, 255, 0.15);
   background:
     radial-gradient(
-      ellipse 70% 60% at 30% 20%,
-      rgba(123, 164, 158, 0.1),
-      transparent 70%
+      ellipse 80% 70% at 32% 18%,
+      rgba(123, 164, 158, 0.16),
+      transparent 72%
     ),
-    rgba(255, 255, 255, 0.02);
+    linear-gradient(160deg, #16332f 0%, #102825 55%, #0c1f1d 100%);
 }
 .project-card:hover .project-frame {
   border-color: rgba(255, 255, 255, 0.3);
@@ -912,30 +916,30 @@ h3.reveal-init {
   box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.7);
 }
 .studio-stack > :nth-child(1) {
-  left: 4%;
-  top: 8%;
-  width: 62%;
+  left: 5%;
+  top: 9%;
+  width: 66%;
   aspect-ratio: 16 / 10;
   z-index: 3;
 }
 .studio-stack > :nth-child(2) {
   right: 4%;
-  top: 26%;
-  width: 40%;
+  top: 5%;
+  width: 45%;
   aspect-ratio: 16 / 10;
   z-index: 4;
 }
 .studio-stack > :nth-child(3) {
-  left: 16%;
-  bottom: 6%;
-  width: 34%;
+  left: 13%;
+  bottom: 7%;
+  width: 41%;
   aspect-ratio: 16 / 10;
   z-index: 5;
 }
 .studio-stack > :nth-child(4) {
-  right: 12%;
-  bottom: 4%;
-  width: 30%;
+  right: 6%;
+  bottom: 11%;
+  width: 35%;
   aspect-ratio: 16 / 10;
   z-index: 2;
 }
