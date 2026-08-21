@@ -96,38 +96,35 @@ const compositions: Record<
     tone: "frame-whispr",
     art: (
       <>
-        {/* Stills, not the demo video. At card size the video's first
-            frame is an empty editor, which reads as a dark rectangle;
-            the settings pane actually shows the product doing its job.
-            The video still leads the case study, where it has room. */}
+        {/* Tight crops of the app's own cards, not whole windows: at card
+            size a full window is furniture and the text is the product. */}
         <Shot
-          src="/images/whispr/settings-general.webp"
+          src="/images/whispr/card-result.webp"
           alt=""
-          className="left-[4%] top-[7%] w-[64%] aspect-[16/12]"
-          sizes="(min-width: 768px) 540px, 64vw"
+          className="left-[5%] top-[9%] w-[74%] aspect-[944/188]"
+          sizes="(min-width: 768px) 620px, 74vw"
           dataFloat={1}
         />
         <Shot
-          src="/images/whispr/settings-models.webp"
+          src="/images/whispr/card-hotkey.webp"
           alt=""
-          className="right-[3%] top-[22%] z-10 w-[42%] aspect-[16/12]"
-          sizes="(min-width: 768px) 360px, 42vw"
+          className="right-[4%] top-[36%] z-10 w-[64%] aspect-[944/226]"
+          sizes="(min-width: 768px) 540px, 64vw"
           dataFloat={2}
         />
-        {/* The pill itself, cropped tight — no border or shadow box, so it
-            reads as the HUD floating over the stage the way it floats over
-            a desktop. */}
+        {/* The pill itself — alpha-masked capsule, so nothing but the HUD
+            floats over the stage, the way it floats over a desktop. */}
         <div
           data-float={3}
-          className="absolute bottom-[10%] left-[24%] z-20 w-[26%]"
+          className="absolute bottom-[11%] left-[24%] z-20 w-[26%]"
         >
           <Image
-            src="/images/whispr/hud-pill.webp"
+            src="/images/whispr/hud-pill-2.webp"
             alt=""
-            width={268}
-            height={78}
+            width={260}
+            height={68}
             sizes="(min-width: 768px) 220px, 26vw"
-            className="h-auto w-full drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
+            className="h-auto w-full drop-shadow-[0_10px_24px_rgba(0,0,0,0.5)]"
           />
         </div>
       </>
@@ -139,19 +136,20 @@ const compositions: Record<
     art: (
       <>
         <Shot
-          src="/images/leadgen/dashboard.webp"
+          src="/images/leadgen/dashboard-top.webp"
           alt=""
           chrome
-          className="left-[4%] top-[7%] w-[70%]"
-          sizes="(min-width: 768px) 580px, 68vw"
+          className="left-[4%] top-[6%] w-[70%]"
+          sizes="(min-width: 768px) 580px, 70vw"
           dataFloat={1}
         />
+        {/* The classifier itself, rendered from the real source: the
+            system is the product here, so the code is the better photo. */}
         <Shot
-          src="/images/leadgen/detail.webp"
+          src="/images/leadgen/classifier-code.webp"
           alt=""
-          chrome
-          className="bottom-[7%] right-[5%] z-10 w-[44%]"
-          sizes="(min-width: 768px) 370px, 44vw"
+          className="bottom-[6%] right-[4%] z-10 w-[54%] aspect-[1564/982]"
+          sizes="(min-width: 768px) 450px, 54vw"
           dataFloat={2}
         />
       </>

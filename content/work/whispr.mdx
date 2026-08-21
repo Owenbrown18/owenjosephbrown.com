@@ -70,7 +70,7 @@ The Whisper context pins somewhere between half a gig and a gig of unified memor
 
 The little recording HUD stays alive and hidden the whole time the app is open. Its React state started out as "listening", so the infinite CSS animation on the bar just kept running in the background forever, and the shared WebKit GPU process sat at around 6% CPU doing nothing anybody could see. Starting it in an idle state that renders nothing at all took that to zero.
 
-![The recording HUD: a small floating pill that appears while you hold the hotkey](/images/whispr/hud-pill.webp)
+![The recording HUD: a small floating pill that appears while you hold the hotkey](/images/whispr/hud-pill-2.webp)
 
 ![The models tab, with three Whisper models listed by size and one selected](/images/whispr/settings-models.webp)
 
