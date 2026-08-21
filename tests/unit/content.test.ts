@@ -1,17 +1,20 @@
+import { readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { getWorkEntries, getWorkEntry, kindLabel } from "@/lib/content";
 
 describe("content layer", () => {
-  it("loads all five case studies", () => {
-    const entries = getWorkEntries();
-    expect(entries).toHaveLength(5);
-    expect(entries.map((e) => e.slug)).toEqual([
-      "grain",
-      "leadgen",
-      "grain-construction",
-      "figs-and-honey",
-      "daves-bakery",
-    ]);
+  it("loads every case study on disk, exactly once", () => {
+    // Derived from the directory, not a hand-written list: the hand-written
+    // count sat at five after Whispr landed and failed CI on every push for
+    // days before anyone read the log.
+    const onDisk = readdirSync("content/work")
+      .filter((f) => f.endsWith(".mdx"))
+      .map((f) => f.replace(/\.mdx$/, ""))
+      .sort();
+    const loaded = getWorkEntries()
+      .map((e) => e.slug)
+      .sort();
+    expect(loaded).toEqual(onDisk);
   });
 
   it("sorts by the order field", () => {

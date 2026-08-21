@@ -24,3 +24,6 @@ jobs:
         env:
           CI: "true"
       - run: npm run lighthouse
+        env:
+          LH_PERF_FLOOR: "70"
+          LH_TBT_CEILING: "900"

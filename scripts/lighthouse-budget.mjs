@@ -14,13 +14,16 @@ import { join } from "node:path";
 
 const PORT = 4321;
 const URL = `http://localhost:${PORT}/`;
+// CI runners are 2-core shared boxes; the same build that scores 94 on a
+// Mac can land in the 70s there. Overridable floors let CI assert "not
+// broken" while local runs keep the honest bar.
 const FLOORS = {
-  performance: 85,
+  performance: Number(process.env.LH_PERF_FLOOR ?? 85),
   accessibility: 100,
   "best-practices": 100,
   seo: 100,
 };
-const TBT_CEILING_MS = 500;
+const TBT_CEILING_MS = Number(process.env.LH_TBT_CEILING ?? 500);
 const CLS_CEILING = 0.1;
 
 const server = spawn("npx", ["next", "start", "-p", String(PORT)], {
