@@ -180,16 +180,24 @@ for (const path of ["/work/figs-and-honey", "/work/grain"]) {
         (n) => window.scrollTo({ top: n, behavior: "instant" }),
         y,
       );
-      await page.waitForTimeout(650); // longest opacity transition is 0.55s
-      const invisible = await page.evaluate(() =>
-        [...document.querySelectorAll<HTMLElement>(".reveal-init")]
-          .filter((el) => {
-            const r = el.getBoundingClientRect();
-            return r.top < innerHeight * 0.85 && r.bottom > 0 && r.height > 0;
-          })
-          .filter((el) => parseFloat(getComputedStyle(el).opacity) < 0.9)
-          .map((el) => (el.tagName + "." + el.className).slice(0, 70)),
-      );
+      // Poll rather than sleep: the transition is 0.55s on a Mac and far
+      // slower on a throttled CI runner, but "settled" means the same
+      // thing everywhere — no in-view element still below full opacity.
+      const deadline = Date.now() + 4000;
+      let invisible: string[] = [];
+      do {
+        invisible = await page.evaluate(() =>
+          [...document.querySelectorAll<HTMLElement>(".reveal-init")]
+            .filter((el) => {
+              const r = el.getBoundingClientRect();
+              return r.top < innerHeight * 0.85 && r.bottom > 0 && r.height > 0;
+            })
+            .filter((el) => parseFloat(getComputedStyle(el).opacity) < 0.9)
+            .map((el) => (el.tagName + "." + el.className).slice(0, 70)),
+        );
+        if (!invisible.length) break;
+        await page.waitForTimeout(200);
+      } while (Date.now() < deadline);
       ghosts.push(...invisible.map((g) => `y=${y} ${g}`));
     }
     expect(ghosts, "in-viewport elements painted invisible").toEqual([]);
@@ -300,9 +308,12 @@ test("hero departs across the first viewport of scroll", async ({ page }) => {
   await page.evaluate(() =>
     window.scrollTo({ top: window.innerHeight * 1.2, behavior: "instant" }),
   );
-  await page.waitForTimeout(200);
+  // The chase eases over ~90ms per step on a Mac; a throttled runner
+  // needs longer, so poll for the settled state rather than sampling once.
+  await expect
+    .poll(async () => (await hero()).opacity, { timeout: 5000 })
+    .toBeLessThan(0.3);
   const departed = await hero();
-  expect(departed.opacity, "hero dissolves").toBeLessThan(0.3);
   expect(departed.y, "hero drifts up").toBeLessThan(top.y);
 });
 
@@ -335,8 +346,11 @@ test("lifted headings ride the scroll", async ({ page }) => {
   for (const sel of [".lift"]) {
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
     const early = await sampleNear(sel, 150);
-    const late = await sampleNear(sel, 620);
-    expect(late, `${sel} moves as it crosses the viewport`).not.toEqual(early);
+    // Poll: the eased value needs several frames to diverge, and CI
+    // WebKit delivers frames slowly.
+    await expect
+      .poll(async () => sampleNear(sel, 620), { timeout: 5000 })
+      .not.toEqual(early);
   }
 });
 
