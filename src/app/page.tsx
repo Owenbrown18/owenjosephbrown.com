@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SiteMarquee } from "@/components/site-marquee";
-import { PhoneFrame } from "@/components/phone-frame";
 import {
   ArrowUpRightIcon,
   GitHubIcon,
@@ -10,8 +9,10 @@ import {
   ObdesignWordmark,
 } from "@/components/icons";
 import { SectionRule } from "@/components/section-rule";
+import { ProjectCard, FrameShot } from "@/components/project-card";
 import { LocalTime } from "@/components/local-time";
 import { education, experience, identity } from "@/lib/resume-data";
+import { getWorkEntries } from "@/lib/content";
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -51,6 +52,13 @@ const history = [
     role: education.credential,
   },
 ];
+
+/**
+ * The index cards after the studio: everything in content/work that isn't
+ * a client site. Read from disk, so a new case study appears here the day
+ * its file lands. Client sites live on the studio page instead.
+ */
+const projects = getWorkEntries().filter((e) => e.kind !== "client");
 
 const expertise = [
   {
@@ -219,306 +227,103 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 03 · Work — the deep point of the page's one continuous grade. */}
+      {/* 03 · Work. An index, not a series of features: every project in
+          an identical frame so the whole body of work is scannable, and so
+          adding one is a data change rather than a new bespoke block. */}
       <SectionRule num="03" />
       <section id="work" className="section-pad relative">
         <p
           aria-hidden
-          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(10rem,26vw,20rem)] font-black leading-none text-white/[0.035]"
+          className="parallax-b pointer-events-none absolute right-[2%] top-4 select-none font-display text-[clamp(8rem,20vw,14rem)] font-black leading-none text-white/[0.035]"
         >
           03
         </p>
         <div className="container-site">
           <div className="reveal-up lift flex items-end justify-between gap-6">
             <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
-              My work<span className="text-sage">.</span>
+              Selected work<span className="text-sage">.</span>
             </h2>
             <p className="eyebrow hidden !text-white/40 sm:block">03</p>
           </div>
-          <p className="reveal-up mt-5 max-w-[56ch] text-white/70">
-            These are real projects with real users. Each one links to a write-up
-            of what the problem actually was and what I did about it. I’ve left
-            in the parts that didn’t go well.
+          <p className="reveal-up mt-5 max-w-[52ch] text-white/70">
+            These are real projects with real users. Each one links to a
+            write-up of what the problem actually was and what I did about
+            it. I’ve left in the parts that didn’t go well.
           </p>
-        </div>
 
-        {/* The studio, full bleed and photo-first. */}
-        <div className="container-site relative z-10 mt-16">
-          <p className="eyebrow !text-sage">The studio</p>
-          <h3 className="anim-heading mt-3 text-[clamp(2.75rem,8vw,6rem)] leading-[0.95] text-white/95">
-            <ObdesignWordmark />
-          </h3>
-          <p className="mt-5 max-w-[52ch] text-white/70">
-            My one-person web studio. Over ten live sites for businesses around
-            BC, all custom-coded, and every one can be edited by the owner
-            without calling me. About 7% of my cold emails turn into paying
-            projects, and I wrote the system that finds them.
-          </p>
-        </div>
-
-        {/* Mobile: stacked, full width. */}
-        <div className="container-site mt-8 space-y-4 sm:hidden">
-          <Image
-            src="/images/work/grain-construction.webp"
-            sizes="(min-width: 640px) 1px, 100vw"
-            alt="Grain Construction website"
-            width={1200}
-            height={750}
-            className="anim-image h-auto w-full border border-white/15"
-          />
-          <Image
-            src="/images/work/figs-and-honey.webp"
-            sizes="(min-width: 640px) 1px, 100vw"
-            alt="Figs & Honey website"
-            width={900}
-            height={563}
-            className="anim-image h-auto w-full border border-white/15"
-          />
-        </div>
-
-        {/* Desktop: staggered full-bleed collage with opposing parallax. */}
-        <div className="fullbleed relative mt-[-1.5rem] hidden h-[clamp(380px,52vw,680px)] sm:mt-[-3rem] sm:block">
-          <div
-            aria-hidden
-            className="absolute left-[8%] top-[5%] h-[90%] w-[65%] bg-[radial-gradient(closest-side,rgba(123,164,158,0.13),transparent)]"
-          />
-          <div className="parallax-a absolute left-[3%] top-[8%] w-[54%] border border-white/15 shadow-2xl">
-            <Image
-              src="/images/work/grain-construction.webp"
-              sizes="(min-width: 640px) 54vw, 1px"
-              alt="Grain Construction website"
-              width={1200}
-              height={750}
-              className="anim-image h-auto w-full object-cover"
-            />
-          </div>
-          <div className="parallax-b absolute right-[4%] top-[24%] z-10 w-[38%] border border-white/15 shadow-2xl">
-            <Image
-              src="/images/work/figs-and-honey.webp"
-              sizes="(min-width: 640px) 38vw, 1px"
-              alt="Figs & Honey website"
-              width={900}
-              height={563}
-              className="anim-image h-auto w-full object-cover"
-            />
-          </div>
-          <div className="parallax-a absolute bottom-0 left-[32%] w-[32%] border border-white/15 shadow-2xl">
-            <Image
-              src="/images/work/daves-bakery.webp"
-              sizes="(min-width: 640px) 32vw, 1px"
-              alt="Daves' Bakery website"
-              width={900}
-              height={563}
-              className="anim-image h-auto w-full object-cover"
-            />
-          </div>
-        </div>
-
-        <div className="mt-10">
-          <SiteMarquee />
-        </div>
-
-        <div className="container-site mt-8">
-          <Link
-            href="/obdesign"
-            className="link-underline font-display text-xl font-bold text-white/95"
-          >
-            View the studio →
-          </Link>
-        </div>
-
-        {/* grain, the featured project. */}
-        <div className="container-site mt-24 sm:mt-28">
-          <div className="grid items-center gap-12 md:grid-cols-[1.1fr_1fr]">
-            <div className="reveal-up">
-              <p className="eyebrow !text-sage">Featured project</p>
-              <h3 className="mt-3 font-display text-[clamp(2.75rem,8vw,6rem)] font-extrabold leading-[0.9] text-white/95">
-                grain
-              </h3>
-              <p className="mt-5 max-w-[46ch] text-white/70">
-                A shared film camera for iOS. Your friends join a roll, everyone
-                shoots with no preview, and nobody sees a photo until the roll
-                gets developed. The rules are enforced down in Postgres, so you
-                can’t cheat them from the app. The film look is done on the GPU
-                as you shoot, and uploads still go through when you’ve got no
-                signal.
-              </p>
-              <p className="mt-7">
-                <Link
-                  href="/work/grain"
-                  className="link-underline font-display text-xl font-bold text-white/95"
-                >
-                  View project →
-                </Link>
-              </p>
-            </div>
-            <div className="relative grid grid-cols-3 items-end gap-4">
-              <div
-                aria-hidden
-                className="absolute -inset-12 bg-[radial-gradient(closest-side,rgba(214,164,80,0.12),transparent)]"
-              />
-              <div className="parallax-b">
-                <PhoneFrame>
-                  <Image
-                    src="/images/grain/home_roll.webp"
-                    sizes="(min-width: 768px) 180px, 30vw"
-                    alt="grain home screen with an active roll"
-                    width={260}
-                    height={563}
-                    className="anim-image h-auto w-full"
-                  />
-                </PhoneFrame>
-              </div>
-              <div className="parallax-a mb-10">
-                <PhoneFrame>
-                  <Image
-                    src="/images/grain/new_roll_qr.webp"
-                    sizes="(min-width: 768px) 180px, 30vw"
-                    alt="A roll's QR share code"
-                    width={260}
-                    height={563}
-                    className="anim-image h-auto w-full"
-                  />
-                </PhoneFrame>
-              </div>
-              <div className="parallax-b mb-4">
-                <PhoneFrame>
-                  <Image
-                    src="/images/grain/waiting.webp"
-                    sizes="(min-width: 768px) 180px, 30vw"
-                    alt="The waiting room before a roll is developed"
-                    width={260}
-                    height={563}
-                    className="anim-image h-auto w-full"
-                  />
-                </PhoneFrame>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Whispr. The demo is a video because the whole product is a
-            five-second interaction a screenshot can't show. */}
-        <div className="container-site mt-28 border-t border-white/15 pt-16 sm:mt-36">
-          <div className="grid items-center gap-12 md:grid-cols-[1fr_1.15fr] md:gap-16">
-            <div>
-              <p className="eyebrow !text-sage">Product</p>
-              <h3 className="anim-heading mt-3 text-[clamp(2rem,4.5vw,3rem)] text-white/95">
-                Whispr
-              </h3>
-              <p className="mt-5 max-w-[46ch] text-white/70">
-                A dictation app for macOS that runs entirely on your own
-                machine. You hold a hotkey, talk, and the text lands at your
-                cursor. I built it because the app I was using sent my audio
-                off to someone else’s servers to clean it up, and I dictate
-                things I’d rather keep on my laptop.
-              </p>
-              <dl className="mt-8 grid max-w-[26rem] grid-cols-3 gap-4 border-t border-white/15 pt-5">
+          <div className="mt-14 grid gap-x-10 gap-y-16 sm:mt-16 md:grid-cols-2">
+            {/* The studio, composed: the one card that isn't a single
+                screenshot, because ten sites is the point of it. */}
+            <ProjectCard
+              num="001"
+              title="OBdesign"
+              href="/obdesign"
+              year="2025 – present"
+              tags={["Next.js", "Astro", "Keystatic", "Vercel"]}
+              blurb="My one-person web studio. Ten live sites for businesses around BC, all custom-coded, each one editable by the owner without calling me."
+              linkLabel="View the studio"
+            >
+              <div aria-hidden className="studio-stack absolute inset-0">
                 {[
-                  { v: "0", l: "bytes of audio uploaded" },
-                  { v: "8 MB", l: "the whole app" },
-                  { v: "99", l: "tests, no mic needed" },
-                ].map((s) => (
-                  <div key={s.l}>
-                    <dt className="font-display text-2xl font-bold text-white/95">
-                      {s.v}
-                    </dt>
-                    <dd className="mt-1 text-xs leading-snug text-white/50">
-                      {s.l}
-                    </dd>
+                  ["grain-construction", "Grain Construction"],
+                  ["figs-and-honey", "Figs & Honey"],
+                  ["daves-bakery", "Daves’ Bakery"],
+                  ["soma-active-health", "Soma Active Health"],
+                ].map(([slug, name], i) => (
+                  <div key={slug}>
+                    <Image
+                      src={`/images/work/${slug}.webp`}
+                      alt={name}
+                      fill
+                      sizes="(min-width: 768px) 28vw, 55vw"
+                      className="object-cover object-top"
+                      priority={i === 0}
+                    />
                   </div>
                 ))}
-              </dl>
-              <p className="mt-8">
-                <Link
-                  href="/work/whispr"
-                  className="link-underline font-display text-xl font-bold text-white/95"
-                >
-                  View project →
-                </Link>
-              </p>
-            </div>
+              </div>
+            </ProjectCard>
 
-            <div className="parallax-b overflow-hidden border border-white/15 shadow-2xl">
-              <video
-                src="/images/whispr/demo.mp4"
-                poster="/images/whispr/demo-poster.webp"
-                autoPlay
-                loop
-                muted
-                playsInline
-                aria-label="Holding the hotkey, speaking, and the text appearing at the cursor"
-                className="block h-auto w-full"
-              />
-            </div>
+            {projects.map((entry, i) => (
+              <ProjectCard
+                key={entry.slug}
+                num={String(i + 2).padStart(3, "0")}
+                title={entry.title}
+                href={`/work/${entry.slug}`}
+                year={entry.year}
+                tags={entry.stack.slice(0, 4)}
+                blurb={entry.summary}
+              >
+                {entry.heroVideo ? (
+                  <video
+                    src={entry.heroVideo}
+                    poster={entry.hero}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    aria-hidden
+                    className="absolute inset-0 h-full w-full object-cover object-top"
+                  />
+                ) : (
+                  <FrameShot
+                    src={entry.hero ?? "/images/work/grain-construction.webp"}
+                    alt={entry.heroAlt ?? entry.title}
+                  />
+                )}
+              </ProjectCard>
+            ))}
           </div>
         </div>
 
-        {/* The pipeline, shown rather than described. */}
-        <div className="container-site mt-28 border-t border-white/15 pt-16 sm:mt-36">
-          <div className="grid items-center gap-12 md:grid-cols-[1fr_1.15fr] md:gap-16">
-            <div>
-              <p className="eyebrow !text-sage">Systems</p>
-              <h3 className="anim-heading mt-3 text-[clamp(2rem,4.5vw,3rem)] text-white/95">
-                Lead generation pipeline
-              </h3>
-              <p className="mt-5 max-w-[46ch] text-white/70">
-                The ~3,900-line Python system that finds my clients. It scrapes
-                businesses, scores them, and drafts the first email. Then it
-                tracks what happened to every one, right through to whether it
-                made me money. I run it all from a dashboard it builds for
-                me.
-              </p>
-              <dl className="mt-8 grid max-w-[26rem] grid-cols-3 gap-4 border-t border-white/15 pt-5">
-                {[
-                  { v: "942", l: "leads scored" },
-                  { v: "~7%", l: "convert to paid" },
-                  { v: "5", l: "pipeline stages" },
-                ].map((s) => (
-                  <div key={s.l}>
-                    <dt className="font-display text-2xl font-bold text-white/95">
-                      {s.v}
-                    </dt>
-                    <dd className="mt-1 text-xs leading-snug text-white/50">
-                      {s.l}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              <p className="mt-8">
-                <Link
-                  href="/work/leadgen"
-                  className="link-underline font-display text-xl font-bold text-white/95"
-                >
-                  View project →
-                </Link>
-              </p>
-            </div>
-
-            {/* Two stacked captures, offset so they read as one interface
-                rather than a pair of unrelated screenshots. */}
-            <div className="relative">
-              <div className="parallax-b overflow-hidden border border-white/15 shadow-2xl">
-                <Image
-                  src="/images/leadgen/dashboard.webp"
-                  sizes="(min-width: 1280px) 560px, (min-width: 768px) 46vw, 100vw"
-                  alt="The leads dashboard: every lead scored and tagged with the problem found on its site"
-                  width={1500}
-                  height={940}
-                  className="anim-image h-auto w-full"
-                />
-              </div>
-              <div className="parallax-a relative z-10 -mt-14 ml-auto w-[62%] overflow-hidden border border-white/15 shadow-2xl sm:-mt-20">
-                <Image
-                  src="/images/leadgen/detail.webp"
-                  sizes="(min-width: 1280px) 350px, (min-width: 768px) 29vw, 62vw"
-                  alt="A single lead: detected issue, contact routes, drafted email, and outcome buttons"
-                  width={1500}
-                  height={940}
-                  className="anim-image h-auto w-full"
-                />
-              </div>
-            </div>
+        {/* Every client site, not just the four in the studio card. The
+            index shows depth; this shows breadth. */}
+        <div className="mt-20 sm:mt-24">
+          <p className="container-site eyebrow !text-white/40">
+            Ten live sites, and counting
+          </p>
+          <div className="mt-6">
+            <SiteMarquee />
           </div>
         </div>
       </section>

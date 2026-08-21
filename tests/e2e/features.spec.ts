@@ -334,7 +334,9 @@ test("parallax images and lifted headings ride the scroll", async ({
       [selector, offset] as const,
     );
   };
-  for (const sel of [".parallax-a", ".parallax-b", ".lift"]) {
+  // Only selectors the landing page actually uses. The index frames are
+  // fixed, so .parallax-a left the home page with the bespoke blocks.
+  for (const sel of [".parallax-b", ".lift"]) {
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
     const early = await sampleNear(sel, 150);
     const late = await sampleNear(sel, 620);

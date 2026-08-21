@@ -880,3 +880,62 @@ h3.reveal-init {
   transform: scaleX(0);
   transform-origin: 0 50%;
 }
+
+/* ---------------------------------------------------------------
+   Project index: every project in an identical frame so the section
+   scans like a contents page rather than four bespoke features.
+   --------------------------------------------------------------- */
+.project-frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background:
+    radial-gradient(
+      ellipse 70% 60% at 30% 20%,
+      rgba(123, 164, 158, 0.1),
+      transparent 70%
+    ),
+    rgba(255, 255, 255, 0.02);
+}
+.project-card:hover .project-frame {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* The studio card composes several sites in the one frame: one large
+   capture with smaller ones stepping away from it. Percentages, so the
+   arrangement holds at any frame size. */
+.studio-stack > * {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.7);
+}
+.studio-stack > :nth-child(1) {
+  left: 4%;
+  top: 8%;
+  width: 62%;
+  aspect-ratio: 16 / 10;
+  z-index: 3;
+}
+.studio-stack > :nth-child(2) {
+  right: 4%;
+  top: 26%;
+  width: 40%;
+  aspect-ratio: 16 / 10;
+  z-index: 4;
+}
+.studio-stack > :nth-child(3) {
+  left: 16%;
+  bottom: 6%;
+  width: 34%;
+  aspect-ratio: 16 / 10;
+  z-index: 5;
+}
+.studio-stack > :nth-child(4) {
+  right: 12%;
+  bottom: 4%;
+  width: 30%;
+  aspect-ratio: 16 / 10;
+  z-index: 2;
+}

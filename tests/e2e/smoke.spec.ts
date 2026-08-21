@@ -59,6 +59,6 @@ test("studio page links through to a case study", async ({ page }) => {
 
 test("landing page reaches the studio page", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: /view the studio/i }).click();
+  await page.getByRole("link", { name: /OBdesign/i }).first().click();
   await expect(page).toHaveURL(/\/obdesign/);
 });
