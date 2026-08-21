@@ -96,34 +96,46 @@ const compositions: Record<
     tone: "frame-whispr",
     art: (
       <>
-        {/* Recaptured at retina from the running app. Three pieces, one
-            story each: what it does (the onboarding hint), what runs it
-            (local models, downloaded, never on the network), and what you
-            see while talking (the pill). */}
+        {/* Not screenshots: these pieces are re-rendered from Whispr's own
+            source styles (Hud.tsx, GeneralPane.tsx) with real alpha, so
+            corners are actually round and both HUD states exist. */}
         <Shot
-          src="/images/whispr/card-hint.webp"
+          src="/images/whispr/card-hint-v2.webp"
           alt=""
-          className="left-[4%] top-[8%] w-[76%] aspect-[1204/174]"
+          className="left-[4%] top-[8%] w-[76%] aspect-[1284/132] rounded-xl"
           sizes="(min-width: 768px) 640px, 76vw"
           dataFloat={1}
         />
         <Shot
-          src="/images/whispr/card-models-2.webp"
+          src="/images/whispr/card-models-v2.webp"
           alt=""
-          className="right-[4%] top-[31%] z-10 w-[62%] aspect-[1222/370]"
-          sizes="(min-width: 768px) 520px, 62vw"
+          className="right-[4%] top-[30%] z-10 w-[60%] aspect-[1224/346] rounded-xl"
+          sizes="(min-width: 768px) 500px, 60vw"
           dataFloat={2}
         />
         <div
           data-float={3}
-          className="absolute bottom-[10%] left-[13%] z-20 w-[26%]"
+          className="absolute bottom-[26%] left-[7%] z-20 w-[24%]"
         >
           <Image
-            src="/images/whispr/hud-pill-2.webp"
+            src="/images/whispr/pill-listening-v2.webp"
+            alt=""
+            width={254}
+            height={64}
+            sizes="(min-width: 768px) 200px, 24vw"
+            className="h-auto w-full drop-shadow-[0_10px_24px_rgba(0,0,0,0.5)]"
+          />
+        </div>
+        <div
+          data-float={4}
+          className="absolute bottom-[9%] left-[16%] z-20 w-[25%]"
+        >
+          <Image
+            src="/images/whispr/pill-transcribing-v2.webp"
             alt=""
             width={260}
-            height={68}
-            sizes="(min-width: 768px) 220px, 26vw"
+            height={64}
+            sizes="(min-width: 768px) 205px, 25vw"
             className="h-auto w-full drop-shadow-[0_10px_24px_rgba(0,0,0,0.5)]"
           />
         </div>
