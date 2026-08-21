@@ -408,38 +408,6 @@
   }
 }
 
-/* Scroll progress hairline: the one piece of persistent chrome, so you
-   always know how far through the page you are. Compositor-only.
-   Desktop only: on a phone the collapsing URL bar changes the scrollable
-   height mid-scroll, so the timeline's range keeps recalculating and the
-   bar visibly snaps backwards. Not fixable from here — the browser chrome
-   owns that height. */
-.scroll-progress {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  width: 100%;
-  transform-origin: 0 50%;
-  transform: scaleX(0);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--accent) 40%,
-    var(--accent)
-  );
-  z-index: 60;
-}
-@media (min-width: 640px) {
-  .scroll-progress {
-    display: block;
-  }
-}
-/* Scaled by ScrollMotion in JS. The CSS scroll(root) timeline version
-   passed headless testing but sat dead in real Safari, pinned at from —
-   the same failure that took down the scroll-driven reveals. */
-
 /* Scroll parallax (hero departure, heading lift, image drifts) is driven
    by ScrollMotion in JS: per-frame transform/opacity writes on scroll.
    The CSS view()/scroll() timeline version passed headless but pinned at
@@ -546,7 +514,7 @@ h3.reveal-init {
    falling back to solid inherited text. A browser without text-stroke
    paints transparent text, i.e. no echo — harmless. */
 .hero-echo {
-  -webkit-text-stroke: 1px rgba(123, 164, 158, 0.28);
+  -webkit-text-stroke: 1px rgba(123, 164, 158, 0.18);
   color: transparent;
 }
 
@@ -885,4 +853,30 @@ h3.reveal-init {
   main {
     padding: 0;
   }
+}
+
+/* ---------------------------------------------------------------
+   Nav rail: each anchor owns a hairline that fills with sage as you
+   move through its section, so the nav doubles as the progress
+   indicator and the site needs no separate progress bar.
+   Filled by ScrollMotion; with no JS the tracks simply sit empty.
+   --------------------------------------------------------------- */
+.nav-rail {
+  display: block;
+  white-space: nowrap;
+}
+.nav-rail-track {
+  display: block;
+  height: 1px;
+  margin-top: 0.55rem;
+  background: rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+}
+.nav-rail-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
 }

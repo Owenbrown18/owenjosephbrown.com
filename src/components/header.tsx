@@ -75,7 +75,7 @@ export function Header() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-[translate,background-color,border-color] duration-300 ease-out ${
-        hidden && !open ? "-translate-y-full" : "translate-y-0"
+        hidden && !open ? "-translate-y-full sm:translate-y-0" : "translate-y-0"
       } ${
         atTop && !open
           ? "border-b border-transparent bg-transparent"
@@ -95,26 +95,32 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Desktop: the full rail. */}
+        {/* Desktop: the rail, spread across the width. Each item owns a
+            rule that fills with sage as you move through its section, so
+            the nav is also the progress indicator. */}
         <nav
           aria-label="Primary"
-          className="hidden items-center sm:flex"
+          className="ml-10 hidden flex-1 items-stretch gap-6 sm:flex"
         >
           {anchors.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="px-2 py-1.5 text-[13px] text-white/60 transition-colors hover:text-white sm:px-3 sm:text-sm"
+              data-nav-section={item.href.split("#")[1]}
+              className="nav-rail group flex-1 pb-1.5 pt-1 text-[13px] text-white/55 transition-colors hover:text-white lg:text-sm"
             >
               <span aria-hidden className="nav-num">
                 {item.num}
               </span>
               {item.label}
+              <span aria-hidden className="nav-rail-track">
+                <span className="nav-rail-fill" />
+              </span>
             </Link>
           ))}
           <Link
             href="/resume"
-            className="ml-2 rounded-full border border-white/20 px-4 py-1.5 text-[13px] text-white/80 transition-colors hover:border-white/60 hover:text-white"
+            className="my-auto shrink-0 rounded-full border border-white/20 px-4 py-1.5 text-[13px] text-white/80 transition-colors hover:border-white/60 hover:text-white"
           >
             resume
           </Link>

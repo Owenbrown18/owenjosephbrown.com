@@ -15,7 +15,6 @@ export function Atmosphere() {
         <ForestCanvas />
       </div>
       <div aria-hidden className="grain" />
-      <div aria-hidden className="scroll-progress" />
       <Reveal />
       <ScrollMotion />
     </>

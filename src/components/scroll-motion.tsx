@@ -47,19 +47,6 @@ export function ScrollMotion() {
     const jobs: Job[] = [];
     const job = (j: Omit<Job, "cur">) => jobs.push({ ...j, cur: NaN });
 
-    // Progress hairline: a position indicator, not decoration, so it runs
-    // even under reduced motion and tracks exactly.
-    const progress = document.querySelector<HTMLElement>(".scroll-progress");
-    if (progress) {
-      job({
-        exact: true,
-        compute: (y, _vh, max) => (max > 0 ? clamp01(y / max) : 0),
-        apply: (v) => {
-          progress.style.transform = `scaleX(${v.toFixed(5)})`;
-        },
-      });
-    }
-
     // Elements whose progress depends on where they sit in the document.
     // Measured with inline transforms cleared so the driver's own writes
     // can never feed back into the measurement.
@@ -81,6 +68,33 @@ export function ScrollMotion() {
       measured.push(m);
       return m;
     };
+
+    // Nav rail: each anchor's hairline fills across its own section, so
+    // the five rules together read as one progress bar. Exact, not eased:
+    // it's an indicator. Runs under reduced motion for the same reason
+    // the progress bar did.
+    const rails = document.querySelectorAll<HTMLElement>("[data-nav-section]");
+    for (const rail of rails) {
+      const fill = rail.querySelector<HTMLElement>(".nav-rail-fill");
+      const section = document.getElementById(rail.dataset.navSection ?? "");
+      if (!fill || !section) continue;
+      const m = track(section);
+      job({
+        exact: true,
+        // The scroll range over which this section is the one you're
+        // reading. The end is clamped to the last reachable scroll
+        // position, because the final section can never scroll fully past
+        // the viewport and would otherwise stop short of full.
+        compute: (y, vh, max) => {
+          const start = m.docTop - vh * 0.35;
+          const end = Math.min(m.docTop + m.height - vh * 0.35, max);
+          return clamp01((y - start) / Math.max(1, end - start));
+        },
+        apply: (v) => {
+          fill.style.transform = `scaleX(${v.toFixed(4)})`;
+        },
+      });
+    }
 
     if (!reduced) {
       // The hero drifts up and dissolves across the first viewport of

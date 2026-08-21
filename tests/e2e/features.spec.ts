@@ -123,12 +123,11 @@ test.describe("mobile", () => {
     await expect(sheet).toBeHidden();
   });
 
-  test("scroll cue and progress bar stay off small screens", async ({
-    page,
-  }) => {
+  test("the desktop nav rail stays off small screens", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator(".scroll-cue")).toBeHidden();
-    await expect(page.locator(".scroll-progress")).toBeHidden();
+    // The rail is the desktop progress indicator; on a phone the hamburger
+    // is the whole nav, and the header is free to hide on scroll.
+    await expect(page.locator("[data-nav-section]").first()).toBeHidden();
   });
 });
 
@@ -209,23 +208,51 @@ for (const path of ["/work/figs-and-honey", "/work/grain"]) {
 // but sit dead in real Safari. They are JS-driven now; these tests pin
 // the behavior in every engine we run.
 
-test("scroll progress bar tracks scroll position", async ({ page }) => {
-  await page.goto("/");
-  await page.waitForTimeout(300);
-  const scaleX = () =>
-    page.evaluate(() => {
-      const el = document.querySelector(".scroll-progress")!;
-      return new DOMMatrix(getComputedStyle(el).transform).a;
-    });
-  expect(await scaleX()).toBeLessThan(0.05);
+test("the nav rail fills section by section as you scroll", async ({
+  page,
+}) => {
+  // The rail replaced the separate progress hairline: each anchor's rule
+  // fills across its own section, so together they are the progress bar.
+  await page.goto("/", { waitUntil: "networkidle" });
+  await page.waitForTimeout(400);
+  const fills = () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll("[data-nav-section]")].map((a) => ({
+        section: (a as HTMLElement).dataset.navSection,
+        x: new DOMMatrix(
+          getComputedStyle(a.querySelector(".nav-rail-fill")!).transform,
+        ).a,
+      })),
+    );
+
+  const atTop = await fills();
+  expect(atTop.length, "one rail per anchor").toBe(5);
+  expect(atTop.at(-1)!.x, "last section empty at the top").toBeLessThan(0.05);
+
   await page.evaluate(() =>
     window.scrollTo({
       top: document.documentElement.scrollHeight,
       behavior: "instant",
     }),
   );
-  await page.waitForTimeout(200);
-  expect(await scaleX()).toBeGreaterThan(0.95);
+  await page.waitForTimeout(300);
+  const atBottom = await fills();
+  for (const rail of atBottom) {
+    expect(rail.x, `${rail.section} full at the bottom`).toBeGreaterThan(0.9);
+  }
+});
+
+test("the header stays visible on desktop so the rail is readable", async ({
+  page,
+}) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+  await page.evaluate(() => window.scrollTo({ top: 2000, behavior: "instant" }));
+  await page.waitForTimeout(400);
+  const onScreen = await page.evaluate(() => {
+    const h = document.querySelector("header")!;
+    return h.getBoundingClientRect().bottom > 0;
+  });
+  expect(onScreen).toBe(true);
 });
 
 test("section rules draw in on arrival, stay put once drawn", async ({

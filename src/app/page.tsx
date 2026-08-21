@@ -10,8 +10,8 @@ import {
   ObdesignWordmark,
 } from "@/components/icons";
 import { SectionRule } from "@/components/section-rule";
-import { clientSites } from "@/lib/sites";
-import { identity } from "@/lib/resume-data";
+import { LocalTime } from "@/components/local-time";
+import { education, experience, identity } from "@/lib/resume-data";
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -31,6 +31,26 @@ const personJsonLd = {
     addressCountry: "CA",
   },
 };
+
+/**
+ * The hero table. Built from the resume data so it can't drift, and sliced
+ * to the three org-type entries: grain and the pipeline are further down
+ * the page as projects, so listing them here twice would be noise.
+ */
+const history = [
+  ...experience.slice(0, 3).map((e) => ({
+    when: e.period.includes("present")
+      ? "Current"
+      : (e.period.match(/(\d{4})/g)?.pop() ?? ""),
+    org: e.org,
+    role: e.role,
+  })),
+  {
+    when: education.period.slice(-16).match(/(\d{4})/)?.[0] ?? "2028",
+    org: education.org,
+    role: education.credential,
+  },
+];
 
 const expertise = [
   {
@@ -63,80 +83,96 @@ export default function HomePage() {
 
       <div aria-hidden className="page-grade" />
 
-      {/* 01 · Hero */}
+      {/* 01 · Hero. Left-aligned and editorial: the name, what I do, the
+          ways to reach me, then the history as a table rather than a
+          paragraph, so a recruiter has it all in the first screen. */}
       <section id="home" className="relative">
-        <div className="container-site relative flex min-h-[100svh] flex-col items-center justify-center pb-40 pt-24 text-center">
+        <div className="container-site relative flex min-h-[100svh] flex-col justify-center pb-28 pt-32 sm:pt-36">
           <div className="hero-stage hero-parallax">
-            <p className="eyebrow !text-sage">
-              Victoria, BC · UVic software engineering
-            </p>
-            {/* hero-name (the animation-handoff hook) lives on the wrapper
-                so the word-level entrance below stays untouched. */}
-            <div className="hero-name relative mt-7">
-              {/* The echo: the name once more as a 1px sage outline, offset
-                  down-right like a print misregistration. inset-0 makes it
-                  wrap and centre exactly like the real heading at every
-                  width, so the offset is the only difference. */}
+            <div className="hero-name relative">
+              {/* The echo: the name once more as a sage outline, offset like
+                  a print misregistration. inset-0 so it wraps exactly as the
+                  real heading does at every width. */}
               <p
                 aria-hidden
-                className="hero-echo pointer-events-none absolute inset-0 translate-x-[7px] translate-y-[8px] select-none font-display text-[clamp(3.5rem,13vw,11rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em]"
+                className="hero-echo pointer-events-none absolute inset-0 translate-x-[7px] translate-y-[8px] select-none font-display text-[clamp(3.2rem,11vw,9rem)] font-extrabold leading-[0.86] tracking-[-0.035em]"
               >
-                Owen Brown
+                Owen
+                <br />
+                Brown
               </p>
-              <h1 className="relative mx-auto text-[clamp(3.5rem,13vw,11rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em] text-white/95">
+              <h1 className="relative font-display text-[clamp(3.2rem,11vw,9rem)] font-extrabold leading-[0.86] tracking-[-0.035em] text-white/95">
                 {/* Split so the two words arrive on a stagger. The full name
                     stays intact for screen readers and copy-paste. */}
-                <span className="hero-word">Owen</span>{" "}
-                <span className="hero-word">Brown</span>
+                {/* The outer span forces the line break: .hero-word is
+                    unlayered inline-block in globals.css and would beat a
+                    Tailwind `block` utility. */}
+                <span className="block">
+                  <span className="hero-word">Owen</span>
+                </span>{" "}
+                <span className="block text-sage">
+                  <span className="hero-word">Brown</span>
+                </span>
               </h1>
             </div>
-            <p className="mt-7 text-[clamp(0.78rem,1.7vw,1rem)] font-medium uppercase tracking-[0.3em] text-white/70">
-              Software engineer, web & app developer.
+
+            <p className="mt-9 max-w-[46ch] text-[clamp(1rem,1.5vw,1.15rem)] leading-relaxed text-white/70">
+              I’m a <strong className="font-semibold text-white">software engineer</strong>{" "}
+              in Victoria, studying at UVic and running a small web studio. I
+              build things people actually use, and most of them are live
+              somewhere you can go click on.
             </p>
-            <p className="mt-5 text-sm text-sage">
-              Open to a Spring 2027 co-op · Victoria or remote
-            </p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-2">
+              {[
+                { label: "Email", href: `mailto:${identity.email}` },
+                { label: "GitHub", href: identity.github },
+                { label: "LinkedIn", href: identity.linkedin },
+              ].map((l) => (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  rel="me noopener"
+                  className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-sm text-white/75 transition-colors hover:border-white/40 hover:text-white"
+                >
+                  {l.label}
+                </a>
+              ))}
+              <Link
+                href="/resume"
+                className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-sm text-white/75 transition-colors hover:border-white/40 hover:text-white"
+              >
+                Résumé
+              </Link>
+            </div>
           </div>
 
-          <div className="hero-parallax absolute inset-x-0 bottom-10">
-            {/* Desktop only: on a phone the hero is tall enough that this
-                collided with the subtitle, and a touch device does not need
-                telling that a page scrolls. */}
-            <a
-              href="#expertise"
-              className="scroll-cue group mx-auto mb-9 hidden w-fit flex-col items-center gap-2 sm:flex"
-              aria-label="Scroll to my expertise"
-            >
-              <span className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white/35 transition-colors group-hover:text-white/70">
-                Scroll
-              </span>
-              <span aria-hidden className="scroll-cue-track">
-                <span className="scroll-cue-dot" />
-              </span>
-            </a>
-            <p className="eyebrow !text-white/40">
-              Real sites for real businesses
-            </p>
-            <p className="mx-auto mt-3 max-w-[72ch] px-6 text-sm leading-relaxed text-white/45">
-              {clientSites.map((s, i) => (
-                <span key={s.slug}>
-                  {/* Live proof beats a label: every name goes to the
-                      real site it stands for. */}
-                  <a
-                    href={s.url}
-                    target="_blank"
-                    rel="noopener"
-                    className="whitespace-nowrap transition-colors hover:text-white"
-                  >
-                    {s.name}
-                  </a>
-                  {i < clientSites.length - 1 && (
-                    <span className="mx-2 text-white/25">·</span>
-                  )}{" "}
-                </span>
-              ))}
-            </p>
-          </div>
+          {/* Place and time, the way a studio site stamps a page. */}
+          <p className="mt-14 text-right font-mono text-xs uppercase tracking-[0.14em] text-white/35">
+            ©2026&nbsp;&nbsp;·&nbsp;&nbsp;Victoria, BC&nbsp;&nbsp;<LocalTime />
+          </p>
+
+          {/* The history, as a table. */}
+          <dl className="mt-5 border-t border-white/15">
+            {history.map((row) => (
+              <div
+                key={row.org}
+                className="reveal-up grid grid-cols-[4.5rem_1fr] items-baseline gap-x-5 border-b border-white/15 py-4 sm:grid-cols-[9rem_1fr] sm:py-5"
+              >
+                <dt className="font-mono text-xs uppercase tracking-[0.12em] text-white/40">
+                  {row.when}
+                </dt>
+                <dd>
+                  <span className="block font-display text-base font-bold text-white/95 sm:text-lg">
+                    {row.org}
+                  </span>
+                  <span className="mt-0.5 block text-sm text-white/50">
+                    {row.role}
+                  </span>
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
