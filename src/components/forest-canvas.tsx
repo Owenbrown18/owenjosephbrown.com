@@ -33,10 +33,13 @@ uniform float u_scroll; // 0..1 page progress
 uniform float u_dpr;    // device pixels per CSS pixel
 uniform float u_tunnel; // 1 on the landing page, 0 elsewhere
 
-const vec3 FOREST = vec3(0.043, 0.122, 0.114); // #0b1f1d
-const vec3 MID    = vec3(0.118, 0.227, 0.216); // #1e3a37
-const vec3 HIGH   = vec3(0.180, 0.329, 0.314); // #2e5450
+// Paper ground. The same field, but it tints the page instead of
+// lighting it: PAPER is the base and every feature darkens toward sage
+// or forest rather than adding light to black.
+const vec3 PAPER  = vec3(0.957, 0.953, 0.937); // #f4f3ef
+const vec3 WASH   = vec3(0.851, 0.882, 0.871); // faint green wash
 const vec3 SAGE   = vec3(0.482, 0.643, 0.620); // #7ba49e
+const vec3 FOREST = vec3(0.180, 0.329, 0.314); // #2e5450
 
 float hash(vec2 p) {
   return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -90,11 +93,11 @@ void main() {
   float d = distance(p, centre) / (0.75 * max(aspect, 1.0));
   d = clamp(d, 0.0, 1.0);
 
-  vec3 col = mix(HIGH, MID, smoothstep(0.0, 0.45, d));
-  col = mix(col, FOREST, smoothstep(0.35, 0.95, d));
+  // Green wash at the centre, clean paper toward the edges.
+  vec3 col = mix(WASH, PAPER, smoothstep(0.05, 0.75, d));
 
-  // Noise breathes sage into the mid band.
-  col += SAGE * (n - 0.5) * 0.08 * (1.0 - d);
+  // The noise breathes the wash in and out.
+  col -= (1.0 - SAGE) * (n - 0.5) * 0.05 * (1.0 - d);
 
   // Two slow orbiting glows: one warm (golden-hour), one sage. The
   // moving elements that keep the field alive.
@@ -102,19 +105,18 @@ void main() {
   vec2 orb1 = vec2(0.8 * aspect, 0.68)
     + vec2(sin(t2 * 0.7), cos(t2 * 0.45)) * 0.14;
   float g1 = exp(-distance(p, orb1) * 4.5);
-  // Warm light, kept to a whisper: at full strength it read as a yellow
-  // blob sitting on the page rather than depth in the field.
-  col += vec3(0.52, 0.42, 0.30) * g1 * 0.05;
+  // A cool shade rather than a warm light, so it still reads as depth.
+  col -= vec3(0.10, 0.13, 0.18) * g1 * 0.10;
 
   vec2 orb2 = vec2(0.3 * aspect, 0.3)
     + vec2(cos(t2 * 0.5 + 2.0), sin(t2 * 0.65 + 1.0)) * 0.18;
   float g2 = exp(-distance(p, orb2) * 5.0);
-  col += SAGE * g2 * 0.14;
+  col -= (1.0 - SAGE) * g2 * 0.16;
 
   // Soft pointer light.
   vec2 m = vec2(u_pointer.x * aspect, u_pointer.y);
   float glow = exp(-distance(p, m) * 3.2);
-  col += SAGE * glow * 0.07;
+  col -= (1.0 - SAGE) * glow * 0.09;
 
   // Pinned to the viewport, never drifting: any scroll-linked offset has
   // to be pixel-snapped to avoid shimmer, and that snapping is what made
@@ -142,8 +144,11 @@ void main() {
                     * smoothstep(0.34, 0.5, u_scroll)
                     * smoothstep(0.72, 0.56, u_scroll);
 
-  col += SAGE * minor * (0.030 + 0.075 * spot) * mask * quiet;
-  col += SAGE * major * (0.050 + 0.110 * spot) * mask * quiet;
+  // The grid darkens the paper instead of lighting the dark. This is the
+  // green poking through that the whole light treatment hangs on.
+  vec3 ink = 1.0 - FOREST;
+  col -= ink * minor * (0.050 + 0.070 * spot) * mask * quiet;
+  col -= ink * major * (0.080 + 0.100 * spot) * mask * quiet;
 
   // Dither to kill banding on the dark ramp.
   col += (hash(gl_FragCoord.xy + fract(u_time)) - 0.5) / 255.0;

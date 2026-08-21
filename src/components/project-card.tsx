@@ -67,7 +67,7 @@ export function ProjectCard({
         {tags.map((t) => (
           <span
             key={t}
-            className="border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.7rem] font-medium text-white/60"
+            className="border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.7rem] font-medium text-white/72"
           >
             {t}
           </span>
@@ -81,7 +81,7 @@ export function ProjectCard({
         </span>
       </div>
 
-      <p className="mt-3 text-sm leading-relaxed text-white/60">{blurb}</p>
+      <p className="mt-3 text-sm leading-relaxed text-white/72">{blurb}</p>
     </Link>
   );
 }

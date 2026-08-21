@@ -9,7 +9,8 @@
   --color-forest: #0b1f1d;
   --color-forest-mid: #1e3a37;
   --color-forest-high: #2e5450;
-  --color-sage: #7ba49e;
+  --color-sage: #45786f;
+  --color-sage-soft: #7ba49e;
   --color-ink: #1e1e1e;
   --color-paper: #f7f6f3;
 
@@ -22,21 +23,29 @@
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);
 
+  /* The whole site is written in text-white/xx, border-white/xx and
+     bg-white/xx. Tailwind v4 resolves those through --color-white, so
+     pointing it at ink inverts all 57 of them at once. "white" now means
+     "the colour that contrasts with the page". */
+  --color-white: #0f2320;
+  --color-paper-bg: #f4f3ef;
+
   --font-display: var(--font-bricolage), system-ui, sans-serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
   --font-wordmark: var(--font-fraunces), Georgia, serif;
 }
 
 :root {
-  --bg: #0b1f1d;
-  --surface: #122a27;
-  --fg: rgba(255, 255, 255, 0.92);
-  --fg-muted: rgba(255, 255, 255, 0.68);
-  --fg-faint: rgba(255, 255, 255, 0.55);
-  --line: rgba(255, 255, 255, 0.14);
-  --accent: #7ba49e;
-  --accent-text: #8fb8b1;
-  color-scheme: dark;
+  --bg: #f4f3ef;
+  --surface: #ebe9e3;
+  --fg: rgba(15, 35, 32, 0.94);
+  --fg-muted: rgba(15, 35, 32, 0.82);
+  --fg-faint: rgba(15, 35, 32, 0.72);
+  --line: rgba(15, 35, 32, 0.16);
+  --accent: #2e5450;
+  /* Sage is only 2.1:1 on paper, so accent text is the deep forest. */
+  --accent-text: #3d6b65;
+  color-scheme: light;
 }
 
 @layer base {
@@ -78,7 +87,7 @@
 
   ::selection {
     background: var(--accent);
-    color: #0b1f1d;
+    color: #f4f3ef;
   }
 
   :focus-visible {
@@ -154,12 +163,12 @@
 
   /* The forest gradient, as a static fallback and page ground. */
   .forest-ground {
-    background-color: #0b1f1d;
+    background-color: #f4f3ef;
     background-image: radial-gradient(
       ellipse 70% 55% at 20% 25%,
-      #2e5450 0%,
-      #1e3a37 35%,
-      #0b1f1d 80%
+      rgba(123, 164, 158, 0.22) 0%,
+      rgba(123, 164, 158, 0.08) 40%,
+      rgba(244, 243, 239, 0) 78%
     );
   }
 
@@ -199,22 +208,14 @@
   inset: 0;
   z-index: -5;
   pointer-events: none;
-  background:
-    radial-gradient(
-      ellipse 55% 12% at 50% 22%,
-      rgba(123, 164, 158, 0.07),
-      transparent 70%
-    ),
-    linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(0, 0, 0, 0.06) 16%,
-      rgba(0, 0, 0, 0.34) 38%,
-      rgba(0, 0, 0, 0.46) 52%,
-      rgba(0, 0, 0, 0.3) 66%,
-      rgba(0, 0, 0, 0.08) 80%,
-      transparent 94%
-    );
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(46, 84, 80, 0.03) 20%,
+    rgba(46, 84, 80, 0.06) 45%,
+    rgba(46, 84, 80, 0.04) 70%,
+    transparent 94%
+  );
 }
 
 /* Film grain. An inline feTurbulence data URI, so it costs zero network
@@ -225,7 +226,8 @@
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.05;
+  opacity: 0.055;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 200px 200px;
 }
@@ -276,7 +278,7 @@
     display: block;
     height: 1.5px;
     width: 22px;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(15, 35, 32, 0.85);
     transition:
       transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
       opacity 0.2s ease;
@@ -364,13 +366,13 @@
   height: min(9rem, 16vh);
   transform: translateY(-50%);
   pointer-events: none;
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
   background: linear-gradient(
     to bottom,
     transparent,
-    rgba(123, 164, 158, 0.035) 30%,
-    rgba(123, 164, 158, 0.09) 50%,
-    rgba(123, 164, 158, 0.035) 70%,
+    rgba(123, 164, 158, 0.1) 30%,
+    rgba(123, 164, 158, 0.24) 50%,
+    rgba(123, 164, 158, 0.1) 70%,
     transparent
   );
 }
@@ -518,7 +520,7 @@ h3.reveal-init {
    falling back to solid inherited text. A browser without text-stroke
    paints transparent text, i.e. no echo — harmless. */
 .hero-echo {
-  -webkit-text-stroke: 1px rgba(123, 164, 158, 0.18);
+  -webkit-text-stroke: 1px rgba(46, 84, 80, 0.3);
   color: transparent;
 }
 
@@ -873,7 +875,7 @@ h3.reveal-init {
   display: block;
   height: 1px;
   margin-top: 0.55rem;
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(15, 35, 32, 0.18);
   overflow: hidden;
 }
 .nav-rail-fill {
@@ -897,10 +899,10 @@ h3.reveal-init {
   background:
     radial-gradient(
       ellipse 80% 70% at 32% 18%,
-      rgba(123, 164, 158, 0.16),
+      rgba(123, 164, 158, 0.28),
       transparent 72%
     ),
-    linear-gradient(160deg, #16332f 0%, #102825 55%, #0c1f1d 100%);
+    linear-gradient(160deg, #e9e7e0 0%, #eeece6 55%, #e4e2da 100%);
 }
 .project-card:hover .project-frame {
   border-color: rgba(255, 255, 255, 0.3);
