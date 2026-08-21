@@ -94,11 +94,14 @@ export function Shot({
   src,
   alt,
   className,
+  sizes,
   priority = false,
 }: {
   src: string;
   alt: string;
   className: string;
+  /** Must match the shot's real rendered width, not the frame's. */
+  sizes: string;
   priority?: boolean;
 }) {
   return (
@@ -110,7 +113,7 @@ export function Shot({
         alt={alt}
         fill
         priority={priority}
-        sizes="(min-width: 768px) 26vw, 50vw"
+        sizes={sizes}
         className="object-cover object-top"
       />
     </div>

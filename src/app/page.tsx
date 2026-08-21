@@ -107,11 +107,13 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
           src="/images/whispr/settings-general.webp"
           alt=""
           className="right-[4%] top-[30%] z-10 w-[42%] aspect-[16/11]"
+          sizes="(min-width: 768px) 250px, 45vw"
         />
         <Shot
           src="/images/whispr/hud.webp"
           alt=""
           className="bottom-[8%] left-[22%] z-20 w-[34%] aspect-[560/150]"
+          sizes="(min-width: 768px) 200px, 38vw"
         />
       </>
     ),
@@ -124,11 +126,13 @@ const compositions: Record<string, { frame: string; art: ReactNode }> = {
           src="/images/leadgen/dashboard.webp"
           alt=""
           className="left-[4%] top-[10%] w-[66%] aspect-[16/10]"
+          sizes="(min-width: 768px) 390px, 62vw"
         />
         <Shot
           src="/images/leadgen/detail.webp"
           alt=""
           className="bottom-[8%] right-[4%] z-10 w-[46%] aspect-[16/11]"
+          sizes="(min-width: 768px) 270px, 46vw"
         />
       </>
     ),
@@ -321,19 +325,18 @@ export default function HomePage() {
             >
               <div aria-hidden className="studio-stack absolute inset-0">
                 {[
-                  ["grain-construction", "Grain Construction"],
-                  ["figs-and-honey", "Figs & Honey"],
-                  ["daves-bakery", "Daves’ Bakery"],
-                  ["soma-active-health", "Soma Active Health"],
-                ].map(([slug, name], i) => (
+                  ["grain-construction", "Grain Construction", "360px"],
+                  ["figs-and-honey", "Figs & Honey", "240px"],
+                  ["daves-bakery", "Daves’ Bakery", "200px"],
+                  ["soma-active-health", "Soma Active Health", "180px"],
+                ].map(([slug, name, w]) => (
                   <div key={slug}>
                     <Image
                       src={`/images/work/${slug}.webp`}
                       alt={name}
                       fill
-                      sizes="(min-width: 768px) 28vw, 55vw"
+                      sizes={`(min-width: 768px) ${w}, 45vw`}
                       className="object-cover object-top"
-                      priority={i === 0}
                     />
                   </div>
                 ))}
