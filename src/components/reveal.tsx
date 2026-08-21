@@ -88,9 +88,16 @@ export function Reveal() {
       queued = true;
       requestAnimationFrame(() => {
         queued = false;
+        // Only a real scroll counts. At scrollY 0 the page is never "at the
+        // bottom" in the sense that matters: if the whole document fits the
+        // viewport the observer reveals everything anyway, and a scroll
+        // event fired during load while layout is still transiently short
+        // used to flush every element invisible-to-the-eye, so distant
+        // section rules were already drawn by the time you reached them.
         const atBottom =
+          window.scrollY > 0 &&
           window.innerHeight + window.scrollY >=
-          document.documentElement.scrollHeight - 4;
+            document.documentElement.scrollHeight - 4;
         if (!atBottom) return;
         for (const el of els) {
           if (el.dataset.revealed) continue;
