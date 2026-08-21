@@ -364,7 +364,7 @@ export default function HomePage() {
                 Almost everything on here is live somewhere, so you can go look
                 at it instead of taking my word for it.
               </p>
-              <p className="mt-6 max-w-[52ch] text-white/60">
+              <p className="mt-6 max-w-[52ch] text-white/75">
                 Looking for a Spring 2027 co-op in Victoria or remote. The
                 full picture is on the{" "}
                 <Link href="/resume" className="link-underline text-white/90">
@@ -398,7 +398,7 @@ export default function HomePage() {
           <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
             <a
               href={`mailto:${identity.email}`}
-              className="inline-flex items-center gap-2 bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-forest transition-transform duration-200 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-[var(--bg)] transition-transform duration-200 hover:-translate-y-0.5"
             >
               <MailIcon className="h-3.5 w-3.5" />
               Email me
