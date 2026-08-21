@@ -22,6 +22,8 @@ export type ProjectCardProps = {
   /** The composed contents of the image frame. */
   children: ReactNode;
   linkLabel?: string;
+  /** Frames deliberately differ in shape so the row doesn't line up. */
+  frameClass?: string;
 };
 
 export function ProjectCard({
@@ -33,6 +35,7 @@ export function ProjectCard({
   blurb,
   children,
   linkLabel = "Case study",
+  frameClass = "aspect-[4/3]",
 }: ProjectCardProps) {
   return (
     <Link
@@ -40,7 +43,7 @@ export function ProjectCard({
       aria-label={`${title}: ${blurb}`}
       className="project-card reveal-up group block"
     >
-      <div className="project-frame">{children}</div>
+      <div className={`project-frame ${frameClass}`}>{children}</div>
 
       <div className="mt-6 flex items-end justify-between gap-4">
         <span className="font-display text-[clamp(2rem,4vw,2.75rem)] font-extrabold leading-none tracking-[-0.03em] text-white/90">
@@ -64,7 +67,7 @@ export function ProjectCard({
         {tags.map((t) => (
           <span
             key={t}
-            className="rounded-sm border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.7rem] font-medium text-white/60"
+            className="border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.7rem] font-medium text-white/60"
           >
             {t}
           </span>
@@ -80,6 +83,37 @@ export function ProjectCard({
 
       <p className="mt-3 text-sm leading-relaxed text-white/60">{blurb}</p>
     </Link>
+  );
+}
+
+/**
+ * One capture placed inside a composition. Position and width come from
+ * the caller as percentages, so an arrangement holds at any frame size.
+ */
+export function Shot({
+  src,
+  alt,
+  className,
+  priority = false,
+}: {
+  src: string;
+  alt: string;
+  className: string;
+  priority?: boolean;
+}) {
+  return (
+    <div
+      className={`absolute overflow-hidden border border-white/20 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.7)] ${className}`}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        priority={priority}
+        sizes="(min-width: 768px) 26vw, 50vw"
+        className="object-cover object-top"
+      />
+    </div>
   );
 }
 

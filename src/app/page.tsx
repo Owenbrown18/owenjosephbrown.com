@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { SiteMarquee } from "@/components/site-marquee";
@@ -9,9 +10,10 @@ import {
   ObdesignWordmark,
 } from "@/components/icons";
 import { SectionRule } from "@/components/section-rule";
-import { ProjectCard, FrameShot } from "@/components/project-card";
+import { ProjectCard, FrameShot, Shot } from "@/components/project-card";
+import { PhoneFrame } from "@/components/phone-frame";
 import { LocalTime } from "@/components/local-time";
-import { education, experience, identity } from "@/lib/resume-data";
+import { identity } from "@/lib/resume-data";
 import { getWorkEntries } from "@/lib/content";
 
 const personJsonLd = {
@@ -34,30 +36,105 @@ const personJsonLd = {
 };
 
 /**
- * The hero table. Built from the resume data so it can't drift, and sliced
- * to the three org-type entries: grain and the pipeline are further down
- * the page as projects, so listing them here twice would be noise.
+ * How each project's imagery is arranged inside its frame. Several shots
+ * at different sizes rather than one flat screenshot, because a single
+ * capture of a phone app or a Mac app says almost nothing.
+ *
+ * A slug with no composition here falls back to its hero image, so a new
+ * case study still shows up on its own.
  */
-const history = [
-  ...experience.slice(0, 3).map((e) => ({
-    when: e.period.includes("present")
-      ? "Current"
-      : (e.period.match(/(\d{4})/g)?.pop() ?? ""),
-    org: e.org,
-    role: e.role,
-  })),
-  {
-    when: education.period.slice(-16).match(/(\d{4})/)?.[0] ?? "2028",
-    org: education.org,
-    role: education.credential,
+const compositions: Record<string, { frame: string; art: ReactNode }> = {
+  grain: {
+    frame: "aspect-[5/4]",
+    art: (
+      <>
+        <div className="absolute bottom-[-5%] left-[5%] w-[26%]">
+          <PhoneFrame>
+            <Image
+              src="/images/grain/home_roll.webp"
+              alt=""
+              width={260}
+              height={563}
+              sizes="(min-width: 768px) 150px, 28vw"
+              className="h-auto w-full"
+            />
+          </PhoneFrame>
+        </div>
+        <div className="absolute bottom-[9%] left-[33%] z-10 w-[24%]">
+          <PhoneFrame>
+            <Image
+              src="/images/grain/new_roll_qr.webp"
+              alt=""
+              width={260}
+              height={563}
+              sizes="(min-width: 768px) 140px, 26vw"
+              className="h-auto w-full"
+            />
+          </PhoneFrame>
+        </div>
+        <div className="absolute bottom-[-8%] right-[7%] w-[22%]">
+          <PhoneFrame>
+            <Image
+              src="/images/grain/waiting.webp"
+              alt=""
+              width={260}
+              height={563}
+              sizes="(min-width: 768px) 130px, 24vw"
+              className="h-auto w-full"
+            />
+          </PhoneFrame>
+        </div>
+      </>
+    ),
   },
-];
+  whispr: {
+    frame: "aspect-[16/11]",
+    art: (
+      <>
+        <div className="absolute left-[5%] top-[9%] w-[62%] overflow-hidden border border-white/20 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.7)]">
+          <video
+            src="/images/whispr/demo.mp4"
+            poster="/images/whispr/demo-poster.webp"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden
+            className="block h-auto w-full"
+          />
+        </div>
+        <Shot
+          src="/images/whispr/settings-general.webp"
+          alt=""
+          className="right-[4%] top-[30%] z-10 w-[42%] aspect-[16/11]"
+        />
+        <Shot
+          src="/images/whispr/hud.webp"
+          alt=""
+          className="bottom-[8%] left-[22%] z-20 w-[34%] aspect-[560/150]"
+        />
+      </>
+    ),
+  },
+  leadgen: {
+    frame: "aspect-[4/3]",
+    art: (
+      <>
+        <Shot
+          src="/images/leadgen/dashboard.webp"
+          alt=""
+          className="left-[4%] top-[10%] w-[66%] aspect-[16/10]"
+        />
+        <Shot
+          src="/images/leadgen/detail.webp"
+          alt=""
+          className="bottom-[8%] right-[4%] z-10 w-[46%] aspect-[16/11]"
+        />
+      </>
+    ),
+  },
+};
 
-/**
- * The index cards after the studio: everything in content/work that isn't
- * a client site. Read from disk, so a new case study appears here the day
- * its file lands. Client sites live on the studio page instead.
- */
 const projects = getWorkEntries().filter((e) => e.kind !== "client");
 
 const expertise = [
@@ -141,14 +218,14 @@ export default function HomePage() {
                   key={l.label}
                   href={l.href}
                   rel="me noopener"
-                  className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-sm text-white/75 transition-colors hover:border-white/40 hover:text-white"
+                  className="border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75 transition-colors hover:border-sage hover:text-white"
                 >
                   {l.label}
                 </a>
               ))}
               <Link
                 href="/resume"
-                className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-sm text-white/75 transition-colors hover:border-white/40 hover:text-white"
+                className="border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75 transition-colors hover:border-sage hover:text-white"
               >
                 Résumé
               </Link>
@@ -160,27 +237,6 @@ export default function HomePage() {
             ©2026&nbsp;&nbsp;·&nbsp;&nbsp;Victoria, BC&nbsp;&nbsp;<LocalTime />
           </p>
 
-          {/* The history, as a table. */}
-          <dl className="mt-5 border-t border-white/15">
-            {history.map((row) => (
-              <div
-                key={row.org}
-                className="reveal-up grid grid-cols-[4.5rem_1fr] items-baseline gap-x-5 border-b border-white/15 py-4 sm:grid-cols-[9rem_1fr] sm:py-5"
-              >
-                <dt className="font-mono text-xs uppercase tracking-[0.12em] text-white/40">
-                  {row.when}
-                </dt>
-                <dd>
-                  <span className="block font-display text-base font-bold text-white/95 sm:text-lg">
-                    {row.org}
-                  </span>
-                  <span className="mt-0.5 block text-sm text-white/50">
-                    {row.role}
-                  </span>
-                </dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </section>
 
@@ -251,7 +307,7 @@ export default function HomePage() {
             it. I’ve left in the parts that didn’t go well.
           </p>
 
-          <div className="mt-14 grid gap-x-10 gap-y-16 sm:mt-16 md:grid-cols-2">
+          <div className="project-index mt-14 grid gap-x-10 gap-y-20 sm:mt-16 md:grid-cols-2">
             {/* The studio, composed: the one card that isn't a single
                 screenshot, because ten sites is the point of it. */}
             <ProjectCard
@@ -293,19 +349,9 @@ export default function HomePage() {
                 year={entry.year}
                 tags={entry.stack.slice(0, 4)}
                 blurb={entry.summary}
+                frameClass={compositions[entry.slug]?.frame}
               >
-                {entry.heroVideo ? (
-                  <video
-                    src={entry.heroVideo}
-                    poster={entry.hero}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    aria-hidden
-                    className="absolute inset-0 h-full w-full object-cover object-top"
-                  />
-                ) : (
+                {compositions[entry.slug]?.art ?? (
                   <FrameShot
                     src={entry.hero ?? "/images/work/grain-construction.webp"}
                     alt={entry.heroAlt ?? entry.title}
@@ -414,7 +460,7 @@ export default function HomePage() {
           <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
             <a
               href={`mailto:${identity.email}`}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-forest transition-transform duration-200 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-forest transition-transform duration-200 hover:-translate-y-0.5"
             >
               <MailIcon className="h-3.5 w-3.5" />
               Email me

@@ -939,3 +939,12 @@ h3.reveal-init {
   aspect-ratio: 16 / 10;
   z-index: 2;
 }
+
+/* The index is deliberately not a tidy grid: frames differ in shape and
+   the second column drops, so the eye moves down the page instead of
+   reading it as a table of equal boxes. */
+@media (min-width: 768px) {
+  .project-index > *:nth-child(even) {
+    margin-top: 5rem;
+  }
+}

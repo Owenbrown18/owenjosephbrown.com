@@ -120,7 +120,7 @@ export function Header() {
           ))}
           <Link
             href="/resume"
-            className="my-auto shrink-0 rounded-full border border-white/20 px-4 py-1.5 text-[13px] text-white/80 transition-colors hover:border-white/60 hover:text-white"
+            className="my-auto shrink-0 border border-white/20 px-4 py-1.5 text-[13px] text-white/80 transition-colors hover:border-sage hover:text-white"
           >
             resume
           </Link>
@@ -165,7 +165,7 @@ export function Header() {
           <Link
             href="/resume"
             onClick={() => setOpen(false)}
-            className="mt-4 block rounded-full border border-white/25 py-3 text-center text-sm text-white/90"
+            className="mt-4 block border border-white/25 py-3 text-center text-sm text-white/90"
           >
             resume
           </Link>
