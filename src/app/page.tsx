@@ -339,7 +339,7 @@ export default function HomePage() {
           </div>
 
           {/* Place and time, the way a studio site stamps a page. */}
-          <p className="mt-14 text-right font-mono text-xs uppercase tracking-[0.14em] text-white/75">
+          <p className="hero-stamp mt-14 text-right font-mono text-xs uppercase tracking-[0.14em] text-white/75">
             ©2026&nbsp;&nbsp;·&nbsp;&nbsp;Victoria, BC&nbsp;&nbsp;<LocalTime />
           </p>
 

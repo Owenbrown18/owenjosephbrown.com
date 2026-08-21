@@ -900,7 +900,7 @@ h3.reveal-init {
   }
   /* The card's text (number, name, chips, meta, blurb) follows the frame
      in a short cascade instead of arriving as one slab. */
-  .project-card.reveal-init > :not(.project-frame) {
+  .project-card.reveal-init > :not(.project-frame):not(.cursor-label) {
     opacity: 0;
     transform: translateY(16px);
     transition:
@@ -919,7 +919,7 @@ h3.reveal-init {
   .project-card.reveal-init > :nth-child(6) {
     transition-delay: 0.24s;
   }
-  .project-card.reveal-init.is-revealed > :not(.project-frame) {
+  .project-card.reveal-init.is-revealed > :not(.project-frame):not(.cursor-label) {
     opacity: 1;
     transform: none;
   }
@@ -1177,5 +1177,89 @@ h3.reveal-init {
     50% {
       translate: 0 -18px;
     }
+  }
+}
+
+/* ---------------------------------------------------------------
+   Load choreography. One sequence, one easing: the logo and nav rail
+   arrive first (the rail's tracks draw left-to-right), the hero words
+   rise, the cluster pops in behind them, and the stamp line comes last.
+   Everything here is `both`-filled CSS on mount — the header lives in
+   the layout and never remounts, so it plays once per visit.
+   --------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .nav-enter {
+    animation: nav-enter 0.6s var(--ease-out) both;
+    animation-delay: calc(0.08s + var(--nav-i, 0) * 0.06s);
+  }
+  .nav-enter .nav-rail-track {
+    transform-origin: 0 50%;
+    animation: nav-track-draw 0.7s var(--ease-out) both;
+    animation-delay: calc(0.2s + var(--nav-i, 0) * 0.06s);
+  }
+  .nav-enter:nth-child(1) { --nav-i: 0; }
+  .nav-enter:nth-child(2) { --nav-i: 1; }
+  .nav-enter:nth-child(3) { --nav-i: 2; }
+  .nav-enter:nth-child(4) { --nav-i: 3; }
+  @keyframes nav-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes nav-track-draw {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+  .hero-stamp {
+    animation: hero-rise 0.8s var(--ease-out) 1.15s both;
+  }
+}
+
+/* The cursor label: a square ink tag that trails the pointer inside a
+   project card. Hidden until the card is hovered; transform only. */
+.cursor-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.85;
+  transition:
+    opacity 0.2s ease-out,
+    scale 0.25s var(--ease-out);
+  will-change: transform;
+}
+.cursor-label[data-on] {
+  opacity: 1;
+  scale: 1;
+}
+.cursor-label__arrow {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+@media (pointer: coarse) {
+  .cursor-label {
+    display: none;
   }
 }

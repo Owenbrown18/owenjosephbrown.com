@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { CursorLabel } from "@/components/cursor-label";
 
 /**
  * One project, contained in a single box: its imagery composed inside a
@@ -44,8 +45,9 @@ export function ProjectCard({
     <Link
       href={href}
       aria-label={`${title}: ${blurb}`}
-      className="project-card reveal-up group block"
+      className="project-card reveal-up group relative block"
     >
+      <CursorLabel />
       <div className={`project-frame ${frameClass} ${tone}`}>{children}</div>
 
       <div className="mt-6 flex items-end justify-between gap-4">

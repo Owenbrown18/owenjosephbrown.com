@@ -101,7 +101,7 @@ export function Header() {
               key={item.href}
               href={item.href}
               data-nav-section={item.href.split("#")[1]}
-              className="nav-rail group flex-1 pb-1.5 pt-1 text-[13px] text-white/55 transition-colors hover:text-white lg:text-sm"
+              className="nav-rail nav-enter group flex-1 pb-1.5 pt-1 text-[13px] text-white/55 transition-colors hover:text-white lg:text-sm"
             >
               <span aria-hidden className="nav-num">
                 {item.num}
