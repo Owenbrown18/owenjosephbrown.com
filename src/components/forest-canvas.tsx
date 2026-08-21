@@ -27,9 +27,8 @@ const FRAG = `
 precision highp float;
 
 uniform vec2 u_res;
-uniform vec2 u_pointer;  // 0..1, y up
-uniform float u_dpr;     // device pixels per CSS pixel
-uniform float u_scrollPx; // page scroll, in device pixels
+uniform vec2 u_pointer; // 0..1, y up
+uniform float u_dpr;    // device pixels per CSS pixel
 
 // Paper, and the green the grid is drawn in.
 const vec3 PAPER  = vec3(0.957, 0.953, 0.937); // #f4f3ef
@@ -52,67 +51,46 @@ float gridLines(vec2 px, float cell, float thickness) {
   return mix(m.x, 1.0, m.y);
 }
 
-// Rectangular patches, laid out in DOCUMENT space so they scroll with the
-// page instead of sitting in fixed spots on the glass. Static: on a white
-// ground any drift is far more obvious than it was on the dark one.
-float patchMask(vec2 docPx) {
-  vec2 cell = vec2(470.0, 350.0) * u_dpr;
-  vec2 id = floor(docPx / cell);
-  vec2 f = fract(docPx / cell);
-
-  // Only some cells carry a patch at all.
-  if (hash(id + 0.5) > 0.36) return 0.0;
-
-  // A rectangle of random size and position inside the cell.
-  vec2 size = vec2(
-    0.30 + 0.36 * hash(id + vec2(11.3, 4.7)),
-    0.28 + 0.38 * hash(id + vec2(3.1, 19.7))
-  );
-  vec2 pos = (1.0 - size) * vec2(
-    hash(id + vec2(7.7, 1.3)),
-    hash(id + vec2(2.9, 13.1))
-  );
-  vec2 lo = pos;
-  vec2 hi = pos + size;
-
-  // Wide feather: the fade has to span several grid cells, or the lines
-  // run at full strength right up to the boundary and the patch reads as
-  // a hard cut from white to grid.
-  vec2 e = size * 0.45;
-  vec2 a = smoothstep(lo, lo + e, f);
-  vec2 b = vec2(1.0) - smoothstep(hi - e, hi, f);
-  float m = a.x * a.y * b.x * b.y;
-  // Bias the ramp long at the edges: the eye reads the last 20% of a
-  // linear fade as "still there", so spend more of the patch fading.
-  return m * m;
+// One static composition, fixed to the viewport. Three soft masses decide
+// where the grid shows; gaussians have no edge at all, so every line
+// fades out along its own length instead of stopping at a patch border.
+// This replaced two earlier versions Owen rejected: a full-viewport grid
+// (too much everywhere) and scattered document-space rectangles (read as
+// hard-cut boxes).
+float field(vec2 uv, float aspect) {
+  vec2 p = vec2(uv.x * aspect, uv.y);
+  float f = 0.0;
+  // Upper-left, behind the hero name and each section heading.
+  f += 0.90 * exp(-pow(distance(p, vec2(0.26 * aspect, 0.74)), 2.0) / 0.14);
+  // Top-right shoulder.
+  f += 0.70 * exp(-pow(distance(p, vec2(0.92 * aspect, 0.95)), 2.0) / 0.09);
+  // Low centre-right, broad and faint.
+  f += 0.55 * exp(-pow(distance(p, vec2(0.68 * aspect, 0.10)), 2.0) / 0.22);
+  return clamp(f, 0.0, 1.0);
 }
 
 void main() {
-  // Document-space pixel: gl_FragCoord is bottom-up, the page is top-down.
-  vec2 docPx = vec2(
-    gl_FragCoord.x,
-    (u_res.y - gl_FragCoord.y) + u_scrollPx
-  );
+  vec2 uv = gl_FragCoord.xy / u_res;
+  float aspect = u_res.x / u_res.y;
 
   vec3 col = PAPER;
 
-  float patch = patchMask(docPx);
-  if (patch > 0.001) {
+  float w = field(uv, aspect);
+  // A touch of gamma keeps the tails long and the centres honest.
+  w = pow(w, 1.3);
+
+  if (w > 0.003) {
     float cellPx = 24.0 * u_dpr;
-    float minor = gridLines(docPx, cellPx, 0.75 * u_dpr);
-    float major = gridLines(docPx, cellPx * 5.0, 1.1 * u_dpr);
+    float minor = gridLines(gl_FragCoord.xy, cellPx, 0.75 * u_dpr);
+    float major = gridLines(gl_FragCoord.xy, cellPx * 5.0, 1.1 * u_dpr);
 
     // The pointer warms the grid it is near. The only thing that moves.
-    vec2 uv = gl_FragCoord.xy / u_res;
-    float aspect = u_res.x / u_res.y;
     vec2 m = vec2(u_pointer.x * aspect, u_pointer.y);
     float spot = exp(-distance(vec2(uv.x * aspect, uv.y), m) * 2.4);
 
     vec3 ink = vec3(1.0) - FOREST;
-    // The block itself reads faintly even between the lines.
-    col -= ink * patch * 0.016;
-    col -= ink * minor * patch * (0.105 + 0.075 * spot);
-    col -= ink * major * patch * (0.155 + 0.105 * spot);
+    col -= ink * minor * w * (0.100 + 0.075 * spot);
+    col -= ink * major * w * (0.150 + 0.105 * spot);
   }
 
   // Dither to kill banding on the flat ground.
@@ -223,7 +201,6 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       const uRes = gl.getUniformLocation(program, "u_res");
       const uPointer = gl.getUniformLocation(program, "u_pointer");
       const uDpr = gl.getUniformLocation(program, "u_dpr");
-      const uScrollPx = gl.getUniformLocation(program, "u_scrollPx");
 
       let width = 0;
       let height = 0;
@@ -248,11 +225,10 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       const eased = { x: 0.25, y: 0.7 };
 
       let raf = 0;
-      // The field is static now: patches don't drift and nothing is driven
-      // by time. So there is no render loop. Frames are requested by the
-      // two things that can actually change the image — the page scrolling
-      // under the patches, and the pointer easing toward a new position —
-      // and stop as soon as both have settled.
+      // The field is static and fixed to the viewport, so there is no
+      // render loop. Frames are requested by the only things that change
+      // the image — the pointer easing toward a new position, a resize —
+      // and stop as soon as everything has settled.
       const draw = () => {
         raf = 0;
         resize();
@@ -266,7 +242,6 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
         gl.uniform2f(uRes, width, height);
         gl.uniform2f(uPointer, eased.x, eased.y);
         gl.uniform1f(uDpr, dpr);
-        gl.uniform1f(uScrollPx, window.scrollY * dpr);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
 
         // Keep going only while the pointer is still catching up.
@@ -285,14 +260,11 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
         schedule();
       };
       window.addEventListener("pointermove", onPointer, { passive: true });
-      // Patches live in document space, so scrolling changes the image.
-      window.addEventListener("scroll", schedule, { passive: true });
       window.addEventListener("resize", schedule, { passive: true });
 
       draw();
 
-      // A route change swaps the page under a canvas that never remounts,
-      // and the new page starts at a different scroll offset.
+      // A route change swaps the page under a canvas that never remounts.
       resyncRef.current = schedule;
 
       // Honour the preference if it changes mid-session. Nothing here is
@@ -306,7 +278,6 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
       return () => {
         motionQuery.removeEventListener("change", onMotionPref);
         window.removeEventListener("pointermove", onPointer);
-        window.removeEventListener("scroll", schedule);
         window.removeEventListener("resize", schedule);
         if (raf) cancelAnimationFrame(raf);
         gl.deleteProgram(program);

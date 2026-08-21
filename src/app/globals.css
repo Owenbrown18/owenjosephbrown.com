@@ -346,46 +346,6 @@
 .section-rule {
   position: relative;
 }
-/* Soft band of sage light lying along the break, so the boundary is felt
-   in the field and not just drawn on it. screen blend ≈ the additive
-   light the shader used to contribute. */
-.section-rule-glow {
-  position: absolute;
-  inset-inline: 0;
-  top: 50%;
-  height: min(9rem, 16vh);
-  transform: translateY(-50%);
-  pointer-events: none;
-  mix-blend-mode: multiply;
-  /* A patch of the same grid, anchored to the break. The field's patches
-     are scattered, so without this a section rule could land on blank
-     paper with nothing behind it. Same 24px cell as the shader. */
-  background-image:
-    repeating-linear-gradient(
-      to right,
-      rgba(46, 84, 80, 0.14) 0 1px,
-      transparent 1px 24px
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      rgba(46, 84, 80, 0.14) 0 1px,
-      transparent 1px 24px
-    );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    #000 38%,
-    #000 62%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    #000 38%,
-    #000 62%,
-    transparent
-  );
-}
 .section-rule-num {
   flex: none;
   font-family: var(--font-body);
@@ -933,6 +893,30 @@ h3.reveal-init {
 .frame-leadgen {
   background: linear-gradient(165deg, #eceeeb 0%, #dfe4df 100%);
   border-color: rgba(46, 84, 80, 0.16);
+}
+
+/* Window chrome for captures that are bare UI: a slim title bar and
+   traffic dots. Screenshots that already carry their own chrome (the
+   Whispr settings window, the client sites) don't get it. */
+.shot-chrome::before {
+  content: "";
+  display: block;
+  height: 1.4rem;
+  background: #e8e6df;
+  border-bottom: 1px solid rgba(15, 35, 32, 0.1);
+}
+.shot-chrome::after {
+  content: "";
+  position: absolute;
+  top: 0.5rem;
+  left: 0.55rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: #cbc9c2;
+  box-shadow:
+    0.65rem 0 0 #cbc9c2,
+    1.3rem 0 0 #cbc9c2;
 }
 
 /* The pieces inside a stage enter one after another when the card

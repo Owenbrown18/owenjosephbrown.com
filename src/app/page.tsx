@@ -114,13 +114,22 @@ const compositions: Record<
           sizes="(min-width: 768px) 360px, 42vw"
           dataFloat={2}
         />
-        <Shot
-          src="/images/whispr/hud.webp"
-          alt=""
-          className="bottom-[9%] left-[17%] z-20 w-[40%] aspect-[560/150]"
-          sizes="(min-width: 768px) 340px, 40vw"
-          dataFloat={3}
-        />
+        {/* The pill itself, cropped tight — no border or shadow box, so it
+            reads as the HUD floating over the stage the way it floats over
+            a desktop. */}
+        <div
+          data-float={3}
+          className="absolute bottom-[10%] left-[24%] z-20 w-[26%]"
+        >
+          <Image
+            src="/images/whispr/hud-pill.webp"
+            alt=""
+            width={268}
+            height={78}
+            sizes="(min-width: 768px) 220px, 26vw"
+            className="h-auto w-full drop-shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
+          />
+        </div>
       </>
     ),
   },
@@ -132,15 +141,17 @@ const compositions: Record<
         <Shot
           src="/images/leadgen/dashboard.webp"
           alt=""
-          className="left-[4%] top-[7%] w-[70%] aspect-[16/10]"
+          chrome
+          className="left-[4%] top-[7%] w-[70%]"
           sizes="(min-width: 768px) 580px, 68vw"
           dataFloat={1}
         />
         <Shot
           src="/images/leadgen/detail.webp"
           alt=""
-          className="bottom-[7%] right-[5%] z-10 w-[40%] aspect-[16/13]"
-          sizes="(min-width: 768px) 340px, 40vw"
+          chrome
+          className="bottom-[7%] right-[5%] z-10 w-[44%]"
+          sizes="(min-width: 768px) 370px, 44vw"
           dataFloat={2}
         />
       </>

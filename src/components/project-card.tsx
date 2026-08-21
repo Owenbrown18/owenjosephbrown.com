@@ -99,6 +99,7 @@ export function Shot({
   className,
   sizes,
   dataFloat,
+  chrome = false,
   priority = false,
 }: {
   src: string;
@@ -108,21 +109,35 @@ export function Shot({
   sizes: string;
   /** Order in the stage's entrance stagger; also the hover-depth group. */
   dataFloat?: number;
+  /** Adds a slim title bar with traffic dots, for captures of bare UI. */
+  chrome?: boolean;
   priority?: boolean;
 }) {
   return (
     <div
       data-float={dataFloat}
-      className={`absolute overflow-hidden border border-white/14 shadow-[0_2px_6px_-2px_rgba(15,35,32,0.12),0_22px_45px_-16px_rgba(15,35,32,0.35)] ${className}`}
+      className={`absolute overflow-hidden border border-white/14 shadow-[0_2px_6px_-2px_rgba(15,35,32,0.12),0_22px_45px_-16px_rgba(15,35,32,0.35)] ${chrome ? "shot-chrome" : ""} ${className}`}
     >
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        priority={priority}
-        sizes={sizes}
-        className="object-cover object-top"
-      />
+      {chrome ? (
+        <Image
+          src={src}
+          alt={alt}
+          width={1400}
+          height={1094}
+          priority={priority}
+          sizes={sizes}
+          className="block h-auto w-full"
+        />
+      ) : (
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          priority={priority}
+          sizes={sizes}
+          className="object-cover object-top"
+        />
+      )}
     </div>
   );
 }
