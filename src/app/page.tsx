@@ -96,27 +96,27 @@ const compositions: Record<
     tone: "frame-whispr",
     art: (
       <>
-        {/* Tight crops of the app's own cards, not whole windows: at card
-            size a full window is furniture and the text is the product. */}
+        {/* Recaptured at retina from the running app. Three pieces, one
+            story each: what it does (the onboarding hint), what runs it
+            (local models, downloaded, never on the network), and what you
+            see while talking (the pill). */}
         <Shot
-          src="/images/whispr/card-result.webp"
+          src="/images/whispr/card-hint.webp"
           alt=""
-          className="left-[5%] top-[9%] w-[74%] aspect-[944/188]"
-          sizes="(min-width: 768px) 620px, 74vw"
+          className="left-[4%] top-[8%] w-[76%] aspect-[1204/174]"
+          sizes="(min-width: 768px) 640px, 76vw"
           dataFloat={1}
         />
         <Shot
-          src="/images/whispr/card-hotkey.webp"
+          src="/images/whispr/card-models-2.webp"
           alt=""
-          className="right-[4%] top-[36%] z-10 w-[64%] aspect-[944/226]"
-          sizes="(min-width: 768px) 540px, 64vw"
+          className="right-[4%] top-[31%] z-10 w-[62%] aspect-[1222/370]"
+          sizes="(min-width: 768px) 520px, 62vw"
           dataFloat={2}
         />
-        {/* The pill itself — alpha-masked capsule, so nothing but the HUD
-            floats over the stage, the way it floats over a desktop. */}
         <div
           data-float={3}
-          className="absolute bottom-[11%] left-[24%] z-20 w-[26%]"
+          className="absolute bottom-[10%] left-[13%] z-20 w-[26%]"
         >
           <Image
             src="/images/whispr/hud-pill-2.webp"
