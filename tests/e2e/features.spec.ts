@@ -1,4 +1,18 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+/**
+ * networkidle is the wrong readiness signal on a slow runner: the landing
+ * page streams a dozen images and a video, and one trickling connection
+ * holds the 500ms-of-silence clock past the test timeout. What the tests
+ * actually need is hydration — the Reveal system arming is the proof.
+ */
+async function gotoReady(page: Page, path: string) {
+  await page.goto(path, { waitUntil: "load" });
+  await expect
+    .poll(() => page.locator(".reveal-init").count(), { timeout: 15000 })
+    .toBeGreaterThan(0);
+  await page.waitForTimeout(250);
+}
 
 test("numbered anchor nav scrolls to sections", async ({ page }) => {
   await page.goto("/");
@@ -172,7 +186,7 @@ for (const path of ["/work/figs-and-honey", "/work/grain"]) {
   test(`no content is left invisible after scrolling ${path}`, async ({
     page,
   }) => {
-    await page.goto(path, { waitUntil: "networkidle" });
+    await gotoReady(page, path);
     const height = await page.evaluate(() => document.body.scrollHeight);
     const ghosts: string[] = [];
     for (let y = 0; y <= height; y += 600) {
@@ -218,8 +232,7 @@ test("the nav rail fills section by section as you scroll", async ({
 }) => {
   // The rail replaced the separate progress hairline: each anchor's rule
   // fills across its own section, so together they are the progress bar.
-  await page.goto("/", { waitUntil: "networkidle" });
-  await page.waitForTimeout(400);
+  await gotoReady(page, "/");
   const fills = () =>
     page.evaluate(() =>
       [...document.querySelectorAll("[data-nav-section]")].map((a) => ({
@@ -250,7 +263,7 @@ test("the nav rail fills section by section as you scroll", async ({
 test("the header stays visible on desktop so the rail is readable", async ({
   page,
 }) => {
-  await page.goto("/", { waitUntil: "networkidle" });
+  await gotoReady(page, "/");
   await page.evaluate(() => window.scrollTo({ top: 2000, behavior: "instant" }));
   await page.waitForTimeout(400);
   const onScreen = await page.evaluate(() => {
@@ -265,8 +278,7 @@ test("section rules draw in on arrival, stay put once drawn", async ({
 }) => {
   // networkidle: while images are still streaming in, layout can briefly
   // place a distant rule inside the viewport and legitimately reveal it.
-  await page.goto("/", { waitUntil: "networkidle" });
-  await page.waitForTimeout(400);
+  await gotoReady(page, "/");
   const lastLine = () =>
     page.evaluate(() => {
       const rule = [...document.querySelectorAll(".section-rule")].at(-1)!;
@@ -361,7 +373,7 @@ test("every stage piece finishes its entrance visible", async ({ page }) => {
   // .is-revealed. The ghost sweep only checks .reveal-init elements
   // themselves, so a broken handoff here would strand the artwork
   // invisible while every other test stayed green.
-  await page.goto("/", { waitUntil: "networkidle" });
+  await gotoReady(page, "/");
   const count = await page.locator("[data-float]").count();
   expect(count, "stages carry float pieces").toBeGreaterThanOrEqual(10);
   await page.evaluate(() =>
