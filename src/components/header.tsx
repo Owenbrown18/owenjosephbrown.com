@@ -86,12 +86,7 @@ export function Header() {
           href="/#home"
           className="whitespace-nowrap font-display text-lg font-bold tracking-[-0.02em] text-white/95"
         >
-          <span className="sm:hidden">
-            OB<span className="text-accent">.</span>
-          </span>
-          <span className="hidden sm:inline">
-            Owen Brown<span className="text-accent">.</span>
-          </span>
+          OB<span className="text-accent">.</span>
         </Link>
 
         {/* Desktop: the rail, spread across the width. Each item owns a

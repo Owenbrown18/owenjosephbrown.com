@@ -13,6 +13,7 @@ import { SectionRule } from "@/components/section-rule";
 import { ProjectCard, FrameShot, Shot } from "@/components/project-card";
 import { PhoneFrame } from "@/components/phone-frame";
 import { LocalTime } from "@/components/local-time";
+import { ContactForm } from "@/components/contact-form";
 import { identity } from "@/lib/resume-data";
 import { getWorkEntries } from "@/lib/content";
 
@@ -407,15 +408,23 @@ export default function HomePage() {
           </h2>
           <p className="mx-auto mt-5 max-w-[44ch] text-white/70">
             If you’re hiring for a co-op, or you just want to know how something
-            on here works, send me an email. I’ll get back to you.
+            on here works, write me. I’ll get back to you.
           </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+
+          <div className="reveal-up relative mx-auto mt-10 max-w-xl">
+            <ContactForm />
+          </div>
+
+          <p className="mt-10 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-white/72">
+            Or find me here
+          </p>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
             <a
               href={`mailto:${identity.email}`}
-              className="inline-flex items-center gap-2 bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-[var(--bg)] transition-transform duration-200 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
             >
-              <MailIcon className="h-3.5 w-3.5" />
-              Email me
+              <MailIcon />
+              Email
             </a>
             <a
               href={identity.github}

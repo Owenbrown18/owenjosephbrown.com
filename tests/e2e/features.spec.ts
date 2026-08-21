@@ -396,3 +396,41 @@ test("every stage piece finishes its entrance visible", async ({ page }) => {
     )
     .toEqual([]);
 });
+
+test("contact form is present, labelled, and honeypotted", async ({
+  page,
+}) => {
+  await gotoReady(page, "/");
+  await page.evaluate(() =>
+    document.getElementById("contact")!.scrollIntoView({ behavior: "instant" }),
+  );
+  for (const name of ["name", "email", "message"]) {
+    await expect(page.locator(`[name="${name}"]`)).toBeVisible();
+  }
+  await expect(page.locator('select[name="topic"]')).toBeVisible();
+  // The honeypot must exist for bots and be invisible to people.
+  const trap = page.locator('input[name="company"]');
+  await expect(trap).toHaveCount(1);
+  await expect(trap).not.toBeInViewport();
+  await expect(page.getByRole("button", { name: /send it/i })).toBeVisible();
+});
+
+test("footer indexes every project page", async ({ page }) => {
+  await gotoReady(page, "/");
+  const footer = page.locator("footer");
+  for (const label of ["Pages", "Elsewhere", "Work"]) {
+    await expect(footer.locator(`nav[aria-label="${label}"]`)).toBeVisible();
+  }
+  // Derived the same way the footer derives it, so this can't go stale.
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const nonClient = readdirSync("content/work")
+    .filter((f) => f.endsWith(".mdx"))
+    .filter((f) => !/kind: "client"/.test(readFileSync(`content/work/${f}`, "utf8")));
+  for (const f of nonClient) {
+    const slug = f.replace(/\.mdx$/, "");
+    await expect(
+      footer.locator(`a[href="/work/${slug}"]`),
+      `footer links ${slug}`,
+    ).toHaveCount(1);
+  }
+});
