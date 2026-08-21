@@ -285,15 +285,23 @@ test("section rules draw in on arrival, stay put once drawn", async ({
       const line = rule.querySelector(".section-rule-line")!;
       return {
         armed: rule.classList.contains("reveal-init"),
+        revealed: rule.classList.contains("is-revealed"),
         scaleX: new DOMMatrix(getComputedStyle(line).transform).a,
+        // Diagnostics, so a failure explains itself: where the rule sat,
+        // where the page was, and how tall the document was.
+        top: Math.round(rule.getBoundingClientRect().top),
+        scrollY: Math.round(window.scrollY),
+        docH: document.documentElement.scrollHeight,
+        vh: window.innerHeight,
       };
     });
   const before = await lastLine();
   expect(before.armed, "rule container joins the reveal system").toBe(true);
   // WebKit reports the collapsed matrix as ~4e-6 rather than exactly 0.
-  expect(before.scaleX, "line starts collapsed while offscreen").toBeLessThan(
-    0.01,
-  );
+  expect(
+    before.scaleX,
+    `line starts collapsed while offscreen: ${JSON.stringify(before)}`,
+  ).toBeLessThan(0.01);
   await page.evaluate(() =>
     [...document.querySelectorAll(".section-rule")]
       .at(-1)!

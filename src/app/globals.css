@@ -331,16 +331,20 @@
    the clip-path lesson again. .reveal-init only ever arrives from JS, so
    with no script the rule is simply visible. */
 @media (prefers-reduced-motion: no-preference) {
+  /* No transition on the hidden state: when the reveal system arms, a
+     line that was visible on the server render must vanish in one frame,
+     not shrink away over a second. The transition lives on the revealed
+     state, so it only ever plays in the direction the eye should see. */
   .section-rule.reveal-init .section-rule-line {
     transform: scaleX(0);
     opacity: 0;
-    transition:
-      transform 1s var(--ease-out) 0.1s,
-      opacity 0.5s ease-out 0.1s;
   }
   .section-rule.reveal-init.is-revealed .section-rule-line {
     transform: scaleX(1);
     opacity: 1;
+    transition:
+      transform 1s var(--ease-out) 0.1s,
+      opacity 0.5s ease-out 0.1s;
   }
 }
 
@@ -364,14 +368,16 @@
    never be revealed — the hidden state blocks its own trigger. Opacity and
    transform only. */
 
+/* Hidden states carry NO transition. Arming must be instant (a visible
+   element that animates out on load is the wrong direction); each type
+   only sets its own reveal durations as vars, read by the revealed rule. */
 .anim-heading.reveal-init,
 h2.reveal-init,
 h3.reveal-init {
   opacity: 0;
   transform: translateY(16px);
-  transition:
-    opacity 0.5s ease-out,
-    transform 0.65s var(--ease-out);
+  --rv-o: 0.5s;
+  --rv-t: 0.65s;
 }
 
 /* Every hidden-state selector must stay at specificity (0,2,0) or below:
@@ -393,33 +399,35 @@ h3.reveal-init {
 :where(.prose-ob > table).reveal-init {
   opacity: 0;
   transform: translateY(12px);
-  transition:
-    opacity 0.45s ease-out,
-    transform 0.55s var(--ease-out);
+  --rv-o: 0.45s;
+  --rv-t: 0.55s;
 }
 
 .anim-image.reveal-init,
 :where(.prose-ob img).reveal-init {
   opacity: 0;
   transform: translateY(18px) scale(1.015);
-  transition:
-    opacity 0.55s ease-out,
-    transform 0.75s var(--ease-out);
+  --rv-o: 0.55s;
+  --rv-t: 0.75s;
 }
 
 /* .lift transforms belong to the scroll driver. A transform transition
-   here would smear its per-frame writes into jelly, so on these the
+   would smear its per-frame inline writes into jelly, so on these the
    reveal contributes opacity only. Must sit after the .reveal-up block:
    same specificity, source order decides. */
 .lift.reveal-init {
   transform: none;
-  transition: opacity 0.45s ease-out;
+  --rv-t: 0s;
 }
 
-/* The state everything lands on. */
+/* The state everything lands on, and the only place the transition
+   lives — so it plays on reveal and never on arm. */
 .reveal-init.is-revealed {
   opacity: 1;
   transform: none;
+  transition:
+    opacity var(--rv-o, 0.45s) ease-out,
+    transform var(--rv-t, 0.55s) var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -870,58 +878,65 @@ h3.reveal-init {
 /* The pieces inside a stage enter one after another when the card
    reveals, and float apart slightly on hover. Hidden state exists only
    once JS has armed the reveal (.reveal-init), so with no script the
-   stage is simply set. */
+   stage is simply set.
+
+   The entrance is a keyframe animation with `backwards` fill, not a
+   transition: a transition-delay for the stagger would also lag every
+   hover afterwards (the earlier "reset delay to 0 after reveal" rule
+   matched during the entrance too, so the stagger never ran). With
+   backwards fill the piece holds the `from` frame through its delay,
+   plays once, then returns to normal styling — where hover transforms
+   transition freely. */
 @media (prefers-reduced-motion: no-preference) {
   .project-card.reveal-init [data-float] {
     opacity: 0;
-    transform: translateY(26px) scale(0.97);
-    transition:
-      opacity 0.55s ease-out,
-      transform 0.7s var(--ease-out);
-  }
-  .project-card.reveal-init [data-float="2"] {
-    transition-delay: 0.09s;
-  }
-  .project-card.reveal-init [data-float="3"] {
-    transition-delay: 0.18s;
-  }
-  .project-card.reveal-init [data-float="4"] {
-    transition-delay: 0.27s;
   }
   .project-card.reveal-init.is-revealed [data-float] {
     opacity: 1;
-    transform: none;
+    animation: float-in 0.7s var(--ease-out) backwards;
+    animation-delay: calc((var(--fi, 1) - 1) * 0.09s);
+    transition: transform 0.35s var(--ease-out);
   }
-  /* After the entrance, delays would lag the hover response, and the
-     0.7s entrance duration would smear it. Snappy from here on. */
-  .project-card.is-revealed [data-float] {
-    transition-delay: 0s;
-    transition-duration: 0.35s, 0.35s;
+  .project-card [data-float="1"] { --fi: 1; }
+  .project-card [data-float="2"] { --fi: 2; }
+  .project-card [data-float="3"] { --fi: 3; }
+  .project-card [data-float="4"] { --fi: 4; }
+  @keyframes float-in {
+    from {
+      opacity: 0;
+      transform: translateY(26px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
+
   /* The card's text (number, name, chips, meta, blurb) follows the frame
-     in a short cascade instead of arriving as one slab. */
+     in a short cascade instead of arriving as one slab. The cursor label
+     is excluded: it is hidden by its own rule and positioned by JS. */
   .project-card.reveal-init > :not(.project-frame):not(.cursor-label) {
     opacity: 0;
-    transform: translateY(16px);
-    transition:
-      opacity 0.5s var(--ease-out),
-      transform 0.6s var(--ease-out);
-  }
-  .project-card.reveal-init > :nth-child(3) {
-    transition-delay: 0.06s;
-  }
-  .project-card.reveal-init > :nth-child(4) {
-    transition-delay: 0.12s;
-  }
-  .project-card.reveal-init > :nth-child(5) {
-    transition-delay: 0.18s;
-  }
-  .project-card.reveal-init > :nth-child(6) {
-    transition-delay: 0.24s;
   }
   .project-card.reveal-init.is-revealed > :not(.project-frame):not(.cursor-label) {
     opacity: 1;
-    transform: none;
+    animation: rise-in 0.6s var(--ease-out) backwards;
+    animation-delay: calc(var(--ci, 0) * 0.06s);
+  }
+  .project-card > :nth-child(3) { --ci: 1; }
+  .project-card > :nth-child(4) { --ci: 2; }
+  .project-card > :nth-child(5) { --ci: 3; }
+  .project-card > :nth-child(6) { --ci: 4; }
+  .project-card > :nth-child(7) { --ci: 5; }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   /* Uneven lifts, so the hover reads as depth rather than a block move. */
