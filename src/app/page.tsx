@@ -361,6 +361,63 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Whispr. The demo is a video because the whole product is a
+            five-second interaction a screenshot can't show. */}
+        <div className="container-site mt-28 border-t border-white/15 pt-16 sm:mt-36">
+          <div className="grid items-center gap-12 md:grid-cols-[1fr_1.15fr] md:gap-16">
+            <div>
+              <p className="eyebrow !text-sage">Product</p>
+              <h3 className="anim-heading mt-3 text-[clamp(2rem,4.5vw,3rem)] text-white/95">
+                Whispr
+              </h3>
+              <p className="mt-5 max-w-[46ch] text-white/70">
+                A dictation app for macOS that runs entirely on your own
+                machine. You hold a hotkey, talk, and the text lands at your
+                cursor. I built it because the app I was using sent my audio
+                off to someone else’s servers to clean it up, and I dictate
+                things I’d rather keep on my laptop.
+              </p>
+              <dl className="mt-8 grid max-w-[26rem] grid-cols-3 gap-4 border-t border-white/15 pt-5">
+                {[
+                  { v: "0", l: "bytes of audio uploaded" },
+                  { v: "8 MB", l: "the whole app" },
+                  { v: "99", l: "tests, no mic needed" },
+                ].map((s) => (
+                  <div key={s.l}>
+                    <dt className="font-display text-2xl font-bold text-white/95">
+                      {s.v}
+                    </dt>
+                    <dd className="mt-1 text-xs leading-snug text-white/50">
+                      {s.l}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-8">
+                <Link
+                  href="/work/whispr"
+                  className="link-underline font-display text-xl font-bold text-white/95"
+                >
+                  View project →
+                </Link>
+              </p>
+            </div>
+
+            <div className="parallax-b overflow-hidden border border-white/15 shadow-2xl">
+              <video
+                src="/images/whispr/demo.mp4"
+                poster="/images/whispr/demo-poster.webp"
+                autoPlay
+                loop
+                muted
+                playsInline
+                aria-label="Holding the hotkey, speaking, and the text appearing at the cursor"
+                className="block h-auto w-full"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* The pipeline, shown rather than described. */}
         <div className="container-site mt-28 border-t border-white/15 pt-16 sm:mt-36">
           <div className="grid items-center gap-12 md:grid-cols-[1fr_1.15fr] md:gap-16">
