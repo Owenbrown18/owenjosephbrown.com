@@ -306,9 +306,7 @@ test("hero departs across the first viewport of scroll", async ({ page }) => {
   expect(departed.y, "hero drifts up").toBeLessThan(top.y);
 });
 
-test("parallax images and lifted headings ride the scroll", async ({
-  page,
-}) => {
+test("lifted headings ride the scroll", async ({ page }) => {
   await page.goto("/");
   await page.waitForTimeout(300);
   const sampleNear = async (selector: string, offset: number) => {
@@ -331,9 +329,10 @@ test("parallax images and lifted headings ride the scroll", async ({
       [selector, offset] as const,
     );
   };
-  // Only selectors the landing page actually uses. The index frames are
-  // fixed, so .parallax-a left the home page with the bespoke blocks.
-  for (const sel of [".parallax-b", ".lift"]) {
+  // Only selectors the landing page actually uses. .parallax-a went with
+  // the bespoke image blocks, and .parallax-b went with the watermark
+  // numerals; .lift is the last scroll-scrubbed thing on this page.
+  for (const sel of [".lift"]) {
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
     const early = await sampleNear(sel, 150);
     const late = await sampleNear(sel, 620);
