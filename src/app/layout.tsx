@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Atmosphere } from "@/components/atmosphere";
+import { RouteTransition } from "@/components/route-transition";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -68,6 +69,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <Atmosphere />
+        <RouteTransition />
         <Header />
         <main id="main">{children}</main>
         <Footer />

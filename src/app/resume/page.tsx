@@ -69,11 +69,11 @@ function Entry({
       </div>
       {detail && <p className="mt-3 max-w-[60ch] text-sm text-fg-muted">{detail}</p>}
       {bullets && (
-        <ul className="mt-4 space-y-1.5">
+        <ul className="cascade mt-4 space-y-1.5">
           {bullets.map((b, i) => (
             <li
               key={b}
-              style={{ "--li": i } as React.CSSProperties}
+              style={{ "--i": i } as React.CSSProperties}
               className="flex gap-3 text-sm leading-relaxed text-fg-muted"
             >
               <span aria-hidden className="mt-[0.7em] h-px w-3 shrink-0 bg-sage" />
@@ -86,12 +86,16 @@ function Entry({
   );
 }
 
+/** A rail heading with its hairline, which draws in as the heading reveals. */
 function RailHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="anim-heading text-[clamp(1.5rem,2.6vw,1.9rem)] text-fg">
-      {children}
-      <span className="text-sage">.</span>
-    </h2>
+    <div className="reveal-up">
+      <h2 className="text-[clamp(1.5rem,2.6vw,1.9rem)] text-fg">
+        {children}
+        <span className="text-sage">.</span>
+      </h2>
+      <span aria-hidden className="rule-draw mt-4 block h-px bg-line" />
+    </div>
   );
 }
 
@@ -99,9 +103,9 @@ function ChipRow({ label, items }: { label: string; items: readonly string[] }) 
   return (
     <div className="reveal-up mt-5">
       <p className="label-mono text-fg-faint">{label}</p>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {items.map((item) => (
-          <span key={item} className="chip">
+      <div className="cascade mt-2 flex flex-wrap gap-1.5">
+        {items.map((item, i) => (
+          <span key={item} className="chip" style={{ "--i": i } as React.CSSProperties}>
             {item}
           </span>
         ))}
@@ -135,15 +139,15 @@ export default function ResumePage() {
 
   return (
     <div className="container-site pb-24 pt-32 sm:pt-36">
-      <div className="sheet sheet-wide">
+      <div className="sheet sheet-wide sheet-still">
         {/* Masthead: photo, name, the pitch, the actions. */}
         <header className="grid items-center gap-8 sm:grid-cols-[9rem_1fr] sm:gap-12">
           {/* The portrait, with the hero echo's own move behind it: a sage
               ring offset down-right like the misregistered name. The photo
               is a tall 9:16 frame, so a centred crop puts the eyes at about
               two-fifths of the circle — classic portrait framing. */}
-          <span className="portrait relative inline-block w-36 print:w-28">
-            <span aria-hidden className="portrait-echo" />
+          <span className="portrait enter-pop relative inline-block w-36 print:w-28">
+            <span aria-hidden className="portrait-echo enter-echo" style={{ "--enter-at": "0.45s" } as React.CSSProperties} />
             <Image
               src="/images/about/owen-brown.jpg"
               alt="Owen Brown"
@@ -154,15 +158,15 @@ export default function ResumePage() {
               className="relative aspect-square w-full rounded-full border border-line object-cover object-center"
             />
           </span>
-          <div>
-            <p className="eyebrow">Résumé</p>
-            <h1 className="anim-heading mt-3 text-[clamp(2.75rem,6vw,4.5rem)] text-fg">
+          <div style={{ "--enter-at": "0.1s" } as React.CSSProperties}>
+            <p className="eyebrow enter" style={{ "--i": 0 } as React.CSSProperties}>Résumé</p>
+            <h1 className="enter mt-3 text-[clamp(2.75rem,6vw,4.5rem)] text-fg" style={{ "--i": 1 } as React.CSSProperties}>
               {first} <span className="text-sage">{rest.join(" ")}</span>
             </h1>
-            <p className="mt-4 max-w-[60ch] text-[1.05rem] leading-relaxed text-fg-muted">
+            <p className="enter mt-4 max-w-[60ch] text-[1.05rem] leading-relaxed text-fg-muted" style={{ "--i": 2 } as React.CSSProperties}>
               {identity.title} · {identity.location}. Seeking {identity.seeking}.
             </p>
-            <div className="mt-6 flex flex-wrap items-center gap-2 print:hidden">
+            <div className="enter mt-6 flex flex-wrap items-center gap-2 print:hidden" style={{ "--i": 3 } as React.CSSProperties}>
               {hasPdf && (
                 <a href={PDF} target="_blank" rel="noopener" className="btn">
                   <PixelCells seed="resume-pdf" variant="hover" cols={10} rows={3} spread={240} />

@@ -8,7 +8,7 @@ export function SectionRule({ num }: { num: string }) {
   return (
     <div aria-hidden className="fullbleed section-rule">
       <span className="section-rule-num">{num}</span>
-      <span className="section-rule-line" />
+      <span className="section-rule-line rule-draw" />
     </div>
   );
 }

@@ -190,7 +190,7 @@ export default function HomePage() {
                   real heading does at every width. */}
               <p
                 aria-hidden
-                className="hero-echo pointer-events-none absolute inset-0 translate-x-[7px] translate-y-[8px] select-none font-display text-[clamp(3.2rem,11vw,9rem)] font-extrabold leading-[0.86] tracking-[-0.035em]"
+                className="hero-echo pointer-events-none absolute inset-0 select-none font-display text-[clamp(3.2rem,11vw,9rem)] font-extrabold leading-[0.86] tracking-[-0.035em]"
               >
                 Owen
                 <br />

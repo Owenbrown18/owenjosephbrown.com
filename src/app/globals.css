@@ -44,6 +44,7 @@
   --t-slow: 0.55s;
   --t-page: 0.65s;
   --stagger: 0.06s;
+  --rise-y: 14px;
   --bg: #f4f3ef;
   --surface: #ebe9e3;
   --fg: rgba(15, 35, 32, 0.94);
@@ -54,6 +55,124 @@
   /* Sage is only 2.1:1 on paper, so accent text is the deep forest. */
   --accent-text: #3d6b65;
   color-scheme: light;
+}
+
+
+/* ---------------------------------------------------------------
+   MOTION VOCABULARY. Every entrance, reveal and cascade on the site is
+   one of these, on the tokens above. Nothing animates any other way.
+
+     rise   text and blocks arrive from below          (--rise-y)
+     pop    objects arrive from below with a breath    (scale .96)
+     draw   hairlines draw in from the left
+     echo   an offset echo settles into its offset
+     float  idle bob for objects                       (--float-y)
+
+   Load entrances (.enter*) are keyframes on mount; scroll reveals use
+   the same shapes as transitions keyed off .is-revealed; cascades give
+   siblings --i and one delay formula. Reduced motion: none of it.
+   --------------------------------------------------------------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-y, 14px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--rise-y, 14px) * 1.4)) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes echo-settle {
+  from {
+    opacity: 0;
+    transform: translate(-7px, -8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 var(--float-y, -10px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .enter,
+  .enter-pop,
+  .enter-draw,
+  .enter-echo {
+    animation-timing-function: var(--ease-out);
+    animation-fill-mode: both;
+    animation-delay: calc(var(--enter-at, 0s) + var(--i, 0) * var(--stagger));
+  }
+  .enter {
+    animation-name: rise;
+    animation-duration: var(--t-slow);
+  }
+  .enter-pop {
+    animation-name: pop;
+    animation-duration: var(--t-slow);
+  }
+  .enter-draw {
+    transform-origin: 0 50%;
+    animation-name: draw;
+    animation-duration: var(--t-slow);
+  }
+  .enter-echo {
+    animation-name: echo-settle;
+    animation-duration: var(--t-page);
+    animation-timing-function: ease-out;
+  }
+  /* A cascade: siblings carry --i and arrive one stagger apart once the
+     armed ancestor reveals. */
+  .reveal-init .cascade > * {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .reveal-init.is-revealed .cascade > * {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--t) ease-out,
+      transform 0.45s var(--ease-out);
+    transition-delay: calc(0.1s + var(--i, 0) * var(--stagger));
+  }
+  /* A drawn hairline: any .rule-draw inside an armed ancestor. */
+  .reveal-init .rule-draw {
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    opacity: 0;
+  }
+  .reveal-init.is-revealed .rule-draw {
+    transform: scaleX(1);
+    opacity: 1;
+    transition:
+      transform 0.7s var(--ease-out) 0.08s,
+      opacity var(--t) ease-out 0.08s;
+  }
 }
 
 @layer base {
@@ -213,17 +332,12 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .sheet {
-    animation: sheet-rise var(--t-page) var(--ease-out) both;
+    --rise-y: 36px;
+    animation: rise var(--t-page) var(--ease-out) both;
   }
-  @keyframes sheet-rise {
-    from {
-      opacity: 0;
-      transform: translateY(46px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
+  /* A page whose masthead carries its own cascade does not also rise. */
+  .sheet-still {
+    animation: none;
   }
 }
 
@@ -307,23 +421,8 @@
    zero width would zero its intersection area and block its own trigger,
    the clip-path lesson again. .reveal-init only ever arrives from JS, so
    with no script the rule is simply visible. */
-@media (prefers-reduced-motion: no-preference) {
-  /* No transition on the hidden state: when the reveal system arms, a
-     line that was visible on the server render must vanish in one frame,
-     not shrink away over a second. The transition lives on the revealed
-     state, so it only ever plays in the direction the eye should see. */
-  .section-rule.reveal-init .section-rule-line {
-    transform: scaleX(0);
-    opacity: 0;
-  }
-  .section-rule.reveal-init.is-revealed .section-rule-line {
-    transform: scaleX(1);
-    opacity: 1;
-    transition:
-      transform 0.7s var(--ease-out) 0.08s,
-      opacity var(--t) ease-out 0.08s;
-  }
-}
+/* The line is a .rule-draw (see the motion vocabulary): the container is
+   what's observed, the line draws once it reveals. */
 
 /* ---------------------------------------------------------------
    Motion vocabulary — IntersectionObserver + transitions.
@@ -352,9 +451,7 @@
 h2.reveal-init,
 h3.reveal-init {
   opacity: 0;
-  transform: translateY(16px);
-  --rv-o: 0.4s;
-  --rv-t: var(--t-slow);
+  transform: translateY(var(--rise-y, 14px));
 }
 
 /* Every hidden-state selector must stay at specificity (0,2,0) or below:
@@ -375,17 +472,14 @@ h3.reveal-init {
 :where(.prose-ob > pre).reveal-init,
 :where(.prose-ob > table).reveal-init {
   opacity: 0;
-  transform: translateY(12px);
-  --rv-o: var(--t);
-  --rv-t: 0.45s;
+  transform: translateY(var(--rise-y, 14px));
 }
 
+/* Images pop in place — the object shape, not the text shape. */
 .anim-image.reveal-init,
 :where(.prose-ob img).reveal-init {
   opacity: 0;
-  transform: translateY(18px) scale(1.015);
-  --rv-o: 0.45s;
-  --rv-t: 0.6s;
+  transform: scale(0.96);
 }
 
 /* .lift transforms belong to the scroll driver. A transform transition
@@ -394,17 +488,20 @@ h3.reveal-init {
    same specificity, source order decides. */
 .lift.reveal-init {
   transform: none;
-  --rv-t: 0s;
 }
 
 /* The state everything lands on, and the only place the transition
-   lives — so it plays on reveal and never on arm. */
+   lives — so it plays on reveal and never on arm. One duration pair for
+   the whole site: opacity on --t, transform on --t-slow. */
 .reveal-init.is-revealed {
   opacity: 1;
   transform: none;
   transition:
-    opacity var(--rv-o, var(--t)) ease-out,
-    transform var(--rv-t, 0.45s) var(--ease-out);
+    opacity var(--t) ease-out,
+    transform var(--t-slow) var(--ease-out);
+}
+.lift.reveal-init.is-revealed {
+  transition: opacity var(--t) ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -422,68 +519,34 @@ h3.reveal-init {
 .hero-echo {
   -webkit-text-stroke: 1px rgba(46, 84, 80, 0.3);
   color: transparent;
+  /* The offset is the resting state (translate, not transform), so the
+     entrance can settle into it by animating transform from the other
+     side. Same move as the résumé portrait's ring. */
+  translate: 7px 8px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* Hero copy: blocks rise in a cascade; the name hands off to its words. */
   .hero-stage > * {
-    animation: hero-rise var(--t-page) var(--ease-out) both;
+    animation: rise var(--t-page) var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * var(--stagger));
   }
-  /* The name carries its own word-level entrance instead of arriving as
-     one block, so hand it off to the children. */
   .hero-stage > .hero-name {
     animation: none;
   }
-  /* The echo fades in after the words have landed, so the entrance stays
-     about the name and the misregistration reads as a settled detail. */
-  .hero-echo {
-    animation: hero-echo-in 0.8s ease-out 0.55s both;
-  }
-  @keyframes hero-echo-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
+  .hero-stage > :nth-child(2) { --i: 1; }
+  .hero-stage > :nth-child(3) { --i: 2; }
+  .hero-stage > :nth-child(4) { --i: 3; }
   .hero-word {
     display: inline-block;
-    animation: hero-word-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+    --rise-y: 0.14em;
+    animation: rise 0.75s var(--ease-out) both;
+    animation-delay: calc(0.08s + var(--i, 0) * var(--stagger));
   }
-  .hero-word:nth-child(1) {
-    animation-delay: 0.08s;
-  }
-  .hero-word:nth-child(2) {
-    animation-delay: 0.18s;
-  }
-  @keyframes hero-word-rise {
-    from {
-      opacity: 0;
-      transform: translateY(0.14em);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-  .hero-stage > *:nth-child(2) {
-    animation-delay: var(--stagger);
-  }
-  .hero-stage > *:nth-child(3) {
-    animation-delay: calc(var(--stagger) * 2);
-  }
-  .hero-stage > *:nth-child(4) {
-    animation-delay: calc(var(--stagger) * 3);
-  }
-  @keyframes hero-rise {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
+  .hero-word:nth-child(2) { --i: 1.5; }
+  /* The echo settles into its offset once the words have landed. */
+  .hero-echo {
+    animation: echo-settle var(--t-page) ease-out 0.55s both;
   }
 }
 
@@ -982,29 +1045,26 @@ h3.reveal-init {
   }
   /* The card's text (number, name, chips, meta, blurb) follows the frame
      in a short cascade instead of arriving as one slab. */
+  /* The card's text is a cascade (see the vocabulary): siblings carry
+     --i and rise one stagger apart, starting once the dissolve is under
+     way. */
   .project-card.reveal-init > :not(.project-frame) {
     opacity: 0;
+    transform: translateY(10px);
   }
   .project-card.reveal-init.is-revealed > :not(.project-frame) {
     opacity: 1;
-    animation: rise-in 0.5s var(--ease-out) backwards;
-    animation-delay: calc(0.2s + var(--ci, 0) * var(--stagger));
+    transform: none;
+    transition:
+      opacity var(--t) ease-out,
+      transform 0.45s var(--ease-out);
+    transition-delay: calc(0.2s + var(--i, 0) * var(--stagger));
   }
-  .project-card > :nth-child(2) { --ci: 1; }
-  .project-card > :nth-child(3) { --ci: 2; }
-  .project-card > :nth-child(4) { --ci: 3; }
-  .project-card > :nth-child(5) { --ci: 4; }
-  .project-card > :nth-child(6) { --ci: 5; }
-  @keyframes rise-in {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
+  .project-card > :nth-child(2) { --i: 1; }
+  .project-card > :nth-child(3) { --i: 2; }
+  .project-card > :nth-child(4) { --i: 3; }
+  .project-card > :nth-child(5) { --i: 4; }
+  .project-card > :nth-child(6) { --i: 5; }
 }
 
 /* The studio card composes several sites in the one frame: one large
@@ -1211,41 +1271,14 @@ h3.reveal-init {
        throttled phone CPU measured as 4.5s of main-thread blocking. With
        the layer promoted, the idle float is transform-only and free. */
     will-change: transform, translate;
+    --rise-y: 22px;
     animation:
-      cluster-pop 0.6s var(--ease-out) both,
-      cluster-float 7s ease-in-out infinite;
-    animation-delay: calc(0.25s + var(--i) * 0.1s), calc(var(--i) * -1.3s);
+      pop var(--t-page) var(--ease-out) both,
+      float 7s ease-in-out infinite;
+    animation-delay: calc(0.25s + var(--i, 0) * var(--stagger)), calc(var(--i, 0) * -1.3s);
   }
   .cluster-piece--phone {
-    animation-name: cluster-pop, cluster-float-deep;
-  }
-  @keyframes cluster-pop {
-    from {
-      opacity: 0;
-      transform: translateY(30px) scale(0.94);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-  @keyframes cluster-float {
-    0%,
-    100% {
-      translate: 0 0;
-    }
-    50% {
-      translate: 0 -10px;
-    }
-  }
-  @keyframes cluster-float-deep {
-    0%,
-    100% {
-      translate: 0 0;
-    }
-    50% {
-      translate: 0 -18px;
-    }
+    --float-y: -18px;
   }
 }
 
@@ -1257,39 +1290,23 @@ h3.reveal-init {
    the layout and never remounts, so it plays once per visit.
    --------------------------------------------------------------- */
 @media (prefers-reduced-motion: no-preference) {
+  /* Nav items rise (from above — they live at the top), their tracks
+     draw; both on the shared stagger. */
   .nav-enter {
-    animation: nav-enter 0.5s var(--ease-out) both;
-    animation-delay: calc(0.08s + var(--nav-i, 0) * var(--stagger));
+    --rise-y: -6px;
+    animation: rise 0.5s var(--ease-out) both;
+    animation-delay: calc(0.08s + var(--i, 0) * var(--stagger));
   }
   .nav-enter .nav-rail-track {
     transform-origin: 0 50%;
-    animation: nav-track-draw 0.6s var(--ease-out) both;
-    animation-delay: calc(0.15s + var(--nav-i, 0) * var(--stagger));
+    animation: draw var(--t-slow) var(--ease-out) both;
+    animation-delay: calc(0.15s + var(--i, 0) * var(--stagger));
   }
-  .nav-enter:nth-child(1) { --nav-i: 0; }
-  .nav-enter:nth-child(2) { --nav-i: 1; }
-  .nav-enter:nth-child(3) { --nav-i: 2; }
-  .nav-enter:nth-child(4) { --nav-i: 3; }
-  @keyframes nav-enter {
-    from {
-      opacity: 0;
-      transform: translateY(-6px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-  @keyframes nav-track-draw {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
-  }
+  .nav-enter:nth-child(2) { --i: 1; }
+  .nav-enter:nth-child(3) { --i: 2; }
+  .nav-enter:nth-child(4) { --i: 3; }
   .hero-stamp {
-    animation: hero-rise var(--t-page) var(--ease-out) 0.9s both;
+    animation: rise var(--t-page) var(--ease-out) 0.9s both;
   }
 }
 
@@ -1460,20 +1477,7 @@ h3.reveal-init {
     border-right: 1px solid var(--line);
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .resume-entry.reveal-init li {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  .resume-entry.reveal-init.is-revealed li {
-    opacity: 1;
-    transform: none;
-    transition:
-      opacity var(--t) ease-out,
-      transform 0.45s var(--ease-out);
-    transition-delay: calc(0.1s + var(--li, 0) * var(--stagger));
-  }
-}
+/* Entry bullets and chip rows are .cascade lists (see the vocabulary). */
 @media print {
   .resume-body {
     display: block;
@@ -1490,11 +1494,28 @@ h3.reveal-init {
   inset: 0;
   border-radius: 9999px;
   border: 1px solid rgba(123, 164, 158, 0.55);
-  transform: translate(7px, 8px);
+  translate: 7px 8px;
   pointer-events: none;
 }
 @media print {
   .portrait-echo {
     display: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Route transitions. Leaving: main fades and lifts; arriving: the sheet
+   or hero plays its own entrance. RouteTransition sets data-leaving on
+   <html> and navigates once the exit has played.
+   --------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  main {
+    transition:
+      opacity var(--t) ease-out,
+      transform var(--t) var(--ease-out);
+  }
+  html[data-leaving] main {
+    opacity: 0;
+    transform: translateY(-10px);
   }
 }
