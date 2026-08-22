@@ -106,9 +106,12 @@ test("resume page carries identity and a route to the document", async ({
   // PDF, since nothing in the embed is crawlable or readable by a screen
   // reader.
   await expect(page.getByText(/Spring 2027 co-op/i).first()).toBeVisible();
-  // The PDF itself is invisible to crawlers and screen readers, so the
-  // page has to carry a real route to the document in HTML.
-  await expect(page.getByRole("link", { name: /download/i })).toBeVisible();
+  // The résumé is real HTML now, not an embed: experience entries must be
+  // in the DOM, and the PDF is a secondary link that opens in a new tab.
+  expect(await page.locator("article").count()).toBeGreaterThanOrEqual(4);
+  const pdf = page.getByRole("link", { name: /pdf/i }).first();
+  await expect(pdf).toBeVisible();
+  await expect(pdf).toHaveAttribute("target", "_blank");
 });
 
 test.describe("mobile", () => {
