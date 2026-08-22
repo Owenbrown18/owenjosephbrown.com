@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { CursorLabel } from "@/components/cursor-label";
 
 /**
  * One project, contained in a single box: its imagery composed inside a
@@ -47,8 +46,14 @@ export function ProjectCard({
       aria-label={`${title}: ${blurb}`}
       className="project-card reveal-up group relative block"
     >
-      <CursorLabel />
-      <div className={`project-frame ${frameClass} ${tone}`}>{children}</div>
+      <div className={`project-frame ${frameClass} ${tone}`}>
+        {children}
+        <PixelGrid seed={title} />
+        <span aria-hidden className="frame-veil">
+          View
+          <span className="frame-veil__arrow">↗</span>
+        </span>
+      </div>
 
       <div className="mt-6 flex items-end justify-between gap-4">
         <span className="font-display text-[clamp(2rem,4vw,2.75rem)] font-extrabold leading-none tracking-[-0.03em] text-white/90">
@@ -88,6 +93,50 @@ export function ProjectCard({
 
       <p className="mt-3 text-sm leading-relaxed text-white/72">{blurb}</p>
     </Link>
+  );
+}
+
+const PIXEL_COLS = 12;
+const PIXEL_ROWS = 8;
+
+function seeded(seed: string) {
+  let h = 2166136261;
+  for (const ch of seed) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return ((h ^= h >>> 16) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * The card's entrance: a grid of paper cells over the art that dissolve
+ * away in a random order when the card reveals — the site's grid, once
+ * more, as the thing the work emerges from. Only rendered over the art
+ * once JS has armed the reveal; with no script the art is simply there.
+ */
+function PixelGrid({ seed }: { seed: string }) {
+  const rand = seeded(seed);
+  const cells = Array.from({ length: PIXEL_COLS * PIXEL_ROWS }, (_, i) => (
+    <span
+      key={i}
+      className="pixel-cell"
+      style={{ "--d": `${Math.round(rand() * 520)}ms` } as React.CSSProperties}
+    />
+  ));
+  return (
+    <span
+      aria-hidden
+      className="pixel-grid"
+      style={
+        {
+          "--cols": PIXEL_COLS,
+          "--rows": PIXEL_ROWS,
+        } as React.CSSProperties
+      }
+    >
+      {cells}
+    </span>
   );
 }
 

@@ -264,12 +264,11 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
         if (!raf) raf = requestAnimationFrame(draw);
       };
 
-      const onPointer = (e: PointerEvent) => {
-        target.x = e.clientX / window.innerWidth;
-        target.y = 1 - e.clientY / window.innerHeight;
-        schedule();
-      };
-      window.addEventListener("pointermove", onPointer, { passive: true });
+      // No pointer-follow: every mouse move used to schedule a run of
+      // full-screen shader passes while the spot eased over, which on an
+      // integrated GPU is continuous work under the cursor and felt like
+      // chop. The field is static; it draws on load (fading in), on
+      // resize, and on route change. The pointer uniform stays parked.
       window.addEventListener("resize", schedule, { passive: true });
 
       draw();
@@ -287,7 +286,6 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
 
       return () => {
         motionQuery.removeEventListener("change", onMotionPref);
-        window.removeEventListener("pointermove", onPointer);
         window.removeEventListener("resize", schedule);
         if (raf) cancelAnimationFrame(raf);
         gl.deleteProgram(program);

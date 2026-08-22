@@ -227,8 +227,10 @@
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.055;
-  mix-blend-mode: multiply;
+  /* Plain alpha, not multiply: a blend mode on a fixed full-viewport
+     layer makes the compositor re-blend the whole screen every scrolled
+     frame, which is where Safari's scroll chop came from. */
+  opacity: 0.07;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 200px 200px;
 }
@@ -359,9 +361,9 @@
    .reveal-init is added by JS, never by the server, so if the script
    never runs nothing is ever hidden.
    --------------------------------------------------------------- */
-.reveal-init {
-  will-change: opacity, transform;
-}
+/* No blanket will-change here: it promoted every revealable element to
+   its own layer for the life of the page (dozens at once). Transitions
+   promote on their own while they run. */
 
 /* NB: no clip-path in the hidden state. Clipping an element to zero area
    makes IntersectionObserver report it as not intersecting, so it can
@@ -875,59 +877,84 @@ h3.reveal-init {
     1.3rem 0 0 #cbc9c2;
 }
 
-/* The pieces inside a stage enter one after another when the card
-   reveals, and float apart slightly on hover. Hidden state exists only
-   once JS has armed the reveal (.reveal-init), so with no script the
-   stage is simply set.
+/* The card entrance and hover, as one system.
 
-   The entrance is a keyframe animation with `backwards` fill, not a
-   transition: a transition-delay for the stagger would also lag every
-   hover afterwards (the earlier "reset delay to 0 after reveal" rule
-   matched during the entrance too, so the stagger never ran). With
-   backwards fill the piece holds the `from` frame through its delay,
-   plays once, then returns to normal styling — where hover transforms
-   transition freely. */
+   Entrance: the card itself does not fade (its reveal-up hidden state is
+   overridden below); instead the PixelGrid — paper cells over the art —
+   dissolves cell by cell in a seeded random order, and the text under the
+   frame rises in a short cascade. Hover: the frame washes to the accent
+   with VIEW centred, the way the reference does it, and lifts 4px. */
+.pixel-grid {
+  display: none;
+  position: absolute;
+  inset: -1px;
+  z-index: 20;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+  pointer-events: none;
+}
+.pixel-cell {
+  background: var(--bg);
+  opacity: 1;
+}
+.frame-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: var(--accent);
+  color: #f4f3ef;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-out);
+}
+.frame-veil__arrow {
+  display: inline-block;
+  transition: transform 0.35s var(--ease-out);
+}
+.project-card:hover .frame-veil {
+  opacity: 1;
+}
+.project-card:hover .frame-veil__arrow {
+  transform: translate(3px, -3px);
+}
 @media (prefers-reduced-motion: no-preference) {
-  .project-card.reveal-init [data-float] {
-    opacity: 0;
-  }
-  .project-card.reveal-init.is-revealed [data-float] {
+  /* The card container stays visible through its reveal: the dissolve
+     and the text cascade ARE the entrance. Same specificity as the
+     .reveal-up hidden rule; later in the file, so it wins. */
+  .project-card.reveal-init {
     opacity: 1;
-    animation: float-in 0.7s var(--ease-out) backwards;
-    animation-delay: calc((var(--fi, 1) - 1) * 0.09s);
-    transition: transform 0.35s var(--ease-out);
+    transform: none;
   }
-  .project-card [data-float="1"] { --fi: 1; }
-  .project-card [data-float="2"] { --fi: 2; }
-  .project-card [data-float="3"] { --fi: 3; }
-  .project-card [data-float="4"] { --fi: 4; }
-  @keyframes float-in {
-    from {
-      opacity: 0;
-      transform: translateY(26px) scale(0.97);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
+  .project-card.reveal-init .pixel-grid {
+    display: grid;
   }
-
+  .project-card.reveal-init.is-revealed .pixel-cell {
+    opacity: 0;
+    transition: opacity 0.32s ease-out var(--d, 0ms);
+  }
   /* The card's text (number, name, chips, meta, blurb) follows the frame
-     in a short cascade instead of arriving as one slab. The cursor label
-     is excluded: it is hidden by its own rule and positioned by JS. */
-  .project-card.reveal-init > :not(.project-frame):not(.cursor-label) {
+     in a short cascade instead of arriving as one slab. */
+  .project-card.reveal-init > :not(.project-frame) {
     opacity: 0;
   }
-  .project-card.reveal-init.is-revealed > :not(.project-frame):not(.cursor-label) {
+  .project-card.reveal-init.is-revealed > :not(.project-frame) {
     opacity: 1;
     animation: rise-in 0.6s var(--ease-out) backwards;
-    animation-delay: calc(var(--ci, 0) * 0.06s);
+    animation-delay: calc(0.25s + var(--ci, 0) * 0.06s);
   }
-  .project-card > :nth-child(3) { --ci: 1; }
-  .project-card > :nth-child(4) { --ci: 2; }
-  .project-card > :nth-child(5) { --ci: 3; }
-  .project-card > :nth-child(6) { --ci: 4; }
-  .project-card > :nth-child(7) { --ci: 5; }
+  .project-card > :nth-child(2) { --ci: 1; }
+  .project-card > :nth-child(3) { --ci: 2; }
+  .project-card > :nth-child(4) { --ci: 3; }
+  .project-card > :nth-child(5) { --ci: 4; }
+  .project-card > :nth-child(6) { --ci: 5; }
   @keyframes rise-in {
     from {
       opacity: 0;
@@ -937,20 +964,6 @@ h3.reveal-init {
       opacity: 1;
       transform: none;
     }
-  }
-
-  /* Uneven lifts, so the hover reads as depth rather than a block move. */
-  .project-card.is-revealed:hover [data-float="1"] {
-    transform: translateY(-7px);
-  }
-  .project-card.is-revealed:hover [data-float="2"] {
-    transform: translateY(-12px);
-  }
-  .project-card.is-revealed:hover [data-float="3"] {
-    transform: translateY(-4px);
-  }
-  .project-card.is-revealed:hover [data-float="4"] {
-    transform: translateY(-9px);
   }
 }
 
@@ -1239,42 +1252,3 @@ h3.reveal-init {
   }
 }
 
-/* The cursor label: a square ink tag that trails the pointer inside a
-   project card. Hidden until the card is hovered; transform only. */
-.cursor-label {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 30;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.7rem;
-  background: var(--fg);
-  color: var(--bg);
-  font-family: var(--font-body);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  pointer-events: none;
-  opacity: 0;
-  scale: 0.85;
-  transition:
-    opacity 0.2s ease-out,
-    scale 0.25s var(--ease-out);
-  will-change: transform;
-}
-.cursor-label[data-on] {
-  opacity: 1;
-  scale: 1;
-}
-.cursor-label__arrow {
-  font-size: 0.75rem;
-  line-height: 1;
-}
-@media (pointer: coarse) {
-  .cursor-label {
-    display: none;
-  }
-}

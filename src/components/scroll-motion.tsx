@@ -86,7 +86,10 @@ export function ScrollMotion() {
         // position, because the final section can never scroll fully past
         // the viewport and would otherwise stop short of full.
         compute: (y, vh, max) => {
-          const start = m.docTop - vh * 0.35;
+          // A section "starts" when it reaches the reading line 35% down
+          // the viewport — except the first one, which is already there at
+          // scrollY 0 and must read as zero progress at the top of the page.
+          const start = Math.max(0, m.docTop - vh * 0.35);
           const end = Math.min(m.docTop + m.height - vh * 0.35, max);
           return clamp01((y - start) / Math.max(1, end - start));
         },

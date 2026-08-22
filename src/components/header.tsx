@@ -78,7 +78,7 @@ export function Header() {
       } ${
         atTop && !open
           ? "border-b border-transparent bg-transparent"
-          : "border-b border-white/10 bg-[color-mix(in_srgb,var(--bg)_85%,transparent)] backdrop-blur-md"
+          : "border-b border-white/10 bg-[color-mix(in_srgb,var(--bg)_94%,transparent)]"
       }`}
     >
       <div className="container-site flex h-20 items-center justify-between">
@@ -140,7 +140,7 @@ export function Header() {
         id="mobile-nav"
         ref={panelRef}
         hidden={!open}
-        className="border-t border-white/10 bg-[color-mix(in_srgb,var(--bg)_95%,transparent)] backdrop-blur-md sm:hidden"
+        className="border-t border-white/10 bg-[color-mix(in_srgb,var(--bg)_97%,transparent)] sm:hidden"
       >
         <nav aria-label="Primary" className="container-site py-4">
           {anchors.map((item) => (
