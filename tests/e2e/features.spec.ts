@@ -313,8 +313,7 @@ test("section rules draw in on arrival, stay put once drawn", async ({
 });
 
 test("hero departs across the first viewport of scroll", async ({ page }) => {
-  await page.goto("/");
-  await page.waitForTimeout(300);
+  await gotoReady(page, "/");
   const hero = () =>
     page.evaluate(() => {
       const el = document.querySelector<HTMLElement>(".hero-parallax")!;
@@ -339,8 +338,7 @@ test("hero departs across the first viewport of scroll", async ({ page }) => {
 });
 
 test("lifted headings ride the scroll", async ({ page }) => {
-  await page.goto("/");
-  await page.waitForTimeout(300);
+  await gotoReady(page, "/");
   const sampleNear = async (selector: string, offset: number) => {
     return page.evaluate(
       ([sel, off]) => {
