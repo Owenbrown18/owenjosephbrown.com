@@ -138,15 +138,22 @@ export default function ResumePage() {
       <div className="sheet sheet-wide">
         {/* Masthead: photo, name, the pitch, the actions. */}
         <header className="grid items-center gap-8 sm:grid-cols-[9rem_1fr] sm:gap-12">
-          <Image
-            src="/images/about/owen-brown.jpg"
-            alt="Owen Brown"
-            width={288}
-            height={288}
-            priority
-            sizes="144px"
-            className="aspect-square w-36 rounded-full border border-line object-cover object-top print:w-28"
-          />
+          {/* The portrait, with the hero echo's own move behind it: a sage
+              ring offset down-right like the misregistered name. The photo
+              is a tall 9:16 frame, so a centred crop puts the eyes at about
+              two-fifths of the circle — classic portrait framing. */}
+          <span className="portrait relative inline-block w-36 print:w-28">
+            <span aria-hidden className="portrait-echo" />
+            <Image
+              src="/images/about/owen-brown.jpg"
+              alt="Owen Brown"
+              width={288}
+              height={288}
+              priority
+              sizes="144px"
+              className="relative aspect-square w-full rounded-full border border-line object-cover object-center"
+            />
+          </span>
           <div>
             <p className="eyebrow">Résumé</p>
             <h1 className="anim-heading mt-3 text-[clamp(2.75rem,6vw,4.5rem)] text-fg">

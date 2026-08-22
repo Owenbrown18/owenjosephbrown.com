@@ -1483,3 +1483,18 @@ h3.reveal-init {
     margin-bottom: 1.5rem;
   }
 }
+
+/* Résumé portrait echo: the name echo's move, as a circle. */
+.portrait-echo {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1px solid rgba(123, 164, 158, 0.55);
+  transform: translate(7px, 8px);
+  pointer-events: none;
+}
+@media print {
+  .portrait-echo {
+    display: none;
+  }
+}
