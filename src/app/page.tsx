@@ -55,7 +55,7 @@ const compositions: Record<
     tone: "frame-grain",
     art: (
       <>
-        <div data-float={1} className="absolute bottom-[-8%] left-[6%] w-[27%] -rotate-2">
+        <div className="absolute bottom-[-8%] left-[6%] w-[27%] -rotate-2">
           <PhoneFrame>
             <Image
               src="/images/grain/home_roll.webp"
@@ -67,7 +67,7 @@ const compositions: Record<
             />
           </PhoneFrame>
         </div>
-        <div data-float={2} className="absolute bottom-[6%] left-[37%] z-10 w-[29%]">
+        <div className="absolute bottom-[6%] left-[37%] z-10 w-[29%]">
           <PhoneFrame>
             <Image
               src="/images/grain/new_roll_qr.webp"
@@ -79,7 +79,7 @@ const compositions: Record<
             />
           </PhoneFrame>
         </div>
-        <div data-float={3} className="absolute bottom-[-6%] right-[7%] w-[25%] rotate-2">
+        <div className="absolute bottom-[-6%] right-[7%] w-[25%] rotate-2">
           <PhoneFrame>
             <Image
               src="/images/grain/waiting.webp"
@@ -107,17 +107,14 @@ const compositions: Record<
           alt=""
           className="left-[4%] top-[8%] w-[76%] aspect-[1284/132] rounded-xl"
           sizes="(min-width: 768px) 640px, 76vw"
-          dataFloat={1}
         />
         <Shot
           src="/images/whispr/card-models-v2.webp"
           alt=""
           className="right-[4%] top-[30%] z-10 w-[60%] aspect-[1224/346] rounded-xl"
           sizes="(min-width: 768px) 500px, 60vw"
-          dataFloat={2}
         />
         <div
-          data-float={3}
           className="absolute bottom-[26%] left-[7%] z-20 w-[24%]"
         >
           <Image
@@ -130,7 +127,6 @@ const compositions: Record<
           />
         </div>
         <div
-          data-float={4}
           className="absolute bottom-[9%] left-[16%] z-20 w-[25%]"
         >
           <Image
@@ -156,7 +152,6 @@ const compositions: Record<
           chrome
           className="left-[4%] top-[6%] w-[70%]"
           sizes="(min-width: 768px) 580px, 70vw"
-          dataFloat={1}
         />
         {/* The classifier itself, rendered from the real source: the
             system is the product here, so the code is the better photo. */}
@@ -165,7 +160,6 @@ const compositions: Record<
           alt=""
           className="bottom-[6%] right-[4%] z-10 w-[54%] aspect-[1564/982]"
           sizes="(min-width: 768px) 450px, 54vw"
-          dataFloat={2}
         />
       </>
     ),
@@ -183,9 +177,9 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
 
-      {/* 01 · Hero. Left-aligned and editorial: the name, what I do, the
-          ways to reach me, then the history as a table rather than a
-          paragraph, so a recruiter has it all in the first screen. */}
+      {/* 01 · Hero. Editorial: the name, what I do, the ways to reach me,
+          and the work itself as physical objects on the right, so a
+          recruiter has the whole pitch in the first screen. */}
       <section id="home" className="relative">
         <div className="container-site relative flex min-h-[100svh] flex-col justify-center pb-24 pt-32 sm:pt-36">
           <div className="grid items-center gap-14 lg:grid-cols-[1fr_0.92fr] lg:gap-10">
@@ -217,7 +211,7 @@ export default function HomePage() {
               </h1>
             </div>
 
-            <p className="mt-9 max-w-[46ch] text-[clamp(1rem,1.5vw,1.15rem)] leading-relaxed text-white/70">
+            <p className="mt-9 max-w-[46ch] text-[clamp(1rem,1.5vw,1.15rem)] leading-relaxed text-white/75">
               I’m a <strong className="font-semibold text-white">software engineer</strong>{" "}
               in Victoria, studying at UVic and running a small web studio. I
               build things people actually use, and most of them are live
@@ -246,10 +240,10 @@ export default function HomePage() {
                   key={l.label}
                   href={l.href}
                   rel="me noopener"
-                  className="btn-pixel inline-flex items-center gap-2 border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75"
+                  className="btn"
                 >
                   <PixelCells seed={l.label} variant="hover" cols={9} rows={3} spread={240} />
-                  <span className="btn-pixel__label inline-flex items-center gap-2">
+                  <span className="btn__label inline-flex items-center gap-2">
                     {l.icon}
                     {l.label}
                   </span>
@@ -257,10 +251,10 @@ export default function HomePage() {
               ))}
               <Link
                 href="/resume"
-                className="btn-pixel inline-flex items-center gap-2 border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75"
+                className="btn"
               >
                 <PixelCells seed="Résumé" variant="hover" cols={9} rows={3} spread={240} />
-                <span className="btn-pixel__label inline-flex items-center gap-2">
+                <span className="btn__label inline-flex items-center gap-2">
                   Résumé
                   <ArrowUpRightIcon />
                 </span>
@@ -318,7 +312,7 @@ export default function HomePage() {
                 alt=""
                 width={782}
                 height={491}
-                sizes="(min-width: 1024px) 300px, 44vw"
+                sizes="(min-width: 1024px) 300px, 40vw"
                 className="h-auto w-full"
               />
             </div>
@@ -347,7 +341,7 @@ export default function HomePage() {
           </div>
 
           {/* Place and time, the way a studio site stamps a page. */}
-          <p className="hero-stamp mt-14 text-right font-mono text-xs uppercase tracking-[0.14em] text-white/75">
+          <p className="hero-stamp mt-14 text-right label-mono text-white/75">
             ©2026&nbsp;&nbsp;·&nbsp;&nbsp;Victoria, BC&nbsp;&nbsp;<LocalTime />
           </p>
 
@@ -366,7 +360,7 @@ export default function HomePage() {
             </h2>
             <p className="eyebrow hidden sm:block">02</p>
           </div>
-          <p className="reveal-up mt-5 max-w-[52ch] text-white/70">
+          <p className="reveal-up mt-5 max-w-[52ch] text-white/75">
             These are real projects with real users. Each one links to a
             write-up of what the problem actually was and what I did about
             it. I’ve left in the parts that didn’t go well.
@@ -391,8 +385,8 @@ export default function HomePage() {
                   ["figs-and-honey", "Figs & Honey", "380px"],
                   ["daves-bakery", "Daves’ Bakery", "340px"],
                   ["soma-active-health", "Soma Active Health", "300px"],
-                ].map(([slug, name, w], i) => (
-                  <div key={slug} data-float={i + 1}>
+                ].map(([slug, name, w]) => (
+                  <div key={slug}>
                     <Image
                       src={`/images/work/${slug}.webp`}
                       alt={name}
@@ -511,21 +505,21 @@ export default function HomePage() {
         <div className="container-site relative grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
           <div>
             <p className="eyebrow !text-sage">04 · Contact</p>
-            <h2 className="anim-heading mt-5 max-w-[16ch] text-[clamp(2.75rem,7vw,5rem)] font-extrabold text-white/95">
+            <h2 className="anim-heading mt-5 max-w-[16ch] text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               Let’s talk.
             </h2>
-            <p className="mt-5 max-w-[44ch] text-white/70">
+            <p className="mt-5 max-w-[44ch] text-white/75">
               If you’re hiring for a co-op, or you just want to know how
               something on here works, write me. I’ll get back to you.
             </p>
 
-            <p className="mt-10 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-white/72">
+            <p className="mt-10 label-mono text-white/75">
               Or find me here
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-4">
             <a
               href={`mailto:${identity.email}`}
-              className="link-draw inline-flex items-center gap-2 text-sm text-white/70"
+              className="link-draw inline-flex items-center gap-2 text-sm text-white/75"
             >
               <MailIcon />
               Email
@@ -533,7 +527,7 @@ export default function HomePage() {
             <a
               href={identity.github}
               rel="me noopener"
-              className="link-draw inline-flex items-center gap-2 text-sm text-white/70"
+              className="link-draw inline-flex items-center gap-2 text-sm text-white/75"
             >
               <GitHubIcon />
               GitHub
@@ -541,7 +535,7 @@ export default function HomePage() {
             <a
               href={identity.linkedin}
               rel="me noopener"
-              className="link-draw inline-flex items-center gap-2 text-sm text-white/70"
+              className="link-draw inline-flex items-center gap-2 text-sm text-white/75"
             >
               <LinkedInIcon />
               LinkedIn
@@ -549,7 +543,7 @@ export default function HomePage() {
             <a
               href="https://www.obwebdesign.ca"
               rel="noopener"
-              className="link-draw inline-flex items-center gap-1.5 text-sm text-white/70"
+              className="link-draw inline-flex items-center gap-1.5 text-sm text-white/75"
             >
               <ObdesignWordmark className="text-base" />
               <ArrowUpRightIcon />

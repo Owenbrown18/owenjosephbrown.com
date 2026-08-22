@@ -62,7 +62,7 @@ export function ObdesignWordmark({ className = "" }: IconProps) {
     // to ~25% and fails contrast outright.
     <span className={`font-wordmark font-bold ${className}`}>
       <span className="text-white/90">OB</span>
-      <span className="text-white/72">design</span>
+      <span className="text-white/75">design</span>
       <span className="text-accent">.</span>
     </span>
   );

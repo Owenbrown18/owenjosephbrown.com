@@ -4,17 +4,14 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 /**
- * The brand's forest gradient, rendered live: a slow noise field drifting
- * through the radial gradient, with a soft light that follows the pointer.
- *
- * The horizon seams that used to be drawn here from scrollY moved into
- * SectionRule as DOM glows: a fixed canvas chasing main-thread scrollY
- * always lags composited scrolling, which read as chop on mobile.
+ * The page ground: paper, with the grid showing through in three soft
+ * masses and a static grain, drawn once by a fragment shader. Fixed to
+ * the viewport; draws on load (fading in), on resize and on route
+ * change, and otherwise never — there is no render loop.
  *
  * Rules it obeys:
- * - prefers-reduced-motion: renders a single static frame, no loop.
- * - No WebGL: the .forest-ground CSS gradient underneath simply shows.
- * - Offscreen or hidden tab: the loop pauses.
+ * - prefers-reduced-motion: the fade-in snaps; the image is the same.
+ * - No WebGL (or a software rasterizer): the .forest-ground paper shows.
  * - DPR is clamped to 1.5 to keep fill-rate cheap on mobile.
  */
 

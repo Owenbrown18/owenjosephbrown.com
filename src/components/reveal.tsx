@@ -70,7 +70,7 @@ export function Reveal() {
         // Trigger slightly BEFORE the element scrolls in. Delaying it made
         // fast scrolling look like text failing to load, because the copy
         // was still fading up by the time it was readable.
-        rootMargin: "0px 0px 5% 0px",
+        rootMargin: "0px 0px 12% 0px",
         threshold: 0,
       },
     );

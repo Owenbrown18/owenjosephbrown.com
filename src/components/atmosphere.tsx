@@ -4,10 +4,9 @@ import { ScrollMotion } from "@/components/scroll-motion";
 import { OffscreenPause } from "@/components/offscreen-pause";
 
 /**
- * The site's ground: the live forest field, the grain, and the scroll
- * hairline. Rendered once in the root layout so every page sits in the
- * same air — subpages previously rendered on flat colour and read as a
- * different site.
+ * The site's ground and its motion plumbing: the field canvas, the
+ * reveal observer, the scroll driver, and the off-screen pause. Rendered
+ * once in the root layout so every page sits in the same air.
  */
 export function Atmosphere() {
   return (

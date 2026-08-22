@@ -34,7 +34,7 @@ function Half({ hidden = false }: { hidden?: boolean }) {
               />
             </LaptopFrame>
           </div>
-          <p className="mt-2 text-xs text-white/72 transition-colors group-hover:text-white">
+          <p className="mt-2 text-xs text-white/75 transition-colors group-hover:text-white">
             {site.name}
           </p>
         </Link>

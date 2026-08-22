@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { PixelCells } from "@/components/pixel-cells";
+import { ArrowUpRightIcon } from "@/components/icons";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -79,7 +80,7 @@ export function Header() {
       } ${
         atTop && !open
           ? "border-b border-transparent bg-transparent"
-          : "border-b border-white/10 bg-[color-mix(in_srgb,var(--bg)_94%,transparent)]"
+          : "border-b border-white/15 bg-[color-mix(in_srgb,var(--bg)_94%,transparent)]"
       }`}
     >
       <div className="container-site flex h-20 items-center justify-between">
@@ -115,10 +116,13 @@ export function Header() {
           ))}
           <Link
             href="/resume"
-            className="btn-pixel my-auto shrink-0 border border-white/20 px-4 py-1.5 text-[13px] text-white/80"
+            className="btn my-auto shrink-0"
           >
-            <PixelCells seed="nav-resume" variant="hover" cols={8} rows={3} spread={220} />
-            <span className="btn-pixel__label">resume</span>
+            <PixelCells seed="nav-resume" variant="hover" cols={9} rows={3} spread={240} />
+            <span className="btn__label inline-flex items-center gap-2">
+              Résumé
+              <ArrowUpRightIcon />
+            </span>
           </Link>
         </nav>
 
@@ -142,7 +146,7 @@ export function Header() {
         id="mobile-nav"
         ref={panelRef}
         hidden={!open}
-        className="border-t border-white/10 bg-[color-mix(in_srgb,var(--bg)_97%,transparent)] sm:hidden"
+        className="border-t border-white/15 bg-[color-mix(in_srgb,var(--bg)_97%,transparent)] sm:hidden"
       >
         <nav aria-label="Primary" className="container-site py-4">
           {anchors.map((item) => (
@@ -150,7 +154,7 @@ export function Header() {
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="flex items-baseline gap-3 border-b border-white/10 py-4 text-lg text-white/85 last:border-b-0"
+              className="flex items-baseline gap-3 border-b border-white/15 py-4 text-lg text-white/90 last:border-b-0"
             >
               <span aria-hidden className="nav-num !text-sm">
                 {item.num}
@@ -161,10 +165,13 @@ export function Header() {
           <Link
             href="/resume"
             onClick={() => setOpen(false)}
-            className="btn-pixel mt-4 block border border-white/25 py-3 text-center text-sm text-white/90"
+            className="btn mt-4 w-full justify-center"
           >
             <PixelCells seed="sheet-resume" variant="hover" cols={14} rows={3} spread={240} />
-            <span className="btn-pixel__label">resume</span>
+            <span className="btn__label inline-flex items-center gap-2">
+              Résumé
+              <ArrowUpRightIcon />
+            </span>
           </Link>
         </nav>
       </div>

@@ -11,7 +11,7 @@ import { getWorkEntries } from "@/lib/content";
 import { identity } from "@/lib/resume-data";
 
 const colHead =
-  "font-mono text-[0.68rem] uppercase tracking-[0.14em] text-fg-faint";
+  "label-mono text-fg-faint";
 const colLink = "text-sm text-fg-muted link-draw";
 
 /**
@@ -100,7 +100,7 @@ export function Footer() {
           </span>{" "}
           ©2026
         </p>
-        <p className="font-mono text-xs uppercase tracking-[0.14em]">
+        <p className="label-mono">
           Victoria, BC&nbsp;&nbsp;<LocalTime />
         </p>
       </div>

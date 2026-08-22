@@ -37,7 +37,7 @@ export function PageHeader({
         <dl className="mt-10 grid grid-cols-2 gap-x-8 gap-y-5 border-y border-line py-6 text-sm sm:grid-cols-4">
           {meta.map((m) => (
             <div key={m.label} className={m.wide ? "col-span-2" : undefined}>
-              <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-fg-faint">
+              <dt className="label-mono text-fg-faint">
                 {m.label}
               </dt>
               <dd className="mt-1 break-words text-fg">{m.value}</dd>

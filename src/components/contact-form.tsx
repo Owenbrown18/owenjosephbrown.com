@@ -8,7 +8,7 @@ const initial: ContactState = { status: "idle" };
 
 const field =
   "w-full border border-white/20 bg-white/[0.03] px-3.5 py-2.5 text-sm " +
-  "text-white placeholder:text-white/35 transition-colors " +
+  "text-white placeholder:text-white/40 transition-colors " +
   "focus:border-sage focus:outline-none";
 
 /**
@@ -25,7 +25,7 @@ export function ContactForm() {
         <p className="font-display text-xl font-bold text-white">
           Got it. Thanks!
         </p>
-        <p className="mt-2 text-sm text-white/70">
+        <p className="mt-2 text-sm text-white/75">
           Your message is in my inbox — I read every one, and I’ll get back to
           you soon.
         </p>
@@ -37,13 +37,13 @@ export function ContactForm() {
     <form action={action} className="text-left">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block">
-          <span className="mb-1.5 block font-mono text-[0.68rem] uppercase tracking-[0.12em] text-white/50">
+          <span className="label-mono mb-1.5 block text-white/55">
             Name
           </span>
           <input name="name" required maxLength={200} className={field} />
         </label>
         <label className="block">
-          <span className="mb-1.5 block font-mono text-[0.68rem] uppercase tracking-[0.12em] text-white/50">
+          <span className="label-mono mb-1.5 block text-white/55">
             Email
           </span>
           <input
@@ -57,7 +57,7 @@ export function ContactForm() {
       </div>
 
       <label className="mt-4 block">
-        <span className="mb-1.5 block font-mono text-[0.68rem] uppercase tracking-[0.12em] text-white/50">
+        <span className="label-mono mb-1.5 block text-white/55">
           What’s this about?
         </span>
         <select name="topic" required className={field} defaultValue="">
@@ -71,7 +71,7 @@ export function ContactForm() {
       </label>
 
       <label className="mt-4 block">
-        <span className="mb-1.5 block font-mono text-[0.68rem] uppercase tracking-[0.12em] text-white/50">
+        <span className="label-mono mb-1.5 block text-white/55">
           Message
         </span>
         <textarea
@@ -100,10 +100,10 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={pending}
-        className="btn-pixel mt-6 inline-flex items-center gap-2 bg-white px-7 py-3 text-xs font-bold uppercase tracking-[0.06em] text-[var(--bg)] disabled:opacity-60"
+        className="btn btn-primary mt-6 disabled:opacity-60"
       >
         <PixelCells seed="send" variant="hover" cols={10} rows={3} spread={240} />
-        <span className="btn-pixel__label">{pending ? "Sending…" : "Send it"}</span>
+        <span className="btn__label">{pending ? "Sending…" : "Send it"}</span>
       </button>
     </form>
   );

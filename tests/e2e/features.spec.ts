@@ -30,7 +30,7 @@ test("resume link in the nav reaches the resume page", async ({ page }) => {
   await page.goto("/");
   await page
     .getByRole("navigation", { name: "Primary" })
-    .getByRole("link", { name: /resume/i })
+    .getByRole("link", { name: /r[ée]sum[ée]/i })
     .click();
   await expect(page).toHaveURL(/\/resume/);
 });
@@ -376,14 +376,13 @@ test("lifted headings ride the scroll", async ({ page }) => {
 });
 
 test("every stage piece finishes its entrance visible", async ({ page }) => {
-  // The floats are CHILDREN of the revealed card, hidden by
-  // .project-card.reveal-init [data-float] and shown when the card gains
-  // .is-revealed. The ghost sweep only checks .reveal-init elements
-  // themselves, so a broken handoff here would strand the artwork
-  // invisible while every other test stayed green.
+  // The stage art sits under the pixel-dissolve grid. The ghost sweep
+  // only checks .reveal-init elements themselves, so a broken dissolve
+  // would strand the artwork covered while every other test stayed
+  // green. Check the images themselves are painted.
   await gotoReady(page, "/");
-  const count = await page.locator("[data-float]").count();
-  expect(count, "stages carry float pieces").toBeGreaterThanOrEqual(10);
+  const count = await page.locator(".project-frame img").count();
+  expect(count, "stages carry art").toBeGreaterThanOrEqual(10);
   await page.evaluate(() =>
     document.getElementById("work")!.scrollIntoView({ behavior: "instant" }),
   );
@@ -394,10 +393,10 @@ test("every stage piece finishes its entrance visible", async ({ page }) => {
     .poll(
       async () =>
         page.evaluate(() =>
-          [...document.querySelectorAll<HTMLElement>("[data-float]")]
+          [...document.querySelectorAll<HTMLElement>(".project-frame img")]
             .filter((el) => parseFloat(getComputedStyle(el).opacity) < 0.9)
             .map(
-              (el) => el.dataset.float + ":" + (el.className || "").slice(0, 40),
+              (el) => (el.getAttribute("src") || "").slice(0, 40),
             ),
         ),
       { timeout: 6000 },

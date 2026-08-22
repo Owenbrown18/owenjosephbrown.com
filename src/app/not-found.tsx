@@ -14,10 +14,10 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="btn-pixel mt-8 inline-block border border-line px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-fg"
+        className="btn mt-8"
       >
         <PixelCells seed="back-home" variant="hover" cols={10} rows={3} spread={240} />
-        <span className="btn-pixel__label">Back home</span>
+        <span className="btn__label">Back home</span>
       </Link>
     </div>
   );

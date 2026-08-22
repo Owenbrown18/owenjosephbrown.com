@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 /*
- * OBdesign family tokens, single dark theme: the whole site lives on the
- * forest. Source of truth: the studio brand (Deep Forest / Sage / Fraunces
- * + Inter). Print flips to ink-on-paper for the resume.
+ * OBdesign family tokens on paper: ink and deep forest on #f4f3ef, with
+ * the studio's sage as the accent. Source of truth: the studio brand
+ * (Forest / Sage / Fraunces + Inter).
  */
 @theme inline {
   --color-forest: #0b1f1d;
@@ -36,8 +36,14 @@
 }
 
 :root {
-  /* Motion tokens: one family for the whole site. */
+  /* Motion tokens: one easing, four durations, one stagger unit. Every
+     transition and entrance on the site is built from these. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-fast: 0.16s;
+  --t: 0.32s;
+  --t-slow: 0.55s;
+  --t-page: 0.65s;
+  --stagger: 0.06s;
   --bg: #f4f3ef;
   --surface: #ebe9e3;
   --fg: rgba(15, 35, 32, 0.94);
@@ -144,7 +150,7 @@
     background-size: 100% 1.5px;
     background-position: 0 100%;
     background-repeat: no-repeat;
-    transition: background-size 0.25s ease;
+    transition: background-size var(--t-fast) ease;
     padding-bottom: 2px;
   }
   .link-underline:hover {
@@ -156,7 +162,7 @@
     border-top: 1px solid var(--line);
   }
 
-  /* The forest gradient, as a static fallback and page ground. */
+  /* The page ground under the field canvas; also the no-WebGL fallback. */
   .forest-ground {
     background-color: #f4f3ef;
   }
@@ -170,15 +176,23 @@
     margin-right: 0.2rem;
   }
 
-  /* Tech chips on experience entries. */
+  /* The one chip: stack tags on cards and anywhere else a tag appears. */
   .chip {
     display: inline-block;
-    border: 1px solid var(--line);
-    padding: 0.15rem 0.6rem;
+    border: 1px solid rgba(15, 35, 32, 0.15);
+    background: rgba(15, 35, 32, 0.03);
+    padding: 0.125rem 0.5rem;
     font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--fg-muted);
+    font-weight: 500;
+    color: rgba(15, 35, 32, 0.75);
+  }
+
+  /* The one small mono label: years, meta keys, stamps, form labels. */
+  .label-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
   }
 }
 
@@ -199,7 +213,7 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .sheet {
-    animation: sheet-rise 0.85s var(--ease-out) both;
+    animation: sheet-rise var(--t-page) var(--ease-out) both;
   }
   @keyframes sheet-rise {
     from {
@@ -306,8 +320,8 @@
     transform: scaleX(1);
     opacity: 1;
     transition:
-      transform 1s var(--ease-out) 0.1s,
-      opacity 0.5s ease-out 0.1s;
+      transform 0.7s var(--ease-out) 0.08s,
+      opacity var(--t) ease-out 0.08s;
   }
 }
 
@@ -339,8 +353,8 @@ h2.reveal-init,
 h3.reveal-init {
   opacity: 0;
   transform: translateY(16px);
-  --rv-o: 0.5s;
-  --rv-t: 0.65s;
+  --rv-o: 0.4s;
+  --rv-t: var(--t-slow);
 }
 
 /* Every hidden-state selector must stay at specificity (0,2,0) or below:
@@ -362,16 +376,16 @@ h3.reveal-init {
 :where(.prose-ob > table).reveal-init {
   opacity: 0;
   transform: translateY(12px);
-  --rv-o: 0.45s;
-  --rv-t: 0.55s;
+  --rv-o: var(--t);
+  --rv-t: 0.45s;
 }
 
 .anim-image.reveal-init,
 :where(.prose-ob img).reveal-init {
   opacity: 0;
   transform: translateY(18px) scale(1.015);
-  --rv-o: 0.55s;
-  --rv-t: 0.75s;
+  --rv-o: 0.45s;
+  --rv-t: 0.6s;
 }
 
 /* .lift transforms belong to the scroll driver. A transform transition
@@ -389,8 +403,8 @@ h3.reveal-init {
   opacity: 1;
   transform: none;
   transition:
-    opacity var(--rv-o, 0.45s) ease-out,
-    transform var(--rv-t, 0.55s) var(--ease-out);
+    opacity var(--rv-o, var(--t)) ease-out,
+    transform var(--rv-t, 0.45s) var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -412,7 +426,7 @@ h3.reveal-init {
 
 @media (prefers-reduced-motion: no-preference) {
   .hero-stage > * {
-    animation: hero-rise 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+    animation: hero-rise var(--t-page) var(--ease-out) both;
   }
   /* The name carries its own word-level entrance instead of arriving as
      one block, so hand it off to the children. */
@@ -422,7 +436,7 @@ h3.reveal-init {
   /* The echo fades in after the words have landed, so the entrance stays
      about the name and the misregistration reads as a settled detail. */
   .hero-echo {
-    animation: hero-echo-in 1.1s ease-out 0.75s both;
+    animation: hero-echo-in 0.8s ease-out 0.55s both;
   }
   @keyframes hero-echo-in {
     from {
@@ -434,13 +448,13 @@ h3.reveal-init {
   }
   .hero-word {
     display: inline-block;
-    animation: hero-word-rise 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: hero-word-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
   .hero-word:nth-child(1) {
-    animation-delay: 0.1s;
+    animation-delay: 0.08s;
   }
   .hero-word:nth-child(2) {
-    animation-delay: 0.22s;
+    animation-delay: 0.18s;
   }
   @keyframes hero-word-rise {
     from {
@@ -453,13 +467,13 @@ h3.reveal-init {
     }
   }
   .hero-stage > *:nth-child(2) {
-    animation-delay: 0.08s;
+    animation-delay: var(--stagger);
   }
   .hero-stage > *:nth-child(3) {
-    animation-delay: 0.16s;
+    animation-delay: calc(var(--stagger) * 2);
   }
   .hero-stage > *:nth-child(4) {
-    animation-delay: 0.24s;
+    animation-delay: calc(var(--stagger) * 3);
   }
   @keyframes hero-rise {
     from {
@@ -720,16 +734,6 @@ h3.reveal-init {
 }
 
 /* Resume */
-.resume-heading {
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-text);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 0.6rem;
-}
 
 @media print {
   :root {
@@ -798,8 +802,8 @@ h3.reveal-init {
   overflow: hidden;
   border: 1px solid rgba(15, 35, 32, 0.12);
   transition:
-    transform 0.45s var(--ease-out),
-    box-shadow 0.45s var(--ease-out);
+    transform var(--t) var(--ease-out),
+    box-shadow var(--t) var(--ease-out);
 }
 .project-card:hover .project-frame {
   transform: translateY(-4px) scale(1.006);
@@ -889,7 +893,7 @@ h3.reveal-init {
 .pixel-grid--hover .pixel-cell {
   background: var(--accent);
   opacity: 0;
-  transition: opacity 0.16s ease-out var(--d, 0ms);
+  transition: opacity 0.14s ease-out var(--d, 0ms);
 }
 .project-card:hover .pixel-grid--hover .pixel-cell {
   opacity: 1;
@@ -910,14 +914,14 @@ h3.reveal-init {
   opacity: 0;
   pointer-events: none;
   /* Arrives once the fill has mostly landed; leaves first on the way out. */
-  transition: opacity 0.25s var(--ease-out) 0.22s;
+  transition: opacity 0.22s var(--ease-out) 0.18s;
 }
 .project-card:not(:hover) .frame-veil {
   transition-delay: 0s;
 }
 .frame-veil__arrow {
   display: inline-block;
-  transition: transform 0.35s var(--ease-out);
+  transition: transform var(--t) var(--ease-out);
 }
 .project-card:hover .frame-veil {
   opacity: 1;
@@ -941,7 +945,7 @@ h3.reveal-init {
      pinned the hover fill to opacity 0. */
   .project-card.reveal-init.is-revealed .pixel-grid--reveal .pixel-cell {
     opacity: 0;
-    transition: opacity 0.32s ease-out var(--d, 0ms);
+    transition: opacity 0.28s ease-out var(--d, 0ms);
   }
   /* The card's text (number, name, chips, meta, blurb) follows the frame
      in a short cascade instead of arriving as one slab. */
@@ -950,8 +954,8 @@ h3.reveal-init {
   }
   .project-card.reveal-init.is-revealed > :not(.project-frame) {
     opacity: 1;
-    animation: rise-in 0.6s var(--ease-out) backwards;
-    animation-delay: calc(0.25s + var(--ci, 0) * 0.06s);
+    animation: rise-in 0.5s var(--ease-out) backwards;
+    animation-delay: calc(0.2s + var(--ci, 0) * var(--stagger));
   }
   .project-card > :nth-child(2) { --ci: 1; }
   .project-card > :nth-child(3) { --ci: 2; }
@@ -1174,9 +1178,9 @@ h3.reveal-init {
        the layer promoted, the idle float is transform-only and free. */
     will-change: transform, translate;
     animation:
-      cluster-pop 0.75s var(--ease-out) both,
+      cluster-pop 0.6s var(--ease-out) both,
       cluster-float 7s ease-in-out infinite;
-    animation-delay: calc(0.35s + var(--i) * 0.12s), calc(var(--i) * -1.3s);
+    animation-delay: calc(0.25s + var(--i) * 0.1s), calc(var(--i) * -1.3s);
   }
   .cluster-piece--phone {
     animation-name: cluster-pop, cluster-float-deep;
@@ -1220,13 +1224,13 @@ h3.reveal-init {
    --------------------------------------------------------------- */
 @media (prefers-reduced-motion: no-preference) {
   .nav-enter {
-    animation: nav-enter 0.6s var(--ease-out) both;
-    animation-delay: calc(0.08s + var(--nav-i, 0) * 0.06s);
+    animation: nav-enter 0.5s var(--ease-out) both;
+    animation-delay: calc(0.08s + var(--nav-i, 0) * var(--stagger));
   }
   .nav-enter .nav-rail-track {
     transform-origin: 0 50%;
-    animation: nav-track-draw 0.7s var(--ease-out) both;
-    animation-delay: calc(0.2s + var(--nav-i, 0) * 0.06s);
+    animation: nav-track-draw 0.6s var(--ease-out) both;
+    animation-delay: calc(0.15s + var(--nav-i, 0) * var(--stagger));
   }
   .nav-enter:nth-child(1) { --nav-i: 0; }
   .nav-enter:nth-child(2) { --nav-i: 1; }
@@ -1251,7 +1255,7 @@ h3.reveal-init {
     }
   }
   .hero-stamp {
-    animation: hero-rise 0.8s var(--ease-out) 1.15s both;
+    animation: hero-rise var(--t-page) var(--ease-out) 0.9s both;
   }
 }
 
@@ -1324,38 +1328,56 @@ h3.reveal-init {
    fill in with the accent on hover; the label flips to paper a beat
    later. Plain links get a hairline that draws in from the left.
    --------------------------------------------------------------- */
-.btn-pixel {
+/* Two buttons, one size. .btn is bordered, .btn-primary is solid ink;
+   both fill with the accent by pixel grid on hover/focus, label flipping
+   to paper a beat later. Every button on the site is one of these. */
+.btn {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   overflow: hidden;
   isolation: isolate;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  border: 1px solid rgba(15, 35, 32, 0.2);
+  background: rgba(15, 35, 32, 0.03);
+  color: rgba(15, 35, 32, 0.8);
   transition:
-    color 0.2s var(--ease-out) 0.08s,
-    border-color 0.2s var(--ease-out);
+    color var(--t-fast) var(--ease-out) 0.08s,
+    border-color var(--t-fast) var(--ease-out);
 }
-.btn-pixel > .pixel-grid {
+.btn-primary {
+  background: #0f2320;
+  border-color: #0f2320;
+  color: var(--bg);
+}
+.btn > .pixel-grid {
   inset: -1px;
   z-index: 0;
 }
-.btn-pixel__label {
+.btn__label {
   position: relative;
   z-index: 1;
 }
-.btn-pixel:hover,
-.btn-pixel:focus-visible {
+.btn:hover,
+.btn:focus-visible {
   color: var(--bg);
   border-color: var(--accent);
 }
-.btn-pixel:hover .pixel-grid--hover .pixel-cell,
-.btn-pixel:focus-visible .pixel-grid--hover .pixel-cell {
+.btn:hover .pixel-grid--hover .pixel-cell,
+.btn:focus-visible .pixel-grid--hover .pixel-cell {
   opacity: 1;
 }
-.btn-pixel .pixel-grid--hover .pixel-cell {
+.btn .pixel-grid--hover .pixel-cell {
   transition-duration: 0.12s;
 }
 
 .link-draw {
   position: relative;
-  transition: color 0.2s var(--ease-out);
+  transition: color var(--t-fast) var(--ease-out);
 }
 .link-draw::after {
   content: "";
@@ -1367,7 +1389,7 @@ h3.reveal-init {
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: 0 50%;
-  transition: transform 0.3s var(--ease-out);
+  transition: transform var(--t) var(--ease-out);
 }
 .link-draw:hover,
 .link-draw:focus-visible {

@@ -79,21 +79,21 @@ export function ProjectCard({
         {tags.map((t) => (
           <span
             key={t}
-            className="border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.7rem] font-medium text-white/72"
+            className="chip"
           >
             {t}
           </span>
         ))}
       </div>
 
-      <div className="mt-3 flex items-baseline justify-between border-t border-white/15 pt-3 font-mono text-[0.7rem] uppercase tracking-[0.1em] text-white/40">
+      <div className="label-mono mt-3 flex items-baseline justify-between border-t border-white/15 pt-3 text-white/40">
         <span>{year}</span>
         <span className="transition-colors group-hover:text-sage">
           {linkLabel}
         </span>
       </div>
 
-      <p className="mt-3 text-sm leading-relaxed text-white/72">{blurb}</p>
+      <p className="mt-3 text-sm leading-relaxed text-white/75">{blurb}</p>
     </Link>
   );
 }
@@ -107,7 +107,6 @@ export function Shot({
   alt,
   className,
   sizes,
-  dataFloat,
   chrome = false,
   priority = false,
 }: {
@@ -116,16 +115,13 @@ export function Shot({
   className: string;
   /** Must match the shot's real rendered width, not the frame's. */
   sizes: string;
-  /** Order in the stage's entrance stagger; also the hover-depth group. */
-  dataFloat?: number;
   /** Adds a slim title bar with traffic dots, for captures of bare UI. */
   chrome?: boolean;
   priority?: boolean;
 }) {
   return (
     <div
-      data-float={dataFloat}
-      className={`absolute overflow-hidden border border-white/14 shadow-[0_2px_6px_-2px_rgba(15,35,32,0.12),0_22px_45px_-16px_rgba(15,35,32,0.35)] ${chrome ? "shot-chrome" : ""} ${className}`}
+      className={`absolute overflow-hidden border border-white/15 shadow-[0_2px_6px_-2px_rgba(15,35,32,0.12),0_22px_45px_-16px_rgba(15,35,32,0.35)] ${chrome ? "shot-chrome" : ""} ${className}`}
     >
       {chrome ? (
         <Image
