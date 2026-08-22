@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PixelCells } from "@/components/pixel-cells";
 
 export default function NotFound() {
   return (
@@ -13,9 +14,10 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="mt-8 inline-block border border-line px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-fg transition-colors hover:border-fg"
+        className="btn-pixel mt-8 inline-block border border-line px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-fg"
       >
-        Back home
+        <PixelCells seed="back-home" variant="hover" cols={10} rows={3} spread={240} />
+        <span className="btn-pixel__label">Back home</span>
       </Link>
     </div>
   );

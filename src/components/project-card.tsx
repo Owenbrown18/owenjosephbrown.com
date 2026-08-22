@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { PixelCells } from "@/components/pixel-cells";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -48,8 +49,8 @@ export function ProjectCard({
     >
       <div className={`project-frame ${frameClass} ${tone}`}>
         {children}
-        <PixelGrid seed={title} variant="reveal" />
-        <PixelGrid seed={title} variant="hover" />
+        <PixelCells seed={title} variant="reveal" />
+        <PixelCells seed={title} variant="hover" />
         <span aria-hidden className="frame-veil">
           View
           <span className="frame-veil__arrow">↗</span>
@@ -94,59 +95,6 @@ export function ProjectCard({
 
       <p className="mt-3 text-sm leading-relaxed text-white/72">{blurb}</p>
     </Link>
-  );
-}
-
-const PIXEL_COLS = 10;
-const PIXEL_ROWS = 6;
-
-function seeded(seed: string) {
-  let h = 2166136261;
-  for (const ch of seed) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
-  return () => {
-    h = Math.imul(h ^ (h >>> 15), 2246822507);
-    h = Math.imul(h ^ (h >>> 13), 3266489909);
-    return ((h ^= h >>> 16) >>> 0) / 4294967296;
-  };
-}
-
-/**
- * The card's entrance: a grid of paper cells over the art that dissolve
- * away in a random order when the card reveals — the site's grid, once
- * more, as the thing the work emerges from. Only rendered over the art
- * once JS has armed the reveal; with no script the art is simply there.
- */
-function PixelGrid({
-  seed,
-  variant,
-}: {
-  seed: string;
-  /** reveal: paper cells dissolve off the art on scroll-in.
-   *  hover:  accent cells fill in over the art on hover, same motion. */
-  variant: "reveal" | "hover";
-}) {
-  const rand = seeded(seed + variant);
-  const spread = variant === "reveal" ? 520 : 300;
-  const cells = Array.from({ length: PIXEL_COLS * PIXEL_ROWS }, (_, i) => (
-    <span
-      key={i}
-      className="pixel-cell"
-      style={{ "--d": `${Math.round(rand() * spread)}ms` } as React.CSSProperties}
-    />
-  ));
-  return (
-    <span
-      aria-hidden
-      className={`pixel-grid pixel-grid--${variant}`}
-      style={
-        {
-          "--cols": PIXEL_COLS,
-          "--rows": PIXEL_ROWS,
-        } as React.CSSProperties
-      }
-    >
-      {cells}
-    </span>
   );
 }
 

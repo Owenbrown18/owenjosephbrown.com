@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { sendContact, type ContactState } from "@/app/contact-action";
+import { PixelCells } from "@/components/pixel-cells";
 
 const initial: ContactState = { status: "idle" };
 
@@ -99,9 +100,10 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-6 inline-flex items-center gap-2 bg-white px-7 py-3 text-xs font-bold uppercase tracking-[0.06em] text-[var(--bg)] transition-transform duration-200 hover:-translate-y-0.5 disabled:opacity-60"
+        className="btn-pixel mt-6 inline-flex items-center gap-2 bg-white px-7 py-3 text-xs font-bold uppercase tracking-[0.06em] text-[var(--bg)] disabled:opacity-60"
       >
-        {pending ? "Sending…" : "Send it"}
+        <PixelCells seed="send" variant="hover" cols={10} rows={3} spread={240} />
+        <span className="btn-pixel__label">{pending ? "Sending…" : "Send it"}</span>
       </button>
     </form>
   );

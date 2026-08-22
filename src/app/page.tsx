@@ -15,6 +15,7 @@ import { PhoneFrame } from "@/components/phone-frame";
 import { LaptopFrame } from "@/components/device-frames";
 import { LocalTime } from "@/components/local-time";
 import { ContactForm } from "@/components/contact-form";
+import { PixelCells } from "@/components/pixel-cells";
 import { identity } from "@/lib/resume-data";
 import { getWorkEntries } from "@/lib/content";
 
@@ -245,18 +246,24 @@ export default function HomePage() {
                   key={l.label}
                   href={l.href}
                   rel="me noopener"
-                  className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75 transition-colors hover:border-sage hover:text-white"
+                  className="btn-pixel inline-flex items-center gap-2 border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75"
                 >
-                  {l.icon}
-                  {l.label}
+                  <PixelCells seed={l.label} variant="hover" cols={9} rows={3} spread={240} />
+                  <span className="btn-pixel__label inline-flex items-center gap-2">
+                    {l.icon}
+                    {l.label}
+                  </span>
                 </a>
               ))}
               <Link
                 href="/resume"
-                className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75 transition-colors hover:border-sage hover:text-white"
+                className="btn-pixel inline-flex items-center gap-2 border border-white/20 bg-white/[0.03] px-4 py-2 text-sm text-white/75"
               >
-                Résumé
-                <ArrowUpRightIcon />
+                <PixelCells seed="Résumé" variant="hover" cols={9} rows={3} spread={240} />
+                <span className="btn-pixel__label inline-flex items-center gap-2">
+                  Résumé
+                  <ArrowUpRightIcon />
+                </span>
               </Link>
             </div>
           </div>
@@ -375,7 +382,7 @@ export default function HomePage() {
               year="2025 – present"
               tags={["Next.js", "Astro", "Keystatic", "Vercel"]}
               blurb="My one-person web studio. Ten live sites for businesses around BC, all custom-coded, each one editable by the owner without calling me."
-              linkLabel="View the studio"
+              linkLabel="View OBdesign"
               tone="frame-studio"
             >
               <div aria-hidden className="studio-stack absolute inset-0">
@@ -518,7 +525,7 @@ export default function HomePage() {
             <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-4">
             <a
               href={`mailto:${identity.email}`}
-              className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
+              className="link-draw inline-flex items-center gap-2 text-sm text-white/70"
             >
               <MailIcon />
               Email
@@ -526,7 +533,7 @@ export default function HomePage() {
             <a
               href={identity.github}
               rel="me noopener"
-              className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
+              className="link-draw inline-flex items-center gap-2 text-sm text-white/70"
             >
               <GitHubIcon />
               GitHub
@@ -534,7 +541,7 @@ export default function HomePage() {
             <a
               href={identity.linkedin}
               rel="me noopener"
-              className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
+              className="link-draw inline-flex items-center gap-2 text-sm text-white/70"
             >
               <LinkedInIcon />
               LinkedIn
@@ -542,7 +549,7 @@ export default function HomePage() {
             <a
               href="https://www.obwebdesign.ca"
               rel="noopener"
-              className="inline-flex items-center gap-1.5 text-sm text-white/70 transition-colors hover:text-white"
+              className="link-draw inline-flex items-center gap-1.5 text-sm text-white/70"
             >
               <ObdesignWordmark className="text-base" />
               <ArrowUpRightIcon />

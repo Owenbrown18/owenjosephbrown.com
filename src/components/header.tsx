@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { PixelCells } from "@/components/pixel-cells";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -114,9 +115,10 @@ export function Header() {
           ))}
           <Link
             href="/resume"
-            className="my-auto shrink-0 border border-white/20 px-4 py-1.5 text-[13px] text-white/80 transition-colors hover:border-sage hover:text-white"
+            className="btn-pixel my-auto shrink-0 border border-white/20 px-4 py-1.5 text-[13px] text-white/80"
           >
-            resume
+            <PixelCells seed="nav-resume" variant="hover" cols={8} rows={3} spread={220} />
+            <span className="btn-pixel__label">resume</span>
           </Link>
         </nav>
 
@@ -159,9 +161,10 @@ export function Header() {
           <Link
             href="/resume"
             onClick={() => setOpen(false)}
-            className="mt-4 block border border-white/25 py-3 text-center text-sm text-white/90"
+            className="btn-pixel mt-4 block border border-white/25 py-3 text-center text-sm text-white/90"
           >
-            resume
+            <PixelCells seed="sheet-resume" variant="hover" cols={14} rows={3} spread={240} />
+            <span className="btn-pixel__label">resume</span>
           </Link>
         </nav>
       </div>

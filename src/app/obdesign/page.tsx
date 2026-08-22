@@ -5,7 +5,7 @@ import { clientSites } from "@/lib/sites";
 import { PageHeader } from "@/components/page-header";
 
 export const metadata: Metadata = {
-  title: "OBdesign — the studio",
+  title: "OBdesign",
   description:
     "10+ production websites for BC businesses, every one custom-coded and client-editable. The studio side of Owen Brown.",
 };

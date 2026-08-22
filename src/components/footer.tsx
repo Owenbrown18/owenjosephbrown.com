@@ -12,7 +12,7 @@ import { identity } from "@/lib/resume-data";
 
 const colHead =
   "font-mono text-[0.68rem] uppercase tracking-[0.14em] text-fg-faint";
-const colLink = "text-sm text-fg-muted transition-colors hover:text-fg";
+const colLink = "text-sm text-fg-muted link-draw";
 
 /**
  * The footer as a site index: three columns — pages, elsewhere, the work
@@ -35,7 +35,7 @@ export function Footer() {
             ["Contact", "/#contact"],
             ["Résumé", "/resume"],
           ].map(([label, href]) => (
-            <Link key={href} href={href} className={`block ${colLink}`}>
+            <Link key={href} href={href} className={`block w-fit ${colLink}`}>
               {label}
             </Link>
           ))}
@@ -45,7 +45,7 @@ export function Footer() {
           <p className={colHead}>Elsewhere</p>
           <a
             href={`mailto:${identity.email}`}
-            className={`flex items-center gap-2 ${colLink}`}
+            className={`flex w-fit items-center gap-2 ${colLink}`}
           >
             <MailIcon className="h-3.5 w-3.5" />
             {identity.email}
@@ -53,7 +53,7 @@ export function Footer() {
           <a
             href={identity.github}
             rel="me noopener"
-            className={`flex items-center gap-2 ${colLink}`}
+            className={`flex w-fit items-center gap-2 ${colLink}`}
           >
             <GitHubIcon className="h-3.5 w-3.5" />
             GitHub
@@ -61,7 +61,7 @@ export function Footer() {
           <a
             href={identity.linkedin}
             rel="me noopener"
-            className={`flex items-center gap-2 ${colLink}`}
+            className={`flex w-fit items-center gap-2 ${colLink}`}
           >
             <LinkedInIcon className="h-3.5 w-3.5" />
             LinkedIn
@@ -69,7 +69,7 @@ export function Footer() {
           <a
             href="https://www.obwebdesign.ca"
             rel="noopener"
-            className={`flex items-center gap-1.5 ${colLink}`}
+            className={`flex w-fit items-center gap-1.5 ${colLink}`}
           >
             <ObdesignWordmark />
             <ArrowUpRightIcon />
@@ -78,14 +78,14 @@ export function Footer() {
 
         <nav aria-label="Work" className="space-y-3">
           <p className={colHead}>Work</p>
-          <Link href="/obdesign" className={`block ${colLink}`}>
-            OBdesign, the studio
+          <Link href="/obdesign" className={`block w-fit ${colLink}`}>
+            OBdesign
           </Link>
           {projects.map((e) => (
             <Link
               key={e.slug}
               href={`/work/${e.slug}`}
-              className={`block ${colLink}`}
+              className={`block w-fit ${colLink}`}
             >
               {e.title}
             </Link>

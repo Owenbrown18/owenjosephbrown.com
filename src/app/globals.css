@@ -1318,3 +1318,62 @@ h3.reveal-init {
     will-change: transform;
   }
 }
+
+/* ---------------------------------------------------------------
+   Buttons: the card's fill, contained. Cells sit behind the label and
+   fill in with the accent on hover; the label flips to paper a beat
+   later. Plain links get a hairline that draws in from the left.
+   --------------------------------------------------------------- */
+.btn-pixel {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    color 0.2s var(--ease-out) 0.08s,
+    border-color 0.2s var(--ease-out);
+}
+.btn-pixel > .pixel-grid {
+  inset: -1px;
+  z-index: 0;
+}
+.btn-pixel__label {
+  position: relative;
+  z-index: 1;
+}
+.btn-pixel:hover,
+.btn-pixel:focus-visible {
+  color: var(--bg);
+  border-color: var(--accent);
+}
+.btn-pixel:hover .pixel-grid--hover .pixel-cell,
+.btn-pixel:focus-visible .pixel-grid--hover .pixel-cell {
+  opacity: 1;
+}
+.btn-pixel .pixel-grid--hover .pixel-cell {
+  transition-duration: 0.12s;
+}
+
+.link-draw {
+  position: relative;
+  transition: color 0.2s var(--ease-out);
+}
+.link-draw::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.3s var(--ease-out);
+}
+.link-draw:hover,
+.link-draw:focus-visible {
+  color: var(--fg);
+}
+.link-draw:hover::after,
+.link-draw:focus-visible::after {
+  transform: scaleX(1);
+}
