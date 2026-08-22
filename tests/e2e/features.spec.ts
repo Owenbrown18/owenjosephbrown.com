@@ -178,8 +178,9 @@ test("every section heading takes part in the reveal system", async ({
   // "Let's talk" and others were silently missed. The selector is
   // structural now; this stops it drifting again.
   for (const path of ["/", "/obdesign", "/work/grain"]) {
-    await page.goto(path);
-    await page.waitForTimeout(400);
+    // gotoReady, not a fixed wait: arming happens on the frame after
+    // hydration, and CI WebKit hydrates slower than any sleep guesses.
+    await gotoReady(page, path);
     const untagged = await page.evaluate(() =>
       [...document.querySelectorAll("main h2, main h3")]
         .filter((h) => !h.closest(".hero-stage"))
