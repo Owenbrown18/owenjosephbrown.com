@@ -95,6 +95,32 @@ export const education = {
   location: "Victoria, BC",
   detail:
     "Current term: operating systems (CSC 360), software architecture (SENG 350), security engineering (SENG 360)",
+  // From the transcript, software- and systems-relevant only. Course
+  // names and codes; no grades, ever — a résumé lists what was studied.
+  coursework: {
+    completed: [
+      "CSC 110/115 · Fundamentals of Programming I & II",
+      "CSC 225/226 · Algorithms & Data Structures I & II",
+      "CSC 230 · Computer Architecture",
+      "CSC 320 · Foundations of Computer Science",
+      "CSC 370 · Database Systems",
+      "SENG 265 · Software Development Methods",
+      "SENG 275 · Software Testing",
+      "SENG 310 · Human–Computer Interaction",
+      "SENG 321 · Requirements Engineering",
+      "SENG 371 · Software Evolution",
+      "ECE 363 · Communication Networks",
+      "STAT 260 · Probability & Statistics",
+      "ENGR 112/121 · Engineering Design I & II",
+      "ENGR 240 · Technical Writing",
+    ],
+    inProgress: [
+      "CSC 360 · Operating Systems",
+      "SENG 350 · Software Architecture & Design",
+      "SENG 360 · Security Engineering",
+      "ECE 265 · Signals & Systems",
+    ],
+  },
 } as const;
 
 export const skills = [

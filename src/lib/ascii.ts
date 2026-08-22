@@ -96,6 +96,22 @@ export function renderAsciiResume({ color = true } = {}): string {
   section("Education");
   out.push(`${c(BOLD)}${education.org}${c(RESET)} · ${education.credential}`);
   out.push(`${c(DIM)}${education.period}${c(RESET)}`);
+  out.push(`${c(DIM)}Coursework${c(RESET)}`);
+  out.push(
+    wrap(
+      education.coursework.completed.map((x) => x.split(" · ")[1]).join(", "),
+      68, // wrap() does not count the indent; 68 + 2 stays inside 72
+      "  ",
+    ),
+  );
+  out.push(`${c(DIM)}In progress${c(RESET)}`);
+  out.push(
+    wrap(
+      education.coursework.inProgress.map((x) => x.split(" · ")[1]).join(", "),
+      68, // wrap() does not count the indent; 68 + 2 stays inside 72
+      "  ",
+    ),
+  );
   out.push("");
 
   section("Skills");

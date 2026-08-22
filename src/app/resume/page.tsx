@@ -29,6 +29,7 @@ function Entry({
   link,
   bullets,
   detail,
+  extra,
 }: {
   period: string;
   location: string;
@@ -37,6 +38,7 @@ function Entry({
   link?: string;
   bullets?: readonly string[];
   detail?: string;
+  extra?: React.ReactNode;
 }) {
   return (
     <article className="reveal-up grid gap-2 border-t border-line py-7 md:grid-cols-[11rem_1fr] md:gap-10">
@@ -71,8 +73,25 @@ function Entry({
             ))}
           </ul>
         )}
+        {extra}
       </div>
     </article>
+  );
+}
+
+/** A labelled row of chips: the coursework lists under Education. */
+function ChipRow({ label, items }: { label: string; items: readonly string[] }) {
+  return (
+    <div className="mt-5">
+      <p className="label-mono text-fg-faint">{label}</p>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {items.map((item) => (
+          <span key={item} className="chip">
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -208,7 +227,18 @@ export default function ResumePage() {
               location={education.location}
               title={education.org}
               subtitle={education.credential}
-              detail={education.detail}
+              extra={
+                <>
+                  <ChipRow
+                    label="Relevant coursework"
+                    items={education.coursework.completed}
+                  />
+                  <ChipRow
+                    label="In progress · Sep–Dec 2026"
+                    items={education.coursework.inProgress}
+                  />
+                </>
+              }
             />
           </div>
         </section>

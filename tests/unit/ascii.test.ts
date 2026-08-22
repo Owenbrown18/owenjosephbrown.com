@@ -12,6 +12,7 @@ describe("ascii resume", () => {
     expect(out).toContain("SKILLS");
     expect(out).toContain("OBdesign");
     expect(out).toContain("grain");
+    expect(out).toContain("Operating Systems");
     expect(out).toContain("University of Victoria");
     expect(out).toContain("Spring 2027");
   });

@@ -112,6 +112,19 @@ test("resume page carries identity and a route to the document", async ({
   const pdf = page.getByRole("link", { name: /pdf/i }).first();
   await expect(pdf).toBeVisible();
   await expect(pdf).toHaveAttribute("target", "_blank");
+  // Coursework comes from the transcript as names and codes — never grades.
+  await expect(page.getByText(/relevant coursework/i)).toBeVisible();
+  expect(
+    await page.locator("article .chip").count(),
+    "coursework chips",
+  ).toBeGreaterThanOrEqual(12);
+  // No chip carries a percentage or a trailing letter grade.
+  const graded = await page.evaluate(() =>
+    [...document.querySelectorAll("article .chip")]
+      .map((c) => c.textContent?.trim() ?? "")
+      .filter((t) => /%/.test(t) || /\s[A-F][+-]?$/.test(t)),
+  );
+  expect(graded, "coursework chips never carry grades").toEqual([]);
 });
 
 test.describe("mobile", () => {
