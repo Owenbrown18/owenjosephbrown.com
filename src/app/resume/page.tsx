@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import Image from "next/image";
-import Link from "next/link";
 import {
   education,
   experience,
@@ -12,6 +11,7 @@ import {
 } from "@/lib/resume-data";
 import { PixelCells } from "@/components/pixel-cells";
 import { Words } from "@/components/words";
+import { ExploreMore } from "@/components/explore-more";
 import {
   ArrowUpRightIcon,
   GitHubIcon,
@@ -276,16 +276,10 @@ export default function ResumePage() {
               </section>
             )}
 
-            <p className="mt-14 text-sm text-fg-faint">
-              The work itself is on{" "}
-              <Link href="/#work" className="link-underline text-fg">
-                the work section
-              </Link>
-              , and every line here is traceable to something you can go look at.
-            </p>
           </div>
         </div>
       </div>
+      <ExploreMore />
     </div>
   );
 }

@@ -574,3 +574,32 @@ test("case studies share one animated masthead and cascade their pieces", async 
   expect(steps.length).toBeGreaterThan(2);
   expect(steps).toEqual(steps.map((_, i) => String(i)));
 });
+
+
+test("a client-side hop into a case study reveals nothing early", async ({
+  page,
+}) => {
+  // The bug: the new route armed while the document still sat at the
+  // landing page's scroll offset, revealing whatever was "in view" there,
+  // and only then scrolled to the top — so below-fold content was already
+  // done by the time the reader reached it. Direct loads never showed it.
+  await gotoReady(page, "/");
+  await page.evaluate(() =>
+    document.getElementById("work")!.scrollIntoView({ behavior: "instant" }),
+  );
+  await page.waitForTimeout(600);
+  await page.locator(".project-card").nth(1).click();
+  await page.waitForURL(/\/work\//, { timeout: 10000 });
+  await expect
+    .poll(() => page.locator(".reveal-init").count(), { timeout: 10000 })
+    .toBeGreaterThan(0);
+  await page.waitForTimeout(1200);
+  const state = await page.evaluate(() => ({
+    scrollY: Math.round(scrollY),
+    belowFoldRevealed: [...document.querySelectorAll(".reveal-init.is-revealed")].filter(
+      (e) => e.getBoundingClientRect().top > innerHeight,
+    ).length,
+  }));
+  expect(state.scrollY, "landed at the top").toBe(0);
+  expect(state.belowFoldRevealed, "below-fold elements revealed early").toBe(0);
+});

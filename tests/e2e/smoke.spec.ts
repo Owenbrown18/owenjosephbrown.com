@@ -50,7 +50,13 @@ test("404 page renders for unknown routes", async ({ page }) => {
 
 test("studio page links through to a case study", async ({ page }) => {
   await page.goto("/obdesign");
-  await page.getByRole("link", { name: "Grain Construction →" }).click();
+  // The studio page hands off through its Explore more tiles, the same
+  // block every case study ends on.
+  await page
+    .locator('[aria-labelledby="explore-heading"]')
+    .getByRole("link", { name: /grain construction/i })
+    .first()
+    .click();
   // Navigation under a full three-browser run (and on a 2-core CI runner)
   // can outlast the 5s default; the assertion is about arriving, not speed.
   await expect(page).toHaveURL(/\/work\/grain-construction/, { timeout: 15000 });

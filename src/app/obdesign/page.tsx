@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { clientSites } from "@/lib/sites";
 import { PixelCells } from "@/components/pixel-cells";
+import { ExploreMore } from "@/components/explore-more";
 import { PageHeader } from "@/components/page-header";
 
 export const metadata: Metadata = {
@@ -114,26 +115,8 @@ export default function ObdesignPage() {
         ))}
       </div>
 
-      <div className="mt-20 border-t border-line pt-10">
-        <p className="max-w-[52ch] text-fg-muted">
-          Three of these builds have full engineering write-ups: the problem,
-          the decisions, and what happened after launch.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-x-8 gap-y-3">
-          {clientSites
-            .filter((s) => s.caseStudy)
-            .map((s) => (
-              <Link
-                key={s.slug}
-                href={s.caseStudy!}
-                className="link-underline font-display text-lg font-bold text-fg"
-              >
-                {s.name} →
-              </Link>
-            ))}
-        </div>
       </div>
-      </div>
+      <ExploreMore />
     </div>
   );
 }

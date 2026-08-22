@@ -15,7 +15,7 @@ const tone: Record<string, string> = {
   leadgen: "frame-leadgen",
 };
 
-export function ExploreMore({ currentSlug }: { currentSlug: string }) {
+export function ExploreMore({ currentSlug }: { currentSlug?: string }) {
   const others = getWorkEntries()
     .filter((e) => e.slug !== currentSlug)
     .slice(0, 4);

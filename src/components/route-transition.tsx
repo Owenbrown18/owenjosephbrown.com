@@ -13,12 +13,24 @@ import { usePathname, useRouter } from "next/navigation";
  */
 const EXIT_MS = 160;
 
+/** Set when this component drove the navigation to a page (no hash), so
+ *  the new route is scrolled to the top the instant it commits. The
+ *  router does this too, but a frame or more later — after the reveal
+ *  system has already judged what is "in view" at the stale offset,
+ *  which revealed below-fold content early on every client-side hop. */
+let pendingTop = false;
+
 export function RouteTransition() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // A new route has committed: clear the leaving state.
+  // A new route has committed: land it at the top if we drove the hop,
+  // then clear the leaving state.
   useEffect(() => {
+    if (pendingTop) {
+      pendingTop = false;
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
     delete document.documentElement.dataset.leaving;
   }, [pathname]);
 
@@ -38,6 +50,7 @@ export function RouteTransition() {
       e.preventDefault();
       document.documentElement.dataset.leaving = "1";
       window.setTimeout(() => {
+        pendingTop = !url.hash;
         router.push(url.pathname + url.search + url.hash);
       }, EXIT_MS);
     };
