@@ -512,9 +512,13 @@ h3.reveal-init {
   }
 }
 
-/* Client-site screenshot marquee */
+/* Client-site screenshot marquee. Clips only sideways: the laptop frames
+   cast shadows below themselves, and a both-axis overflow:hidden cut them
+   off in a hard horizontal line. Vertical padding gives the shadow room. */
 .marquee {
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
+  padding-block: 1.25rem 2.75rem;
   -webkit-mask-image: linear-gradient(
     to right,
     transparent,
@@ -885,16 +889,41 @@ h3.reveal-init {
    frame rises in a short cascade. Hover: the frame washes to the accent
    with VIEW centred, the way the reference does it, and lifts 4px. */
 .pixel-grid {
-  display: none;
   position: absolute;
   inset: -1px;
-  z-index: 20;
+  display: grid;
   grid-template-columns: repeat(var(--cols), 1fr);
   grid-template-rows: repeat(var(--rows), 1fr);
   pointer-events: none;
 }
-.pixel-cell {
+/* Reveal grid: paper cells over the art, only once JS has armed. */
+.pixel-grid--reveal {
+  display: none;
+  z-index: 20;
+}
+.pixel-grid--reveal .pixel-cell {
   background: var(--bg);
+  opacity: 1;
+}
+/* Cells overlap their neighbours by a hair: fractional grid tracks leave
+   sub-pixel seams between adjacent opaque cells where the art peeks
+   through, and a solid fill has to read solid. */
+.pixel-grid .pixel-cell {
+  transform: scale(1.05);
+}
+/* Hover grid: the same cells in the accent, filling in over the art
+   when you hover and dissolving back off when you leave — the reveal
+   motion run the other way, the way the reference does it. Each cell
+   keeps its own seeded delay in both directions. */
+.pixel-grid--hover {
+  z-index: 25;
+}
+.pixel-grid--hover .pixel-cell {
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.16s ease-out var(--d, 0ms);
+}
+.project-card:hover .pixel-grid--hover .pixel-cell {
   opacity: 1;
 }
 .frame-veil {
@@ -905,7 +934,6 @@ h3.reveal-init {
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  background: var(--accent);
   color: #f4f3ef;
   font-family: var(--font-body);
   font-size: 1.05rem;
@@ -913,7 +941,11 @@ h3.reveal-init {
   letter-spacing: 0.01em;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.35s var(--ease-out);
+  /* Arrives once the fill has mostly landed; leaves first on the way out. */
+  transition: opacity 0.25s var(--ease-out) 0.22s;
+}
+.project-card:not(:hover) .frame-veil {
+  transition-delay: 0s;
 }
 .frame-veil__arrow {
   display: inline-block;
@@ -933,10 +965,13 @@ h3.reveal-init {
     opacity: 1;
     transform: none;
   }
-  .project-card.reveal-init .pixel-grid {
+  .project-card.reveal-init .pixel-grid--reveal {
     display: grid;
   }
-  .project-card.reveal-init.is-revealed .pixel-cell {
+  /* Scoped to the reveal grid: an unscoped .pixel-cell here matched the
+     hover grid too, at equal specificity and later in the file, and
+     pinned the hover fill to opacity 0. */
+  .project-card.reveal-init.is-revealed .pixel-grid--reveal .pixel-cell {
     opacity: 0;
     transition: opacity 0.32s ease-out var(--d, 0ms);
   }

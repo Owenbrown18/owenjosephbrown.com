@@ -114,6 +114,18 @@ export function ScrollMotion() {
         });
       }
 
+      // The device cluster is plain parallax: it drifts at a different
+      // rate than the page so the hero reads as two depths, but it never
+      // fades (Owen's call — the objects should stay objects).
+      for (const el of document.querySelectorAll<HTMLElement>(".hero-drift")) {
+        job({
+          compute: (y, vh) => clamp01(y / vh),
+          apply: (t) => {
+            el.style.transform = `translateY(${(-22 * t).toFixed(3)}%)`;
+          },
+        });
+      }
+
       // Section headings rise slightly slower than the page: 28px of
       // travel across the first ~45% of the element's pass through the
       // viewport.

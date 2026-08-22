@@ -266,7 +266,7 @@ export default function HomePage() {
               Loosely circular, allowed to overlap, floating idle. */}
           <div
             aria-hidden
-            className="hero-cluster hero-parallax relative mx-auto w-full max-w-[420px] lg:max-w-none"
+            className="hero-cluster hero-drift relative mx-auto w-full max-w-[420px] lg:max-w-none"
           >
             <span className="hero-cluster__glow" />
             <div className="cluster-piece absolute left-0 top-[4%] w-[62%]" style={{ "--i": 1 } as React.CSSProperties}>
@@ -436,7 +436,10 @@ export default function HomePage() {
       <SectionRule num="03" />
       <section id="about" className="section-pad relative">
         <div className="container-site">
-          <div className="reveal-up lift flex items-end justify-between gap-6">
+          {/* Same 64rem measure as the photo-and-text grid below, so the
+              heading's left edge lines up with the photo and the 03 sits on
+              the grid's right edge rather than out at the page edge. */}
+          <div className="reveal-up lift mx-auto flex max-w-[64rem] items-end justify-between gap-6">
             <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               About me<span className="text-sage">.</span>
             </h2>

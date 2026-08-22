@@ -48,7 +48,8 @@ export function ProjectCard({
     >
       <div className={`project-frame ${frameClass} ${tone}`}>
         {children}
-        <PixelGrid seed={title} />
+        <PixelGrid seed={title} variant="reveal" />
+        <PixelGrid seed={title} variant="hover" />
         <span aria-hidden className="frame-veil">
           View
           <span className="frame-veil__arrow">↗</span>
@@ -115,19 +116,28 @@ function seeded(seed: string) {
  * more, as the thing the work emerges from. Only rendered over the art
  * once JS has armed the reveal; with no script the art is simply there.
  */
-function PixelGrid({ seed }: { seed: string }) {
-  const rand = seeded(seed);
+function PixelGrid({
+  seed,
+  variant,
+}: {
+  seed: string;
+  /** reveal: paper cells dissolve off the art on scroll-in.
+   *  hover:  accent cells fill in over the art on hover, same motion. */
+  variant: "reveal" | "hover";
+}) {
+  const rand = seeded(seed + variant);
+  const spread = variant === "reveal" ? 520 : 300;
   const cells = Array.from({ length: PIXEL_COLS * PIXEL_ROWS }, (_, i) => (
     <span
       key={i}
       className="pixel-cell"
-      style={{ "--d": `${Math.round(rand() * 520)}ms` } as React.CSSProperties}
+      style={{ "--d": `${Math.round(rand() * spread)}ms` } as React.CSSProperties}
     />
   ));
   return (
     <span
       aria-hidden
-      className="pixel-grid"
+      className={`pixel-grid pixel-grid--${variant}`}
       style={
         {
           "--cols": PIXEL_COLS,
