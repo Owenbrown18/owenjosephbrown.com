@@ -1,6 +1,7 @@
 import { ForestCanvas } from "@/components/forest-canvas";
 import { Reveal } from "@/components/reveal";
 import { ScrollMotion } from "@/components/scroll-motion";
+import { OffscreenPause } from "@/components/offscreen-pause";
 
 /**
  * The site's ground: the live forest field, the grain, and the scroll
@@ -14,9 +15,9 @@ export function Atmosphere() {
       <div aria-hidden className="forest-ground fixed inset-0 -z-10">
         <ForestCanvas />
       </div>
-      <div aria-hidden className="grain" />
       <Reveal />
       <ScrollMotion />
+      <OffscreenPause />
     </>
   );
 }

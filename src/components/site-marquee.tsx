@@ -19,8 +19,11 @@ function Half({ hidden = false }: { hidden?: boolean }) {
           tabIndex={hidden ? -1 : undefined}
           className="marquee-card group"
         >
-          <div className="w-[260px] sm:w-[320px]">
-            <LaptopFrame url={site.url.replace(/^https?:\/\//, "")}>
+          <div className="marquee-laptop">
+            <LaptopFrame
+              size="mini"
+              url={site.url.replace(/^https?:\/\//, "")}
+            >
               <Image
                 src={`/images/work/${site.slug}.webp`}
                 alt={hidden ? "" : `${site.name} website`}
@@ -42,7 +45,12 @@ function Half({ hidden = false }: { hidden?: boolean }) {
 
 export function SiteMarquee() {
   return (
-    <div className="marquee" role="group" aria-label="Client websites">
+    <div
+      className="marquee"
+      role="group"
+      aria-label="Client websites"
+      data-pause-offscreen
+    >
       <div className="marquee-track">
         <Half />
         <Half hidden />

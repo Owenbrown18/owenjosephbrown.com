@@ -97,8 +97,8 @@ export function ProjectCard({
   );
 }
 
-const PIXEL_COLS = 12;
-const PIXEL_ROWS = 8;
+const PIXEL_COLS = 10;
+const PIXEL_ROWS = 6;
 
 function seeded(seed: string) {
   let h = 2166136261;

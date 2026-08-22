@@ -9,12 +9,15 @@ import type { ReactNode } from "react";
 export function LaptopFrame({
   url,
   children,
+  size = "full",
 }: {
   url: string;
   children: ReactNode;
+  /** mini: the carousel's scaled-down metrics, ported from TrustStrip. */
+  size?: "full" | "mini";
 }) {
   return (
-    <div className="laptop-frame">
+    <div className={`laptop-frame${size === "mini" ? " laptop-frame--mini" : ""}`}>
       <div className="laptop-frame__screen">
         <div className="laptop-frame__bar">
           <span className="laptop-frame__dots" aria-hidden>

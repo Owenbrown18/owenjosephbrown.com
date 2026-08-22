@@ -94,6 +94,10 @@ void main() {
     col -= ink * major * w * (0.150 + 0.105 * spot);
   }
 
+  // Paper grain, baked in here instead of a separate fixed overlay: one
+  // less full-screen layer for the compositor to blend every scrolled
+  // frame, and one less always-running animation. Static by design.
+  col -= (hash(gl_FragCoord.xy * 0.73) - 0.5) * 0.075;
   // Dither to kill banding on the flat ground.
   col += (hash(gl_FragCoord.xy) - 0.5) / 255.0;
 

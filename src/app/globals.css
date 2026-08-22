@@ -219,45 +219,6 @@
   margin-left: calc(50% - 50vw);
 }
 
-/* Film grain. An inline feTurbulence data URI, so it costs zero network
-   requests and rasterises once. Kept low enough to feel like paper stock
-   rather than an effect. */
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  /* Plain alpha, not multiply: a blend mode on a fixed full-viewport
-     layer makes the compositor re-blend the whole screen every scrolled
-     frame, which is where Safari's scroll chop came from. */
-  opacity: 0.07;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .grain {
-    /* Stepped, not smooth: discrete jumps read as film, a smooth slide
-       reads as a texture sliding around. Transform-only, so it stays on
-       the compositor. */
-    animation: grain-shift 6s steps(8, end) infinite;
-  }
-  @keyframes grain-shift {
-    0% {
-      transform: translate(-4%, -6%);
-    }
-    50% {
-      transform: translate(-8%, -2%);
-    }
-    100% {
-      transform: translate(-4%, -6%);
-    }
-  }
-  .grain {
-    /* oversize so the drift never exposes an edge */
-    inset: -10%;
-  }
-}
-
 /* One padding value for every section, so the rhythm down the page is
    even and the breaks all get the same air. */
 .section-pad {
@@ -518,7 +479,7 @@ h3.reveal-init {
 .marquee {
   overflow-x: clip;
   overflow-y: visible;
-  padding-block: 1.25rem 2.75rem;
+  padding-block: 1rem 3rem;
   -webkit-mask-image: linear-gradient(
     to right,
     transparent,
@@ -543,8 +504,15 @@ h3.reveal-init {
   display: flex;
 }
 .marquee-card {
-  margin-right: 1.25rem;
+  /* Margin, not flex gap, so both halves are identical and the wrap is
+     clean. Wide enough that the laptop bases (112% of the screen) never
+     touch their neighbours — at 1.25rem they fused into one long bar. */
+  margin-right: clamp(2rem, 4vw, 3.5rem);
   flex-shrink: 0;
+  padding: 0.25rem 0 0;
+}
+.marquee-laptop {
+  width: clamp(200px, 22vw, 280px);
 }
 @keyframes marquee-scroll {
   to {
@@ -1287,3 +1255,66 @@ h3.reveal-init {
   }
 }
 
+
+/* The carousel's mini laptop: the hero frame scaled down, metrics from
+   the OBdesign TrustStrip. */
+.laptop-frame--mini .laptop-frame__screen {
+  border-radius: 0.45rem 0.45rem 0.15rem 0.15rem;
+  padding: 0.3rem 0.3rem 0;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.25),
+    0 18px 32px -18px rgba(11, 31, 29, 0.35);
+}
+.laptop-frame--mini .laptop-frame__bar {
+  gap: 0.4rem;
+  padding: 0.3rem 0.45rem;
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+.laptop-frame--mini .laptop-frame__dots {
+  gap: 0.2rem;
+}
+.laptop-frame--mini .laptop-frame__dots span {
+  width: 0.32rem;
+  height: 0.32rem;
+}
+.laptop-frame--mini .laptop-frame__url {
+  gap: 0.25rem;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.56rem;
+  letter-spacing: 0.01em;
+}
+.laptop-frame--mini .laptop-frame__lock {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+.laptop-frame--mini .laptop-frame__view {
+  border-radius: 0 0 0.12rem 0.12rem;
+}
+.laptop-frame--mini .laptop-frame__base {
+  height: 0.6rem;
+  box-shadow: 0 10px 16px -8px rgba(0, 0, 0, 0.45);
+}
+.laptop-frame--mini .laptop-frame__notch {
+  height: 0.22rem;
+}
+
+/* Continuous animations pause while their section is off-screen (set by
+   OffscreenPause). The compositor otherwise pays for them every frame of
+   the whole visit. */
+[data-offscreen] .cluster-piece,
+.marquee[data-offscreen] .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Elements the scroll driver writes to every frame get their own layer,
+   so a transform or opacity write composites instead of repainting the
+   hero text (or a heading) on every scrolled frame. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-parallax {
+    will-change: transform, opacity;
+  }
+  .hero-drift,
+  .lift {
+    will-change: transform;
+  }
+}

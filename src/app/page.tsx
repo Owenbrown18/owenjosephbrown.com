@@ -267,6 +267,7 @@ export default function HomePage() {
           <div
             aria-hidden
             className="hero-cluster hero-drift relative mx-auto w-full max-w-[420px] lg:max-w-none"
+            data-pause-offscreen
           >
             <span className="hero-cluster__glow" />
             <div className="cluster-piece absolute left-0 top-[4%] w-[62%]" style={{ "--i": 1 } as React.CSSProperties}>
