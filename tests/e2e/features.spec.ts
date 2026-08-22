@@ -458,3 +458,69 @@ test("footer indexes every project page", async ({ page }) => {
     ).toHaveCount(1);
   }
 });
+
+
+// Reveals must play where the eye is. Earlier the trigger fired 12% before
+// an element entered the viewport, so a 0.3s reveal had finished by the time
+// it was visible — every "is it visible eventually" test stayed green while
+// the motion itself was never seen. This pins the trigger to in-view.
+test("reveals wait until their element is actually in view", async ({
+  page,
+}) => {
+  await gotoReady(page, "/resume");
+  // Nothing below the fold is revealed on a fresh load at the top.
+  const early = await page.evaluate(() =>
+    [...document.querySelectorAll(".reveal-init.is-revealed")].filter(
+      (e) => e.getBoundingClientRect().top > innerHeight,
+    ).length,
+  );
+  expect(early, "below-fold elements revealed at load").toBe(0);
+
+  // Park an entry just below the viewport: still not revealed.
+  const parked = await page.evaluate(() => {
+    const el = [...document.querySelectorAll<HTMLElement>(".resume-entry")].find(
+      (e) => e.getBoundingClientRect().top > innerHeight,
+    )!;
+    const target = el.getBoundingClientRect().top + scrollY - innerHeight - 40;
+    window.scrollTo({ top: target, behavior: "instant" });
+    return el.className.includes("is-revealed");
+  });
+  await page.waitForTimeout(500);
+  expect(parked).toBe(false);
+
+  // Bring it 15% into view: now it reveals.
+  await page.evaluate(() => window.scrollBy({ top: innerHeight * 0.15 + 40, behavior: "instant" }));
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
+          const els = [...document.querySelectorAll<HTMLElement>(".resume-entry")];
+          const inView = els.find((e) => {
+            const r = e.getBoundingClientRect();
+            return r.top < innerHeight * 0.9 && r.bottom > 0;
+          });
+          return inView?.classList.contains("is-revealed") ?? null;
+        }),
+      { timeout: 4000 },
+    )
+    .toBe(true);
+});
+
+test("a lazy image reveals only once it has loaded", async ({ page }) => {
+  await gotoReady(page, "/");
+  await page.evaluate(() =>
+    document.getElementById("about")!.scrollIntoView({ behavior: "instant" }),
+  );
+  // When the reveal lands, the image must already be complete: the pop
+  // plays on the picture, not on an empty box that snaps in later.
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
+          const img = document.querySelector<HTMLImageElement>("#about img.anim-image")!;
+          return img.classList.contains("is-revealed") ? img.complete : null;
+        }),
+      { timeout: 8000 },
+    )
+    .toBe(true);
+});

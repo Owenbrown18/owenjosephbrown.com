@@ -426,7 +426,7 @@ export default function HomePage() {
         {/* Every client site, not just the four in the studio card. The
             index shows depth; this shows breadth. */}
         <div className="mt-20 sm:mt-24">
-          <p className="container-site eyebrow">
+          <p className="container-site eyebrow reveal-up">
             Ten live sites, and counting
           </p>
           <div className="mt-6">
@@ -453,7 +453,9 @@ export default function HomePage() {
               at the far left with the text starting a column later and
               nothing on the right. The pair now reads as one composition. */}
           <div className="mx-auto mt-14 grid max-w-[64rem] items-center gap-14 md:grid-cols-[minmax(260px,360px)_1fr] md:gap-16">
-            <div className="reveal-up relative max-w-[380px]">
+            {/* The photo pops on its own (anim-image); no second reveal on
+                the wrapper, which stacked a rise on top of the pop. */}
+            <div className="relative max-w-[380px]">
               <Image
                 src="/images/about/owen-brown.jpg"
                 sizes="(min-width: 768px) 380px, 100vw"
@@ -505,19 +507,19 @@ export default function HomePage() {
       <section id="contact" className="section-pad relative overflow-hidden">
         <div className="container-site relative grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
           <div>
-            <p className="eyebrow !text-sage">04 · Contact</p>
+            <p className="eyebrow reveal-up !text-sage">04 · Contact</p>
             <h2 className="anim-heading mt-5 max-w-[16ch] text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               Let’s talk.
             </h2>
-            <p className="mt-5 max-w-[44ch] text-white/75">
+            <p className="reveal-up mt-5 max-w-[44ch] text-white/75">
               If you’re hiring for a co-op, or you just want to know how
               something on here works, write me. I’ll get back to you.
             </p>
 
-            <p className="mt-10 label-mono text-white/75">
+            <p className="reveal-up mt-10 label-mono text-white/75">
               Or find me here
             </p>
-            <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <div className="reveal-up mt-4 flex flex-wrap items-center gap-x-6 gap-y-4">
             <a
               href={`mailto:${identity.email}`}
               className="link-draw inline-flex items-center gap-2 text-sm text-white/75"
