@@ -1450,3 +1450,36 @@ h3.reveal-init {
   overflow: hidden;
   border: 1px solid rgba(15, 35, 32, 0.12);
 }
+
+/* ---------------------------------------------------------------
+   Résumé: the rail gets a hairline beside it on wide screens, and each
+   entry's bullets cascade in one after another once the entry reveals.
+   --------------------------------------------------------------- */
+@media (min-width: 1024px) {
+  .resume-rail {
+    border-right: 1px solid var(--line);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .resume-entry.reveal-init li {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .resume-entry.reveal-init.is-revealed li {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--t) ease-out,
+      transform 0.45s var(--ease-out);
+    transition-delay: calc(0.1s + var(--li, 0) * var(--stagger));
+  }
+}
+@media print {
+  .resume-body {
+    display: block;
+  }
+  .resume-rail {
+    border-right: 0;
+    margin-bottom: 1.5rem;
+  }
+}

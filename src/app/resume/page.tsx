@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import Image from "next/image";
 import Link from "next/link";
-import { education, experience, identity, projects, skills } from "@/lib/resume-data";
-import { PageHeader } from "@/components/page-header";
+import {
+  education,
+  experience,
+  identity,
+  projects,
+  skills,
+} from "@/lib/resume-data";
 import { PixelCells } from "@/components/pixel-cells";
 import {
   ArrowUpRightIcon,
@@ -20,69 +26,78 @@ export const metadata: Metadata = {
 
 const PDF = "/owen-brown-resume.pdf";
 
-/** One résumé entry: period and place on the left, the substance on the right. */
+/**
+ * One résumé entry, role first: the role in bold, org · place under it,
+ * the period right-aligned in mono, then the bullets. Each bullet carries
+ * its index so the reveal can cascade them one after another.
+ */
 function Entry({
-  period,
+  role,
+  org,
   location,
-  title,
-  subtitle,
+  period,
   link,
   bullets,
   detail,
-  extra,
 }: {
-  period: string;
+  role: string;
+  org: string;
   location: string;
-  title: string;
-  subtitle: string;
+  period: string;
   link?: string;
   bullets?: readonly string[];
   detail?: string;
-  extra?: React.ReactNode;
 }) {
   return (
-    <article className="reveal-up grid gap-2 border-t border-line py-7 md:grid-cols-[11rem_1fr] md:gap-10">
-      <div>
+    <article className="resume-entry reveal-up border-t border-line py-7">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+        <div>
+          <h3 className="font-display text-xl font-bold text-fg">{role}</h3>
+          <p className="mt-0.5 text-sm text-fg-muted">
+            {link ? (
+              <a href={link} rel="noopener" className="link-draw inline-flex items-center gap-1">
+                {org}
+                <ArrowUpRightIcon />
+              </a>
+            ) : (
+              org
+            )}
+            <span className="text-fg-faint"> · {location}</span>
+          </p>
+        </div>
         <p className="label-mono text-fg-faint">{period}</p>
-        <p className="mt-1 text-sm text-fg-faint">{location}</p>
       </div>
-      <div>
-        <h3 className="font-display text-xl font-bold text-fg">
-          {link ? (
-            <a
-              href={link}
-              rel="noopener"
-              className="link-draw inline-flex items-center gap-1.5"
+      {detail && <p className="mt-3 max-w-[60ch] text-sm text-fg-muted">{detail}</p>}
+      {bullets && (
+        <ul className="mt-4 space-y-1.5">
+          {bullets.map((b, i) => (
+            <li
+              key={b}
+              style={{ "--li": i } as React.CSSProperties}
+              className="flex gap-3 text-sm leading-relaxed text-fg-muted"
             >
-              {title}
-              <ArrowUpRightIcon />
-            </a>
-          ) : (
-            title
-          )}
-        </h3>
-        <p className="mt-0.5 text-sm text-fg-muted">{subtitle}</p>
-        {detail && <p className="mt-3 text-sm text-fg-muted">{detail}</p>}
-        {bullets && (
-          <ul className="mt-3 space-y-1.5">
-            {bullets.map((b) => (
-              <li key={b} className="flex gap-3 text-sm leading-relaxed text-fg-muted">
-                <span aria-hidden className="mt-[0.7em] h-px w-3 shrink-0 bg-sage" />
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-        {extra}
-      </div>
+              <span aria-hidden className="mt-[0.7em] h-px w-3 shrink-0 bg-sage" />
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </article>
   );
 }
 
-/** A labelled row of chips: the coursework lists under Education. */
+function RailHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="anim-heading text-[clamp(1.5rem,2.6vw,1.9rem)] text-fg">
+      {children}
+      <span className="text-sage">.</span>
+    </h2>
+  );
+}
+
 function ChipRow({ label, items }: { label: string; items: readonly string[] }) {
   return (
-    <div className="mt-5">
+    <div className="reveal-up mt-5">
       <p className="label-mono text-fg-faint">{label}</p>
       <div className="mt-2 flex flex-wrap gap-1.5">
         {items.map((item) => (
@@ -95,184 +110,169 @@ function ChipRow({ label, items }: { label: string; items: readonly string[] }) 
   );
 }
 
-function SectionHeading({ children }: { children: React.ReactNode }) {
+/** Square icon button: same .btn, icon only, name for assistive tech. */
+function IconButton({
+  href,
+  label,
+  children,
+}: {
+  href: string;
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
-    <h2 className="anim-heading text-[clamp(1.75rem,3.5vw,2.5rem)] text-fg">
-      {children}
-      <span className="text-sage">.</span>
-    </h2>
+    <a href={href} rel="me noopener" aria-label={label} className="btn !px-2.5">
+      <PixelCells seed={label} variant="hover" cols={4} rows={3} spread={180} />
+      <span className="btn__label inline-flex">{children}</span>
+    </a>
   );
 }
 
 export default function ResumePage() {
-  // Checked at build time: the PDF is optional, and the page is the
-  // résumé either way — it's real HTML now, not an embed.
+  // Checked at build time: the PDF is optional, the page is the résumé.
   const hasPdf = existsSync(join(process.cwd(), "public", PDF.slice(1)));
-  const work = experience;
+  const [first, ...rest] = identity.name.split(" ");
 
   return (
     <div className="container-site pb-24 pt-32 sm:pt-36">
-      <div className="sheet resume-sheet">
-        <PageHeader
-          eyebrow="Résumé"
-          title={identity.name}
-          summary={`${identity.title} · ${identity.location}. Seeking ${identity.seeking}.`}
-          meta={[
-            {
-              label: "Email",
-              wide: true,
-              value: (
-                <a
-                  href={`mailto:${identity.email}`}
-                  className="link-underline inline-flex items-center gap-2 text-fg"
-                >
-                  <MailIcon className="h-3.5 w-3.5" />
-                  {identity.email}
+      <div className="sheet sheet-wide">
+        {/* Masthead: photo, name, the pitch, the actions. */}
+        <header className="grid items-center gap-8 sm:grid-cols-[9rem_1fr] sm:gap-12">
+          <Image
+            src="/images/about/owen-brown.jpg"
+            alt="Owen Brown"
+            width={288}
+            height={288}
+            priority
+            sizes="144px"
+            className="aspect-square w-36 rounded-full border border-line object-cover object-top print:w-28"
+          />
+          <div>
+            <p className="eyebrow">Résumé</p>
+            <h1 className="anim-heading mt-3 text-[clamp(2.75rem,6vw,4.5rem)] text-fg">
+              {first} <span className="text-sage">{rest.join(" ")}</span>
+            </h1>
+            <p className="mt-4 max-w-[60ch] text-[1.05rem] leading-relaxed text-fg-muted">
+              {identity.title} · {identity.location}. Seeking {identity.seeking}.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-2 print:hidden">
+              {hasPdf && (
+                <a href={PDF} target="_blank" rel="noopener" className="btn">
+                  <PixelCells seed="resume-pdf" variant="hover" cols={10} rows={3} spread={240} />
+                  <span className="btn__label inline-flex items-center gap-2">
+                    Open the PDF
+                    <ArrowUpRightIcon />
+                  </span>
                 </a>
-              ),
-            },
-            {
-              label: "GitHub",
-              value: (
-                <a
-                  href={identity.github}
-                  rel="me noopener"
-                  className="link-underline inline-flex items-center gap-2 text-fg"
-                >
-                  <GitHubIcon className="h-3.5 w-3.5" />
-                  Owenbrown18
-                </a>
-              ),
-            },
-            {
-              label: "LinkedIn",
-              value: (
-                <a
-                  href={identity.linkedin}
-                  rel="me noopener"
-                  className="link-underline inline-flex items-center gap-2 text-fg"
-                >
-                  <LinkedInIcon className="h-3.5 w-3.5" />
-                  owenbrown18
-                </a>
-              ),
-            },
-          ]}
-        />
-
-        {hasPdf && (
-          <p className="mt-8 print:hidden">
-            <a
-              href={PDF}
-              target="_blank"
-              rel="noopener"
-              className="btn"
-            >
-              <PixelCells seed="resume-pdf" variant="hover" cols={10} rows={3} spread={240} />
-              <span className="btn__label inline-flex items-center gap-2">
-                Open the PDF
-                <ArrowUpRightIcon />
-              </span>
-            </a>
-          </p>
-        )}
-
-        <section aria-labelledby="resume-experience" className="mt-16">
-          <SectionHeading>
-            <span id="resume-experience">Experience</span>
-          </SectionHeading>
-          <div className="mt-6">
-            {work.map((e) => (
-              <Entry
-                key={e.org}
-                period={e.period}
-                location={e.location}
-                title={e.org}
-                subtitle={e.role}
-                link={e.link}
-                bullets={e.bullets}
-              />
-            ))}
-          </div>
-        </section>
-
-        {projects.length > 0 && (
-          <section aria-labelledby="resume-projects" className="mt-16">
-            <SectionHeading>
-              <span id="resume-projects">Projects</span>
-            </SectionHeading>
-            <div className="mt-6">
-              {projects.map((e) => (
-                <Entry
-                  key={e.org}
-                  period={e.period}
-                  location={e.location}
-                  title={e.org}
-                  subtitle={e.role}
-                  link={e.link}
-                  bullets={e.bullets}
-                />
-              ))}
+              )}
+              <IconButton href={`mailto:${identity.email}`} label="Email Owen">
+                <MailIcon className="h-4 w-4" />
+              </IconButton>
+              <IconButton href={identity.github} label="GitHub">
+                <GitHubIcon className="h-4 w-4" />
+              </IconButton>
+              <IconButton href={identity.linkedin} label="LinkedIn">
+                <LinkedInIcon className="h-4 w-4" />
+              </IconButton>
             </div>
-          </section>
-        )}
-
-        <section aria-labelledby="resume-education" className="mt-16">
-          <SectionHeading>
-            <span id="resume-education">Education</span>
-          </SectionHeading>
-          <div className="mt-6">
-            <Entry
-              period={education.period}
-              location={education.location}
-              title={education.org}
-              subtitle={education.credential}
-              extra={
-                <>
-                  <ChipRow
-                    label="Relevant coursework"
-                    items={education.coursework.completed}
-                  />
-                  <ChipRow
-                    label="In progress · Sep–Dec 2026"
-                    items={education.coursework.inProgress}
-                  />
-                </>
-              }
-            />
+            {/* Print gets the plain contact line the buttons stand in for. */}
+            <p className="mt-3 hidden text-sm text-fg-muted print:block">
+              {identity.email} · {identity.github.replace("https://", "")} ·{" "}
+              {identity.linkedin.replace("https://www.", "")}
+            </p>
           </div>
-        </section>
+        </header>
 
-        <section aria-labelledby="resume-skills" className="mt-16">
-          <SectionHeading>
-            <span id="resume-skills">Skills</span>
-          </SectionHeading>
-          <dl className="mt-6 border-t border-line">
-            {skills.map((group) => (
-              <div
-                key={group.label}
-                className="reveal-up grid gap-2 border-b border-line py-5 md:grid-cols-[11rem_1fr] md:gap-10"
-              >
-                <dt className="label-mono text-fg-faint">{group.label}</dt>
-                <dd className="flex flex-wrap gap-1.5">
-                  {group.items.split(", ").map((item) => (
-                    <span key={item} className="chip">
-                      {item}
-                    </span>
-                  ))}
-                </dd>
+        {/* Body: a rail for education and skills, the record on the right. */}
+        <div className="resume-body mt-16 grid gap-14 lg:grid-cols-[19rem_1fr] lg:gap-14">
+          <aside className="resume-rail lg:pr-10">
+            <section aria-labelledby="resume-education">
+              <RailHeading>
+                <span id="resume-education">Education</span>
+              </RailHeading>
+              <div className="reveal-up mt-5 border-t border-line pt-5">
+                <h3 className="font-display text-lg font-bold text-fg">
+                  {education.credential}
+                </h3>
+                <p className="mt-0.5 text-sm text-fg-muted">{education.org}</p>
+                <p className="label-mono mt-1.5 text-fg-faint">{education.period}</p>
               </div>
-            ))}
-          </dl>
-        </section>
+              <ChipRow
+                label="Relevant coursework"
+                items={education.coursework.completed}
+              />
+              <ChipRow
+                label="In progress · Sep–Dec 2026"
+                items={education.coursework.inProgress}
+              />
+            </section>
 
-        <p className="mt-16 text-sm text-fg-faint">
-          The work itself is on{" "}
-          <Link href="/#work" className="link-underline text-fg">
-            the work section
-          </Link>
-          , and every line here is traceable to something you can go look at.
-        </p>
+            <section aria-labelledby="resume-skills" className="mt-14">
+              <RailHeading>
+                <span id="resume-skills">Skills</span>
+              </RailHeading>
+              <div className="mt-1 border-t border-line">
+                {skills.map((group) => (
+                  <ChipRow
+                    key={group.label}
+                    label={group.label}
+                    items={group.items.split(", ")}
+                  />
+                ))}
+              </div>
+            </section>
+          </aside>
+
+          <div className="min-w-0">
+            <section aria-labelledby="resume-experience">
+              <RailHeading>
+                <span id="resume-experience">Experience</span>
+              </RailHeading>
+              <div className="mt-5">
+                {experience.map((e) => (
+                  <Entry
+                    key={e.org + e.period}
+                    role={e.role}
+                    org={e.org}
+                    location={e.location}
+                    period={e.period}
+                    link={e.link}
+                    bullets={e.bullets}
+                  />
+                ))}
+              </div>
+            </section>
+
+            {projects.length > 0 && (
+              <section aria-labelledby="resume-projects" className="mt-14">
+                <RailHeading>
+                  <span id="resume-projects">Projects</span>
+                </RailHeading>
+                <div className="mt-5">
+                  {projects.map((e) => (
+                    <Entry
+                      key={e.org}
+                      role={e.role}
+                      org={e.org}
+                      location={e.location}
+                      period={e.period}
+                      link={e.link}
+                      bullets={e.bullets}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <p className="mt-14 text-sm text-fg-faint">
+              The work itself is on{" "}
+              <Link href="/#work" className="link-underline text-fg">
+                the work section
+              </Link>
+              , and every line here is traceable to something you can go look at.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

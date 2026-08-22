@@ -114,13 +114,14 @@ test("resume page carries identity and a route to the document", async ({
   await expect(pdf).toHaveAttribute("target", "_blank");
   // Coursework comes from the transcript as names and codes — never grades.
   await expect(page.getByText(/relevant coursework/i)).toBeVisible();
+  // Coursework and skills chips live in the rail, not inside the entries.
   expect(
-    await page.locator("article .chip").count(),
+    await page.locator("main .chip").count(),
     "coursework chips",
   ).toBeGreaterThanOrEqual(12);
   // No chip carries a percentage or a trailing letter grade.
   const graded = await page.evaluate(() =>
-    [...document.querySelectorAll("article .chip")]
+    [...document.querySelectorAll("main .chip")]
       .map((c) => c.textContent?.trim() ?? "")
       .filter((t) => /%/.test(t) || /\s[A-F][+-]?$/.test(t)),
   );
