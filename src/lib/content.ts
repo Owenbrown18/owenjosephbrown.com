@@ -20,6 +20,9 @@ export const workFrontmatter = z.object({
   // A looping video hero, for work whose whole point is an interaction a
   // still frame can't show. `hero` is its poster frame when set.
   heroVideo: z.string().optional(),
+  // A still for index tiles when the hero is a video poster that says
+  // nothing on its own (Whispr's is an empty editor).
+  thumb: z.string().optional(),
   downloadUrl: z.string().url().optional(),
   downloadLabel: z.string().optional(),
   order: z.number().int(),

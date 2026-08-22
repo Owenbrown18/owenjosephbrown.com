@@ -798,7 +798,10 @@ h3.reveal-init {
    and carry their own shadows. */
 .project-frame {
   position: relative;
-  aspect-ratio: 4 / 3;
+  /* No aspect-ratio here: this rule is unlayered and would beat the
+     per-project aspect-[...] utility on the element, which is exactly
+     what happened — every frame rendered 4/3 regardless. The utility
+     (default aspect-[4/3] from ProjectCard) owns the ratio. */
   overflow: hidden;
   border: 1px solid rgba(15, 35, 32, 0.12);
   transition:
@@ -987,29 +990,29 @@ h3.reveal-init {
 }
 .studio-stack > :nth-child(1) {
   left: 5%;
-  top: 9%;
-  width: 66%;
+  top: 8%;
+  width: 60%;
   aspect-ratio: 16 / 10;
   z-index: 3;
 }
 .studio-stack > :nth-child(2) {
   right: 4%;
   top: 5%;
-  width: 45%;
+  width: 41%;
   aspect-ratio: 16 / 10;
   z-index: 4;
 }
 .studio-stack > :nth-child(3) {
-  left: 13%;
-  bottom: 7%;
-  width: 41%;
+  left: 12%;
+  bottom: 6%;
+  width: 37%;
   aspect-ratio: 16 / 10;
   z-index: 5;
 }
 .studio-stack > :nth-child(4) {
   right: 6%;
-  bottom: 11%;
-  width: 35%;
+  bottom: 9%;
+  width: 32%;
   aspect-ratio: 16 / 10;
   z-index: 2;
 }
@@ -1398,4 +1401,31 @@ h3.reveal-init {
 .link-draw:hover::after,
 .link-draw:focus-visible::after {
   transform: scaleX(1);
+}
+
+/* Explore-more tiles at the foot of a case study: the project's hero on
+   its stage tone, same pixel-fill + View hover as the work cards. */
+.explore-tile__frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid rgba(15, 35, 32, 0.12);
+}
+.explore-tile__frame img {
+  transition: transform var(--t-slow) var(--ease-out);
+}
+.explore-tile:hover .explore-tile__frame img {
+  transform: scale(1.03);
+}
+.explore-tile:hover .frame-veil,
+.explore-tile:focus-visible .frame-veil {
+  opacity: 1;
+}
+.explore-tile:hover .frame-veil__arrow {
+  transform: translate(3px, -3px);
+}
+.explore-tile:hover .pixel-grid--hover .pixel-cell,
+.explore-tile:focus-visible .pixel-grid--hover .pixel-cell {
+  opacity: 1;
 }

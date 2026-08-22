@@ -51,11 +51,11 @@ const compositions: Record<
   { frame: string; tone: string; art: ReactNode }
 > = {
   grain: {
-    frame: "aspect-[5/4]",
+    frame: "aspect-[16/11]",
     tone: "frame-grain",
     art: (
       <>
-        <div className="absolute bottom-[-8%] left-[6%] w-[27%] -rotate-2">
+        <div className="absolute bottom-[-8%] left-[7%] w-[24%] -rotate-2">
           <PhoneFrame>
             <Image
               src="/images/grain/home_roll.webp"
@@ -67,7 +67,7 @@ const compositions: Record<
             />
           </PhoneFrame>
         </div>
-        <div className="absolute bottom-[6%] left-[37%] z-10 w-[29%]">
+        <div className="absolute bottom-[5%] left-[38%] z-10 w-[26%]">
           <PhoneFrame>
             <Image
               src="/images/grain/new_roll_qr.webp"
@@ -79,7 +79,7 @@ const compositions: Record<
             />
           </PhoneFrame>
         </div>
-        <div className="absolute bottom-[-6%] right-[7%] w-[25%] rotate-2">
+        <div className="absolute bottom-[-6%] right-[8%] w-[22%] rotate-2">
           <PhoneFrame>
             <Image
               src="/images/grain/waiting.webp"
@@ -95,7 +95,7 @@ const compositions: Record<
     ),
   },
   whispr: {
-    frame: "aspect-[16/11]",
+    frame: "aspect-[16/9]",
     tone: "frame-whispr",
     art: (
       <>
@@ -142,7 +142,7 @@ const compositions: Record<
     ),
   },
   leadgen: {
-    frame: "aspect-[4/3]",
+    frame: "aspect-[16/10]",
     tone: "frame-leadgen",
     art: (
       <>
@@ -376,6 +376,7 @@ export default function HomePage() {
               year="2025 – present"
               tags={["Next.js", "Astro", "Keystatic", "Vercel"]}
               blurb="My one-person web studio. Ten live sites for businesses around BC, all custom-coded, each one editable by the owner without calling me."
+                frameClass="aspect-[16/10]"
               linkLabel="View OBdesign"
               tone="frame-studio"
             >

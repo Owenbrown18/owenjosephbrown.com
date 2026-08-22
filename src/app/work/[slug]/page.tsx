@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Mdx } from "@/components/mdx";
 import { getWorkEntries, getWorkEntry, kindLabel } from "@/lib/content";
 import { PageHeader } from "@/components/page-header";
+import { ExploreMore } from "@/components/explore-more";
 
 type Params = { slug: string };
 
@@ -36,9 +36,6 @@ export default async function WorkEntryPage({
   const entry = getWorkEntry(slug);
   if (!entry) notFound();
 
-  const entries = getWorkEntries();
-  const index = entries.findIndex((e) => e.slug === entry.slug);
-  const next = entries[(index + 1) % entries.length];
 
   return (
     <article className="container-site pb-24 pt-32 sm:pt-36">
@@ -137,27 +134,8 @@ export default async function WorkEntryPage({
         <Mdx source={entry.body} />
       </div>
 
-      <nav
-        aria-label="More work"
-        className="mt-20 flex items-center justify-between border-t border-line pt-8"
-      >
-        <Link
-          href={entry.kind === "client" ? "/obdesign" : "/#work"}
-          className="text-sm text-fg-faint hover:text-fg"
-        >
-          {entry.kind === "client" ? "← The studio" : "← My work"}
-        </Link>
-        <Link
-          href={`/work/${next.slug}`}
-          className="group text-right"
-        >
-          <span className="block text-xs text-fg-faint">Next</span>
-          <span className="link-underline font-display text-xl font-bold text-fg">
-            {next.title}
-          </span>
-        </Link>
-      </nav>
       </div>
+      <ExploreMore currentSlug={entry.slug} />
     </article>
   );
 }
