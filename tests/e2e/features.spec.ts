@@ -312,7 +312,9 @@ test("section rules draw in on arrival, stay put once drawn", async ({
     .toBeGreaterThan(0.99);
 });
 
-test("hero departs across the first viewport of scroll", async ({ page }) => {
+test("hero drifts across the first viewport of scroll, and does not fade", async ({
+  page,
+}) => {
   await gotoReady(page, "/");
   const hero = () =>
     page.evaluate(() => {
@@ -328,13 +330,13 @@ test("hero departs across the first viewport of scroll", async ({ page }) => {
   await page.evaluate(() =>
     window.scrollTo({ top: window.innerHeight * 1.2, behavior: "instant" }),
   );
-  // The chase eases over ~90ms per step on a Mac; a throttled runner
-  // needs longer, so poll for the settled state rather than sampling once.
+  // Parallax only: the copy drifts up (Owen's call — no fade on the hero,
+  // same as the device cluster). Poll for the eased drift to land.
   await expect
-    .poll(async () => (await hero()).opacity, { timeout: 5000 })
-    .toBeLessThan(0.3);
-  const departed = await hero();
-  expect(departed.y, "hero drifts up").toBeLessThan(top.y);
+    .poll(async () => (await hero()).y, { timeout: 5000 })
+    .toBeLessThan(top.y - 20);
+  const drifted = await hero();
+  expect(drifted.opacity, "hero never fades").toBeGreaterThan(0.95);
 });
 
 test("lifted headings ride the scroll", async ({ page }) => {

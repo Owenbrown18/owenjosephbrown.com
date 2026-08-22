@@ -925,6 +925,10 @@ h3.reveal-init {
 .stage:not(:hover) .frame-veil {
   transition-delay: 0s;
 }
+.frame-veil--sm {
+  font-size: 0.8rem;
+  gap: 0.3rem;
+}
 .frame-veil__arrow {
   display: inline-block;
   transition: transform var(--t) var(--ease-out);
@@ -1084,6 +1088,7 @@ h3.reveal-init {
   color: #7ba49e;
 }
 .laptop-frame__view {
+  position: relative;
   aspect-ratio: 16 / 10;
   overflow: hidden;
   background: #eae8e4;
@@ -1322,7 +1327,7 @@ h3.reveal-init {
    hero text (or a heading) on every scrolled frame. */
 @media (prefers-reduced-motion: no-preference) {
   .hero-parallax {
-    will-change: transform, opacity;
+    will-change: transform;
   }
   .hero-drift,
   .lift {

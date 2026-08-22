@@ -51,7 +51,9 @@ test("404 page renders for unknown routes", async ({ page }) => {
 test("studio page links through to a case study", async ({ page }) => {
   await page.goto("/obdesign");
   await page.getByRole("link", { name: "Grain Construction →" }).click();
-  await expect(page).toHaveURL(/\/work\/grain-construction/);
+  // Navigation under a full three-browser run (and on a 2-core CI runner)
+  // can outlast the 5s default; the assertion is about arriving, not speed.
+  await expect(page).toHaveURL(/\/work\/grain-construction/, { timeout: 15000 });
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     /grain construction/i,
   );
@@ -60,5 +62,5 @@ test("studio page links through to a case study", async ({ page }) => {
 test("landing page reaches the studio page", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: /OBdesign/i }).first().click();
-  await expect(page).toHaveURL(/\/obdesign/);
+  await expect(page).toHaveURL(/\/obdesign/, { timeout: 15000 });
 });

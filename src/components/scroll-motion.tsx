@@ -100,8 +100,9 @@ export function ScrollMotion() {
     }
 
     if (!reduced) {
-      // The hero drifts up and dissolves across the first viewport of
-      // scroll. Pure scrollY math — no measurement needed.
+      // The hero copy drifts up across the first viewport of scroll — plain
+      // parallax, no fade (Owen's call, same as the cluster). Pure scrollY
+      // math, no measurement needed.
       for (const el of document.querySelectorAll<HTMLElement>(
         ".hero-parallax",
       )) {
@@ -109,7 +110,6 @@ export function ScrollMotion() {
           compute: (y, vh) => clamp01(y / vh),
           apply: (t) => {
             el.style.transform = `translateY(${(-12 * t).toFixed(3)}%)`;
-            el.style.opacity = (1 - 0.85 * t).toFixed(3);
           },
         });
       }

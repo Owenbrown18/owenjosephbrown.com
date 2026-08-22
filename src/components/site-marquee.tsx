@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { clientSites } from "@/lib/sites";
 import { LaptopFrame } from "@/components/device-frames";
+import { PixelCells } from "@/components/pixel-cells";
 
 /**
  * Looping strip of client-site screenshots. Two identical halves and a
@@ -13,11 +13,12 @@ function Half({ hidden = false }: { hidden?: boolean }) {
   return (
     <div aria-hidden={hidden} className="marquee-half">
       {clientSites.map((site) => (
-        <Link
+        <a
           key={site.slug}
-          href="/obdesign"
+          href={site.url}
+          rel="noopener"
           tabIndex={hidden ? -1 : undefined}
-          className="marquee-card group"
+          className="marquee-card stage group"
         >
           <div className="marquee-laptop">
             <LaptopFrame
@@ -30,14 +31,21 @@ function Half({ hidden = false }: { hidden?: boolean }) {
                 width={420}
                 height={263}
                 sizes="320px"
-                className="transition-transform duration-500 group-hover:scale-[1.03]"
               />
+              {/* The stage hover, inside the laptop screen: cells fill the
+                  viewport and the site's name lands over it. Same motion as
+                  every other tile on the site, no scale pop. */}
+              <PixelCells seed={site.name} variant="hover" cols={8} rows={5} spread={220} />
+              <span aria-hidden className="frame-veil frame-veil--sm">
+                View {site.name}
+                <span className="frame-veil__arrow">↗</span>
+              </span>
             </LaptopFrame>
           </div>
           <p className="mt-2 text-xs text-white/75 transition-colors group-hover:text-white">
             {site.name}
           </p>
-        </Link>
+        </a>
       ))}
     </div>
   );
