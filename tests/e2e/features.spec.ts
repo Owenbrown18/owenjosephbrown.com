@@ -524,3 +524,28 @@ test("a lazy image reveals only once it has loaded", async ({ page }) => {
     )
     .toBe(true);
 });
+
+
+test("word cascades land every word", async ({ page }) => {
+  // Paragraphs cascade word by word; a stuck word is invisible text, so
+  // assert every word reaches full opacity once its paragraph reveals.
+  await gotoReady(page, "/");
+  await page.evaluate(() =>
+    document.getElementById("about")!.scrollIntoView({ behavior: "instant" }),
+  );
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
+          const p = document.querySelector<HTMLElement>("#about p.words")!;
+          if (!p.classList.contains("is-revealed")) return null;
+          const ws = [...p.querySelectorAll<HTMLElement>(".w")];
+          return ws.length > 10 && ws.every((w) => parseFloat(getComputedStyle(w).opacity) > 0.95);
+        }),
+      { timeout: 8000 },
+    )
+    .toBe(true);
+  // The hero pitch cascades on load too.
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  expect(await page.locator(".hero-stage p.words-enter .w").count()).toBeGreaterThan(10);
+});

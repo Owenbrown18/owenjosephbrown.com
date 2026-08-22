@@ -160,6 +160,35 @@
       transform 0.45s var(--ease-out);
     transition-delay: calc(0.1s + var(--i, 0) * var(--stagger));
   }
+  /* A word cascade: a paragraph whose words rise one after another in
+     a soft left-to-right sweep — the paragraph analogue of the bullet
+     cascade. .words reveals on scroll; .words-enter plays on load. The
+     paragraph itself never moves as a block. */
+  .words .w,
+  .words-enter .w {
+    display: inline-block;
+  }
+  .words.reveal-init {
+    opacity: 1;
+    transform: none;
+  }
+  .words.reveal-init .w {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+  .words.reveal-init.is-revealed .w {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--t) ease-out,
+      transform 0.45s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 0.012s);
+  }
+  .words-enter .w {
+    --rise-y: 0.35em;
+    animation: rise 0.5s var(--ease-out) both;
+    animation-delay: calc(var(--enter-at, 0s) + var(--i, 0) * 0.012s);
+  }
   /* A drawn hairline: any .rule-draw inside an armed ancestor. */
   .reveal-init .rule-draw {
     transform: scaleX(0);
@@ -531,7 +560,8 @@ h3.reveal-init {
     animation: rise var(--t-page) var(--ease-out) both;
     animation-delay: calc(var(--i, 0) * var(--stagger));
   }
-  .hero-stage > .hero-name {
+  .hero-stage > .hero-name,
+  .hero-stage > .words-enter {
     animation: none;
   }
   .hero-stage > :nth-child(2) { --i: 1; }

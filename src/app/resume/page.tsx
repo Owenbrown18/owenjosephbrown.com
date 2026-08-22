@@ -11,6 +11,7 @@ import {
   skills,
 } from "@/lib/resume-data";
 import { PixelCells } from "@/components/pixel-cells";
+import { Words } from "@/components/words";
 import {
   ArrowUpRightIcon,
   GitHubIcon,
@@ -163,8 +164,8 @@ export default function ResumePage() {
             <h1 className="enter mt-3 text-[clamp(2.75rem,6vw,4.5rem)] text-fg" style={{ "--i": 1 } as React.CSSProperties}>
               {first} <span className="text-sage">{rest.join(" ")}</span>
             </h1>
-            <p className="enter mt-4 max-w-[60ch] text-[1.05rem] leading-relaxed text-fg-muted" style={{ "--i": 2 } as React.CSSProperties}>
-              {identity.title} · {identity.location}. Seeking {identity.seeking}.
+            <p className="words-enter mt-4 max-w-[60ch] text-[1.05rem] leading-relaxed text-fg-muted" style={{ "--enter-at": "0.28s" } as React.CSSProperties}>
+              <Words>{`${identity.title} · ${identity.location}. Seeking ${identity.seeking}.`}</Words>
             </p>
             <div className="enter mt-6 flex flex-wrap items-center gap-2 print:hidden" style={{ "--i": 3 } as React.CSSProperties}>
               {hasPdf && (

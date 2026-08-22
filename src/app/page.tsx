@@ -16,6 +16,7 @@ import { LaptopFrame } from "@/components/device-frames";
 import { LocalTime } from "@/components/local-time";
 import { ContactForm } from "@/components/contact-form";
 import { PixelCells } from "@/components/pixel-cells";
+import { Words } from "@/components/words";
 import { identity } from "@/lib/resume-data";
 import { getWorkEntries } from "@/lib/content";
 
@@ -211,11 +212,13 @@ export default function HomePage() {
               </h1>
             </div>
 
-            <p className="mt-9 max-w-[46ch] text-[clamp(1rem,1.5vw,1.15rem)] leading-relaxed text-white/75">
-              I’m a <strong className="font-semibold text-white">software engineer</strong>{" "}
+            <p className="words-enter mt-9 max-w-[46ch] text-[clamp(1rem,1.5vw,1.15rem)] leading-relaxed text-white/75" style={{ "--enter-at": "0.2s" } as React.CSSProperties}>
+              <Words>
+I’m a <strong className="font-semibold text-white">software engineer</strong>{" "}
               in Victoria, studying at UVic and running a small web studio. I
               build things people actually use, and most of them are live
               somewhere you can go click on.
+              </Words>
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-2">
@@ -360,10 +363,12 @@ export default function HomePage() {
             </h2>
             <p className="eyebrow hidden sm:block">02</p>
           </div>
-          <p className="reveal-up mt-5 max-w-[52ch] text-white/75">
+          <p className="reveal-up words mt-5 max-w-[52ch] text-white/75">
+            <Words>
             These are real projects with real users. Each one links to a
             write-up of what the problem actually was and what I did about
             it. I’ve left in the parts that didn’t go well.
+            </Words>
           </p>
 
           <div className="project-index mt-14 grid gap-x-10 gap-y-20 sm:mt-16 md:grid-cols-2">
@@ -465,8 +470,9 @@ export default function HomePage() {
                 className="anim-image aspect-[4/5] w-full border border-white/15 object-cover shadow-2xl"
               />
             </div>
-            <div className="reveal-up">
-              <p className="max-w-[52ch] text-[clamp(1.05rem,1.8vw,1.3rem)] leading-relaxed text-white/75">
+            <div>
+              <p className="reveal-up words max-w-[52ch] text-[clamp(1.05rem,1.8vw,1.3rem)] leading-relaxed text-white/75">
+                <Words>
                 I grew up on Salt Spring Island and I’m studying software
                 engineering at UVic. When I was nineteen I ran a painting
                 business and did $80,000 in revenue. Now{" "}
@@ -488,14 +494,17 @@ export default function HomePage() {
                 things than starting them, which took me a while to work out.
                 Almost everything on here is live somewhere, so you can go look
                 at it instead of taking my word for it.
+                </Words>
               </p>
-              <p className="mt-6 max-w-[52ch] text-white/75">
-                Looking for a Spring 2027 co-op in Victoria or remote. The
-                full picture is on the{" "}
-                <Link href="/resume" className="link-underline text-white/90">
-                  resume
-                </Link>
-                .
+              <p className="reveal-up words mt-6 max-w-[52ch] text-white/75">
+                <Words>
+                  Looking for a Spring 2027 co-op in Victoria or remote. The
+                  full picture is on the{" "}
+                  <Link href="/resume" className="link-underline text-white/90">
+                    resume
+                  </Link>
+                  .
+                </Words>
               </p>
             </div>
           </div>
@@ -511,9 +520,11 @@ export default function HomePage() {
             <h2 className="anim-heading mt-5 max-w-[16ch] text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               Let’s talk.
             </h2>
-            <p className="reveal-up mt-5 max-w-[44ch] text-white/75">
+            <p className="reveal-up words mt-5 max-w-[44ch] text-white/75">
+              <Words>
               If you’re hiring for a co-op, or you just want to know how
               something on here works, write me. I’ll get back to you.
+              </Words>
             </p>
 
             <p className="reveal-up mt-10 label-mono text-white/75">
