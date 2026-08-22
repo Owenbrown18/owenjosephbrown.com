@@ -144,13 +144,13 @@ export default function ResumePage() {
         {/* Masthead: photo, name, the pitch, the actions. */}
         <header className="grid items-center gap-8 sm:grid-cols-[9rem_1fr] sm:gap-12">
           {/* The portrait, with the hero echo's own move behind it: a sage
-              ring offset down-right like the misregistered name. The photo
-              is a tall 9:16 frame, so a centred crop puts the eyes at about
-              two-fifths of the circle — classic portrait framing. */}
+              ring offset down-right like the misregistered name. The headshot
+              is pre-cropped square with the eyes two-fifths of the way down,
+              classic portrait framing, so no object-position tuning here. */}
           <span className="portrait enter-pop relative inline-block w-36 print:w-28">
             <span aria-hidden className="portrait-echo enter-echo" style={{ "--enter-at": "0.45s" } as React.CSSProperties} />
             <Image
-              src="/images/about/owen-brown.jpg"
+              src="/images/about/owen-brown-headshot.jpg"
               alt="Owen Brown"
               width={288}
               height={288}
