@@ -168,7 +168,8 @@
   .words-enter .w {
     display: inline-block;
   }
-  .words.reveal-init {
+  .words.reveal-init,
+  .cascade.reveal-init {
     opacity: 1;
     transform: none;
   }
@@ -492,8 +493,6 @@ h3.reveal-init {
 .reveal-up.reveal-init,
 .anim-row.reveal-init,
 [data-reveal].reveal-init,
-.pipeline-step.reveal-init,
-.stat.reveal-init,
 :where(.prose-ob > p).reveal-init,
 :where(.prose-ob > ul).reveal-init,
 :where(.prose-ob > ol).reveal-init,

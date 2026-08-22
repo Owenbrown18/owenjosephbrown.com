@@ -219,7 +219,9 @@ for (const path of ["/work/figs-and-honey", "/work/grain"]) {
       let invisible: string[] = [];
       do {
         invisible = await page.evaluate(() =>
-          [...document.querySelectorAll<HTMLElement>(".reveal-init")]
+          // Armed elements, cascade children and cascaded words alike: any
+          // of them still faint in view after settling is invisible text.
+          [...document.querySelectorAll<HTMLElement>(".reveal-init, .cascade > *, .words .w, .words-enter .w")]
             .filter((el) => {
               const r = el.getBoundingClientRect();
               return r.top < innerHeight * 0.85 && r.bottom > 0 && r.height > 0;
@@ -549,4 +551,26 @@ test("word cascades land every word", async ({ page }) => {
   // The hero pitch cascades on load too.
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   expect(await page.locator(".hero-stage p.words-enter .w").count()).toBeGreaterThan(10);
+});
+
+
+test("case studies share one animated masthead and cascade their pieces", async ({
+  page,
+}) => {
+  await gotoReady(page, "/work/leadgen");
+  const head = await page.evaluate(() => ({
+    eyebrowEnter: document.querySelector("header .eyebrow")?.classList.contains("enter"),
+    titleEnter: document.querySelector("header h1")?.classList.contains("enter"),
+    summaryWords: document.querySelectorAll("header .words-enter .w").length,
+    metaEnter: document.querySelector("header dl")?.classList.contains("enter"),
+    sheetStill: !!document.querySelector(".sheet.sheet-still"),
+  }));
+  expect(head).toEqual({ eyebrowEnter: true, titleEnter: true, summaryWords: expect.any(Number), metaEnter: true, sheetStill: true });
+  expect(head.summaryWords).toBeGreaterThan(5);
+  // Pipeline steps carry cascade indices assigned by Reveal.
+  const steps = await page.evaluate(() =>
+    [...document.querySelectorAll(".pipeline.cascade > *")].map((li) => (li as HTMLElement).style.getPropertyValue("--i")),
+  );
+  expect(steps.length).toBeGreaterThan(2);
+  expect(steps).toEqual(steps.map((_, i) => String(i)));
 });

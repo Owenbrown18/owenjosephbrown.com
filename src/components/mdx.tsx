@@ -4,11 +4,16 @@ import rehypePrettyCode from "rehype-pretty-code";
 import { Children, type ReactNode } from "react";
 import { PhoneFrame } from "@/components/phone-frame";
 
+/* Every multi-item piece below is a .cascade under a .reveal-up: the
+   container reveals, its children arrive one stagger apart. Reveal assigns
+   --i to cascade children and never arms them separately. */
 function ScreenRow({ children }: { children: ReactNode }) {
   return (
-    <div className="screen-row">
+    <div className="screen-row cascade reveal-up">
       {Children.map(children, (child) => (
-        <PhoneFrame>{child}</PhoneFrame>
+        <div>
+          <PhoneFrame>{child}</PhoneFrame>
+        </div>
       ))}
     </div>
   );
@@ -21,7 +26,7 @@ function ScreenRow({ children }: { children: ReactNode }) {
 function Pipeline({ steps }: { steps: string }) {
   const items = steps.split("|").map((s) => s.trim());
   return (
-    <ol className="pipeline">
+    <ol className="pipeline cascade reveal-up">
       {items.map((item, i) => {
         const [title, ...rest] = item.split(":");
         return (
@@ -44,7 +49,7 @@ function Pipeline({ steps }: { steps: string }) {
 function StatRow({ stats }: { stats: string }) {
   const items = stats.split("|").map((s) => s.trim());
   return (
-    <div className="stat-row">
+    <div className="stat-row cascade reveal-up">
       {items.map((item) => {
         const [value, ...label] = item.split(":");
         return (
@@ -58,10 +63,20 @@ function StatRow({ stats }: { stats: string }) {
   );
 }
 
+/* Prose lists cascade their items like the résumé's bullets do. */
+function Ul(props: React.ComponentProps<"ul">) {
+  return <ul {...props} className={["cascade", props.className].filter(Boolean).join(" ")} />;
+}
+function Ol(props: React.ComponentProps<"ol">) {
+  return <ol {...props} className={["cascade", props.className].filter(Boolean).join(" ")} />;
+}
+
 const components = {
   ScreenRow,
   Pipeline,
   StatRow,
+  ul: Ul,
+  ol: Ol,
 };
 
 export function Mdx({ source }: { source: string }) {

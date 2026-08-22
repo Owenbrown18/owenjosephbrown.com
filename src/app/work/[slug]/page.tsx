@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Mdx } from "@/components/mdx";
-import { getWorkEntries, getWorkEntry, kindLabel } from "@/lib/content";
-import { PageHeader } from "@/components/page-header";
-import { ExploreMore } from "@/components/explore-more";
+import { getWorkEntries, getWorkEntry } from "@/lib/content";
+import { CaseStudy } from "@/components/case-study";
 
 type Params = { slug: string };
 
@@ -35,107 +32,5 @@ export default async function WorkEntryPage({
   const { slug } = await params;
   const entry = getWorkEntry(slug);
   if (!entry) notFound();
-
-
-  return (
-    <article className="container-site pb-24 pt-32 sm:pt-36">
-      <div className="sheet">
-      <PageHeader
-        eyebrow={`${kindLabel[entry.kind]} · ${entry.year}`}
-        title={entry.title}
-        summary={entry.summary}
-        meta={[
-          { label: "Role", value: entry.role },
-          { label: "Timeline", value: entry.timeline },
-          { label: "Stack", value: entry.stack.join(" · "), wide: true },
-          ...(entry.liveUrl
-            ? [
-                {
-                  label: "Live",
-                  wide: true,
-                  value: (
-                    <a
-                      href={entry.liveUrl}
-                      rel="noopener"
-                      className="link-underline font-medium text-fg"
-                    >
-                      {entry.liveUrl.replace("https://", "")} ↗
-                    </a>
-                  ),
-                },
-              ]
-            : []),
-          ...(entry.repoUrl
-            ? [
-                {
-                  label: "Source",
-                  value: (
-                    <a
-                      href={entry.repoUrl}
-                      rel="noopener"
-                      className="link-underline font-medium text-fg"
-                    >
-                      {entry.repoUrl.replace("https://github.com/", "")} ↗
-                    </a>
-                  ),
-                },
-              ]
-            : []),
-          ...(entry.downloadUrl
-            ? [
-                {
-                  label: "Download",
-                  value: (
-                    <a
-                      href={entry.downloadUrl}
-                      rel="noopener"
-                      className="link-underline font-medium text-fg"
-                    >
-                      {entry.downloadLabel ?? "Latest release"} ↗
-                    </a>
-                  ),
-                },
-              ]
-            : []),
-        ]}
-      />
-
-      {entry.heroVideo ? (
-        <div className="anim-image relative mt-12 max-w-[52rem] overflow-hidden border border-line">
-          {/* muted + playsInline are what let this start on its own; a
-              still frame cannot show a five-second interaction. */}
-          <video
-            src={entry.heroVideo}
-            poster={entry.hero}
-            autoPlay
-            loop
-            muted
-            playsInline
-            aria-label={entry.heroAlt ?? entry.title}
-            className="block h-auto w-full"
-          />
-        </div>
-      ) : (
-        entry.hero && (
-          <div className="relative mt-12 aspect-[16/9] max-w-[52rem] overflow-hidden border border-line">
-            <Image
-              src={entry.hero}
-              alt={entry.heroAlt ?? entry.title}
-              fill
-              priority
-              sizes="(max-width: 900px) 100vw, 832px"
-              className="anim-image object-cover object-top"
-            />
-          </div>
-        )
-      )}
-
-      <div className="prose-ob mt-12">
-        <Mdx source={entry.body} />
-      </div>
-
-      </div>
-      <ExploreMore currentSlug={entry.slug} />
-    </article>
-  );
+  return <CaseStudy entry={entry} />;
 }

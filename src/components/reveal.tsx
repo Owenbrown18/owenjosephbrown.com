@@ -33,8 +33,6 @@ const SELECTOR = [
   ".prose-ob > pre",
   ".prose-ob > table",
   ".prose-ob img",
-  ".pipeline-step",
-  ".stat",
   // Observed for the child line's draw-in. The container never transforms,
   // so its intersection area stays honest while the line scales from zero.
   ".section-rule",
@@ -48,7 +46,27 @@ export function Reveal() {
 
     const els = Array.from(
       document.querySelectorAll<HTMLElement>(SELECTOR),
-    ).filter((el) => !el.dataset.revealed);
+    )
+      .filter((el) => !el.dataset.revealed)
+      // Children of a .cascade belong to their container's reveal; arming
+      // them separately would stack a second motion on the cascade.
+      .filter((el) => !el.parentElement?.closest(".cascade"));
+
+    // A cascade's children get their index once, here, so markup that
+    // can't know its position (MDX lists) still cascades.
+    for (const el of els) {
+      if (!el.classList.contains("cascade")) continue;
+      Array.from(el.children).forEach((child, i) => {
+        const c = child as HTMLElement;
+        if (!c.style.getPropertyValue("--i")) c.style.setProperty("--i", String(i));
+      });
+    }
+    for (const c of document.querySelectorAll<HTMLElement>(".cascade")) {
+      Array.from(c.children).forEach((child, i) => {
+        const k = child as HTMLElement;
+        if (!k.style.getPropertyValue("--i")) k.style.setProperty("--i", String(i));
+      });
+    }
 
     if (!els.length) return;
 
