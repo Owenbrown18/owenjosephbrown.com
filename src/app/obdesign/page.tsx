@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { clientSites } from "@/lib/sites";
+import { PixelCells } from "@/components/pixel-cells";
 import { PageHeader } from "@/components/page-header";
 
 export const metadata: Metadata = {
@@ -66,20 +67,28 @@ export default function ObdesignPage() {
 
       <div className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2">
         {clientSites.map((site, i) => (
-          <article key={site.slug} className="reveal-up">
-            <a href={site.url} rel="noopener" className="group block">
-              <div className="overflow-hidden border border-line bg-surface">
+          <article key={site.slug}>
+            {/* Same stage as the work cards: the site dissolves in behind
+                a pixel grid and fills with the accent on hover, no jump. */}
+            <a href={site.url} rel="noopener" className="stage reveal-up block">
+              <span className="stage-frame">
                 <Image
                   src={`/images/work/${site.slug}.webp`}
                   alt={`${site.name} website on desktop`}
                   width={840}
                   height={525}
                   priority={i < 2}
-                  className="anim-image h-auto w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
+                  className="h-auto w-full object-cover object-top"
                 />
-              </div>
+                <PixelCells seed={site.name} variant="reveal" />
+                <PixelCells seed={site.name} variant="hover" cols={10} rows={6} spread={260} />
+                <span aria-hidden className="frame-veil">
+                  View {site.name}
+                  <span className="frame-veil__arrow">↗</span>
+                </span>
+              </span>
             </a>
-            <div className="mt-4 flex items-baseline justify-between gap-4">
+            <div className="reveal-up mt-4 flex items-baseline justify-between gap-4">
               <h2 className="font-display text-xl font-bold text-fg">
                 {site.name}
               </h2>

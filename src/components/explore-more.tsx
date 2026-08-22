@@ -40,7 +40,7 @@ export function ExploreMore({ currentSlug }: { currentSlug: string }) {
       <ul className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
         {others.map((e) => (
           <li key={e.slug}>
-            <Link href={`/work/${e.slug}`} className="explore-tile block">
+            <Link href={`/work/${e.slug}`} className="explore-tile stage reveal-up block">
               <span
                 className={`explore-tile__frame ${tone[e.slug] ?? "frame-studio"}`}
               >
@@ -53,9 +53,10 @@ export function ExploreMore({ currentSlug }: { currentSlug: string }) {
                     className="object-cover object-top"
                   />
                 )}
+                <PixelCells seed={e.title} variant="reveal" />
                 <PixelCells seed={e.title} variant="hover" cols={10} rows={6} spread={260} />
                 <span aria-hidden className="frame-veil">
-                  View
+                  View {e.title}
                   <span className="frame-veil__arrow">↗</span>
                 </span>
               </span>

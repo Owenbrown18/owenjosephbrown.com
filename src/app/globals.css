@@ -898,7 +898,10 @@ h3.reveal-init {
   opacity: 0;
   transition: opacity 0.14s ease-out var(--d, 0ms);
 }
-.project-card:hover .pixel-grid--hover .pixel-cell {
+/* .stage is any hoverable tile with a pixel grid and a veil: the work
+   cards, the explore tiles, the studio's site gallery. One hover. */
+.stage:hover .pixel-grid--hover .pixel-cell,
+.stage:focus-visible .pixel-grid--hover .pixel-cell {
   opacity: 1;
 }
 .frame-veil {
@@ -919,34 +922,35 @@ h3.reveal-init {
   /* Arrives once the fill has mostly landed; leaves first on the way out. */
   transition: opacity 0.22s var(--ease-out) 0.18s;
 }
-.project-card:not(:hover) .frame-veil {
+.stage:not(:hover) .frame-veil {
   transition-delay: 0s;
 }
 .frame-veil__arrow {
   display: inline-block;
   transition: transform var(--t) var(--ease-out);
 }
-.project-card:hover .frame-veil {
+.stage:hover .frame-veil,
+.stage:focus-visible .frame-veil {
   opacity: 1;
 }
-.project-card:hover .frame-veil__arrow {
+.stage:hover .frame-veil__arrow {
   transform: translate(3px, -3px);
 }
 @media (prefers-reduced-motion: no-preference) {
   /* The card container stays visible through its reveal: the dissolve
      and the text cascade ARE the entrance. Same specificity as the
      .reveal-up hidden rule; later in the file, so it wins. */
-  .project-card.reveal-init {
+  .stage.reveal-init {
     opacity: 1;
     transform: none;
   }
-  .project-card.reveal-init .pixel-grid--reveal {
+  .stage.reveal-init .pixel-grid--reveal {
     display: grid;
   }
   /* Scoped to the reveal grid: an unscoped .pixel-cell here matched the
      hover grid too, at equal specificity and later in the file, and
      pinned the hover fill to opacity 0. */
-  .project-card.reveal-init.is-revealed .pixel-grid--reveal .pixel-cell {
+  .stage.reveal-init.is-revealed .pixel-grid--reveal .pixel-cell {
     opacity: 0;
     transition: opacity 0.28s ease-out var(--d, 0ms);
   }
@@ -1412,20 +1416,10 @@ h3.reveal-init {
   overflow: hidden;
   border: 1px solid rgba(15, 35, 32, 0.12);
 }
-.explore-tile__frame img {
-  transition: transform var(--t-slow) var(--ease-out);
-}
-.explore-tile:hover .explore-tile__frame img {
-  transform: scale(1.03);
-}
-.explore-tile:hover .frame-veil,
-.explore-tile:focus-visible .frame-veil {
-  opacity: 1;
-}
-.explore-tile:hover .frame-veil__arrow {
-  transform: translate(3px, -3px);
-}
-.explore-tile:hover .pixel-grid--hover .pixel-cell,
-.explore-tile:focus-visible .pixel-grid--hover .pixel-cell {
-  opacity: 1;
+/* A frame that keeps the image's own ratio (the studio gallery). */
+.stage-frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(15, 35, 32, 0.12);
 }

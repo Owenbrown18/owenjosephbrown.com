@@ -45,14 +45,14 @@ export function ProjectCard({
     <Link
       href={href}
       aria-label={`${title}: ${blurb}`}
-      className="project-card reveal-up group relative block"
+      className="project-card stage reveal-up group relative block"
     >
       <div className={`project-frame ${frameClass} ${tone}`}>
         {children}
         <PixelCells seed={title} variant="reveal" />
         <PixelCells seed={title} variant="hover" />
         <span aria-hidden className="frame-veil">
-          View
+          View {title}
           <span className="frame-veil__arrow">↗</span>
         </span>
       </div>
