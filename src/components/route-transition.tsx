@@ -11,7 +11,7 @@ import { usePathname, useRouter } from "next/navigation";
  * plain same-tab internal navigation is left alone. Reduced motion skips
  * the wait. Without JS, links are just links.
  */
-const EXIT_MS = 220;
+const EXIT_MS = 160;
 
 export function RouteTransition() {
   const router = useRouter();

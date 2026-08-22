@@ -584,23 +584,31 @@ h3.reveal-init {
    cast shadows below themselves, and a both-axis overflow:hidden cut them
    off in a hard horizontal line. Vertical padding gives the shadow room. */
 .marquee {
+  position: relative;
   overflow-x: clip;
   overflow-y: visible;
   padding-block: 1rem 3rem;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 6%,
-    black 94%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 6%,
-    black 94%,
-    transparent
-  );
+}
+/* Edge fades as paper-coloured overlays, not a mask: a mask on a strip
+   whose track animates forces the whole strip through an offscreen
+   buffer every frame; two static gradients composite for free. */
+.marquee::before,
+.marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 6%;
+  z-index: 2;
+  pointer-events: none;
+}
+.marquee::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+.marquee::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg), transparent);
 }
 .marquee-track {
   display: flex;
@@ -629,8 +637,10 @@ h3.reveal-init {
 @media (prefers-reduced-motion: reduce) {
   .marquee {
     overflow-x: auto;
-    mask-image: none;
-    -webkit-mask-image: none;
+  }
+  .marquee::before,
+  .marquee::after {
+    display: none;
   }
   .marquee-track {
     animation: none;
@@ -1278,14 +1288,16 @@ h3.reveal-init {
 .hero-cluster__glow {
   position: absolute;
   inset: -8%;
+  /* A radial gradient is already soft; the blur filter on top of it made
+     the compositor re-render a ~2000px blurred surface every frame the
+     cluster floated — measured as the 183ms hitches during scroll. */
   background: radial-gradient(
     ellipse at 52% 46%,
-    rgba(123, 164, 158, 0.32) 0%,
-    rgba(123, 164, 158, 0.1) 45%,
-    transparent 72%
+    rgba(123, 164, 158, 0.3) 0%,
+    rgba(123, 164, 158, 0.12) 40%,
+    rgba(123, 164, 158, 0.03) 62%,
+    transparent 76%
   );
-  filter: blur(18px);
-  will-change: transform;
   pointer-events: none;
 }
 .cluster-piece--code {
@@ -1541,8 +1553,8 @@ h3.reveal-init {
 @media (prefers-reduced-motion: no-preference) {
   main {
     transition:
-      opacity var(--t) ease-out,
-      transform var(--t) var(--ease-out);
+      opacity var(--t-fast) ease-out,
+      transform var(--t-fast) var(--ease-out);
   }
   html[data-leaving] main {
     opacity: 0;

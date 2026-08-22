@@ -517,9 +517,13 @@ I’m a <strong className="font-semibold text-white">software engineer</strong>{
         <div className="container-site relative grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
           <div>
             <p className="eyebrow reveal-up !text-sage">04 · Contact</p>
-            <h2 className="anim-heading mt-5 max-w-[16ch] text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
-              Let’s talk.
-            </h2>
+            {/* Same row as every other section heading: the reveal-up lift
+                wrapper drifts with scroll, the heading rises inside it. */}
+            <div className="reveal-up lift mt-5">
+              <h2 className="anim-heading max-w-[16ch] text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
+                Let’s talk.
+              </h2>
+            </div>
             <p className="reveal-up words mt-5 max-w-[44ch] text-white/75">
               <Words>
               If you’re hiring for a co-op, or you just want to know how
