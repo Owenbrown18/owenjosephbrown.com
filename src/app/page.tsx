@@ -462,7 +462,7 @@ I’m a <strong className="font-semibold text-white">software engineer</strong>{
                 the wrapper, which stacked a rise on top of the pop. */}
             <div className="relative max-w-[380px]">
               <Image
-                src="/images/about/owen-brown-portrait.jpg"
+                src="/images/about/owen-brown-portrait-2.jpg"
                 sizes="(min-width: 768px) 380px, 100vw"
                 alt="Owen Brown"
                 width={760}
