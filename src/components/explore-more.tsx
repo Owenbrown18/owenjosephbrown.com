@@ -42,7 +42,7 @@ export function ExploreMore({ currentSlug }: { currentSlug?: string }) {
           <li key={e.slug}>
             <Link href={`/work/${e.slug}`} className="explore-tile stage reveal-up block">
               <span
-                className={`explore-tile__frame ${tone[e.slug] ?? "frame-studio"}`}
+                className={`explore-tile__frame ${tone[e.slug] ?? "frame-obdesign"}`}
               >
                 {(e.thumb ?? e.hero) && (
                   <Image

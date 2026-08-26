@@ -1,6 +1,6 @@
 /**
  * Every client site OBdesign has shipped. Screenshots live in
- * public/images/work/<slug>.png (exported from the studio repo).
+ * public/images/work/<slug>.png (exported from the OBdesign repo).
  */
 export type ClientSite = {
   slug: string;

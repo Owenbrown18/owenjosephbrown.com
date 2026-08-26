@@ -6,7 +6,7 @@ export const alt = "OBdesign: 10+ production websites for BC businesses.";
 
 export default function Image() {
   return ogCard({
-    title: "OBdesign, the studio.",
+    title: "OBdesign.",
     subtitle:
       "10+ production websites for BC businesses. Custom-coded, client-editable, found by a pipeline I wrote.",
   });

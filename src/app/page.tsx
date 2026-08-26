@@ -215,7 +215,7 @@ export default function HomePage() {
             <p className="words-enter mt-9 max-w-[46ch] text-[clamp(1rem,1.5vw,1.15rem)] leading-relaxed text-white/75" style={{ "--enter-at": "0.2s" } as React.CSSProperties}>
               <Words>
 I’m a <strong className="font-semibold text-white">software engineer</strong>{" "}
-              in Victoria, studying at UVic and running a small web studio. I
+              in Victoria, studying at UVic and running my own web development business. I
               build things people actually use, and most of them are live
               somewhere you can go click on.
               </Words>
@@ -265,7 +265,7 @@ I’m a <strong className="font-semibold text-white">software engineer</strong>{
             </div>
           </div>
 
-          {/* The work, physically: client sites in the studio's laptop
+          {/* The work, physically: client sites in the OBdesign laptop
               frame, grain on a phone, Whispr's pill listening in over it.
               Loosely circular, allowed to overlap, floating idle. */}
           <div
@@ -343,7 +343,7 @@ I’m a <strong className="font-semibold text-white">software engineer</strong>{
           </div>
           </div>
 
-          {/* Place and time, the way a studio site stamps a page. */}
+          {/* Place and time, the way a design site stamps a page. */}
           <p className="hero-stamp mt-14 text-right label-mono text-white/75">
             ©2026&nbsp;&nbsp;·&nbsp;&nbsp;Victoria, BC&nbsp;&nbsp;<LocalTime />
           </p>
@@ -372,7 +372,7 @@ I’m a <strong className="font-semibold text-white">software engineer</strong>{
           </p>
 
           <div className="project-index mt-14 grid gap-x-10 gap-y-20 sm:mt-16 md:grid-cols-2">
-            {/* The studio, composed: the one card that isn't a single
+            {/* OBdesign, composed: the one card that isn't a single
                 screenshot, because ten sites is the point of it. */}
             <ProjectCard
               num="001"
@@ -380,12 +380,12 @@ I’m a <strong className="font-semibold text-white">software engineer</strong>{
               href="/obdesign"
               year="2025 – present"
               tags={["Next.js", "Astro", "Keystatic", "Vercel"]}
-              blurb="My one-person web studio. Ten live sites for businesses around BC, all custom-coded, each one editable by the owner without calling me."
+              blurb="Ten live sites for businesses around BC, all custom-coded, each one editable by the owner without calling me."
                 frameClass="aspect-[16/10]"
               linkLabel="View OBdesign"
-              tone="frame-studio"
+              tone="frame-obdesign"
             >
-              <div aria-hidden className="studio-stack absolute inset-0">
+              <div aria-hidden className="obdesign-stack absolute inset-0">
                 {[
                   ["grain-construction", "Grain Construction", "560px"],
                   ["figs-and-honey", "Figs & Honey", "380px"],
@@ -428,7 +428,7 @@ I’m a <strong className="font-semibold text-white">software engineer</strong>{
           </div>
         </div>
 
-        {/* Every client site, not just the four in the studio card. The
+        {/* Every client site, not just the four in the OBdesign card. The
             index shows depth; this shows breadth. */}
         <div className="mt-20 sm:mt-24">
           <p className="container-site eyebrow reveal-up">
@@ -481,7 +481,7 @@ I’m a <strong className="font-semibold text-white">software engineer</strong>{
                   rel="noopener"
                   className="font-semibold text-white underline decoration-sage decoration-2 underline-offset-4 hover:decoration-white"
                 >
-                  the studio
+                  OBdesign
                 </a>{" "}
                 pays for my degree, and{" "}
                 <Link

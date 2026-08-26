@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     template: "%s — Owen Brown",
   },
   description:
-    "I'm a software engineering student at UVic and I run a small web studio called OBdesign. I've built and shipped over ten client sites, an iOS app, and the Python pipeline that finds the clients.",
+    "I'm a software engineering student at UVic and I run a web development business called OBdesign. I've built and shipped over ten client sites, an iOS app, and the Python pipeline that finds the clients.",
   authors: [{ name: "Owen Brown", url: "https://owenjosephbrown.com" }],
   openGraph: {
     type: "website",

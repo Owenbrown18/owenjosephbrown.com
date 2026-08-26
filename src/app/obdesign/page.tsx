@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/page-header";
 export const metadata: Metadata = {
   title: "OBdesign",
   description:
-    "10+ production websites for BC businesses, every one custom-coded and client-editable. The studio side of Owen Brown.",
+    "10+ production websites for BC businesses, every one custom-coded and client-editable. Owen Brown's web development business.",
 };
 
 export default function ObdesignPage() {
@@ -17,7 +17,7 @@ export default function ObdesignPage() {
     <div className="container-site pb-24 pt-32 sm:pt-36">
       <div className="sheet sheet-wide sheet-still">
       <PageHeader
-        eyebrow="The studio · June 2025 – present"
+        eyebrow="Web development · June 2025 – present"
         title={
           <>
             OBdesign<span className="text-accent">.</span>
@@ -32,7 +32,7 @@ export default function ObdesignPage() {
             wide: true,
           },
           {
-            label: "Studio",
+            label: "Site",
             value: (
               <a
                 href="https://www.obwebdesign.ca"
@@ -47,7 +47,7 @@ export default function ObdesignPage() {
       >
         <div className="mt-6 max-w-[58ch] space-y-5 text-fg-muted">
           <p>
-            OBdesign is my one-person web studio. Every site below is a real
+            OBdesign is my one-person web development business. Every site below is a real
             business paying real money for work they rely on: custom-coded
             Next.js or Astro builds with a git-based CMS, so every client
             edits their own content without touching code.

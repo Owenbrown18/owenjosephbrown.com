@@ -2,7 +2,7 @@
 
 /*
  * OBdesign family tokens on paper: ink and deep forest on #f4f3ef, with
- * the studio's sage as the accent. Source of truth: the studio brand
+ * OBdesign's sage as the accent. Source of truth: the OBdesign brand
  * (Forest / Sage / Fraunces + Inter).
  */
 @theme inline {
@@ -283,7 +283,7 @@
     }
   }
 
-  /* Signature quiet label: the studio eyebrow. */
+  /* Signature quiet label: the OBdesign eyebrow. */
   .eyebrow {
     font-family: var(--font-body);
     font-size: 0.7rem;
@@ -937,13 +937,13 @@ h3.reveal-init {
   box-shadow: 0 26px 54px -26px rgba(15, 35, 32, 0.28);
 }
 
-/* Per-project stages. grain is its own cream, the studio sits on sage,
+/* Per-project stages. grain is its own cream, OBdesign sits on sage,
    Whispr on its dark app forest, leadgen on a cool mist. */
 .frame-grain {
   background: linear-gradient(165deg, #f7f1e3 0%, #f1e8d2 100%);
   border-color: rgba(122, 99, 48, 0.22);
 }
-.frame-studio {
+.frame-obdesign {
   background: linear-gradient(165deg, #e7efe9 0%, #d7e5dd 100%);
   border-color: rgba(46, 84, 80, 0.22);
 }
@@ -1023,7 +1023,7 @@ h3.reveal-init {
   transition: opacity 0.14s ease-out var(--d, 0ms);
 }
 /* .stage is any hoverable tile with a pixel grid and a veil: the work
-   cards, the explore tiles, the studio's site gallery. One hover. */
+   cards, the explore tiles, the OBdesign site gallery. One hover. */
 .stage:hover .pixel-grid--hover .pixel-cell,
 .stage:focus-visible .pixel-grid--hover .pixel-cell {
   opacity: 1;
@@ -1106,10 +1106,10 @@ h3.reveal-init {
   .project-card > :nth-child(6) { --i: 5; }
 }
 
-/* The studio card composes several sites in the one frame: one large
+/* The OBdesign card composes several sites in the one frame: one large
    capture with smaller ones stepping away from it. Percentages, so the
    arrangement holds at any frame size. */
-.studio-stack > * {
+.obdesign-stack > * {
   position: absolute;
   overflow: hidden;
   border: 1px solid rgba(15, 35, 32, 0.14);
@@ -1117,28 +1117,28 @@ h3.reveal-init {
     0 2px 6px -2px rgba(15, 35, 32, 0.12),
     0 22px 45px -16px rgba(15, 35, 32, 0.35);
 }
-.studio-stack > :nth-child(1) {
+.obdesign-stack > :nth-child(1) {
   left: 5%;
   top: 8%;
   width: 60%;
   aspect-ratio: 16 / 10;
   z-index: 3;
 }
-.studio-stack > :nth-child(2) {
+.obdesign-stack > :nth-child(2) {
   right: 4%;
   top: 5%;
   width: 41%;
   aspect-ratio: 16 / 10;
   z-index: 4;
 }
-.studio-stack > :nth-child(3) {
+.obdesign-stack > :nth-child(3) {
   left: 12%;
   bottom: 6%;
   width: 37%;
   aspect-ratio: 16 / 10;
   z-index: 5;
 }
-.studio-stack > :nth-child(4) {
+.obdesign-stack > :nth-child(4) {
   right: 6%;
   bottom: 9%;
   width: 32%;
@@ -1501,7 +1501,7 @@ h3.reveal-init {
   overflow: hidden;
   border: 1px solid rgba(15, 35, 32, 0.12);
 }
-/* A frame that keeps the image's own ratio (the studio gallery). */
+/* A frame that keeps the image's own ratio (the OBdesign gallery). */
 .stage-frame {
   position: relative;
   display: block;

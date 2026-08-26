@@ -10,7 +10,7 @@ export type ContactState = {
 };
 
 /**
- * Sends the contact form to Owen's inbox through Resend, from the studio
+ * Sends the contact form to Owen's inbox through Resend, from the OBdesign
  * domain that's already verified there. Degrades honestly: with no key
  * configured the visitor is told to email directly instead of watching a
  * form pretend to work.

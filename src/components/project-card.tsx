@@ -25,7 +25,7 @@ export type ProjectCardProps = {
   linkLabel?: string;
   /** Frames deliberately differ in shape so the row doesn't line up. */
   frameClass?: string;
-  /** The project's own stage colour (frame-grain, frame-studio, ...). */
+  /** The project's own stage colour (frame-grain, frame-obdesign, ...). */
   tone?: string;
 };
 

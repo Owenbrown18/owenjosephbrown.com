@@ -9,7 +9,7 @@ export type MetaItem = {
 };
 
 /**
- * The masthead every subpage shares — case studies and the studio page —
+ * The masthead every subpage shares — case studies and the OBdesign page —
  * and the page's entrance: eyebrow, title, summary (word by word),
  * anything passed as children, then the meta rail, one stagger apart.
  * Pages that use it set sheet-still, because this carries the entrance.

@@ -48,9 +48,9 @@ test("404 page renders for unknown routes", async ({ page }) => {
   );
 });
 
-test("studio page links through to a case study", async ({ page }) => {
+test("OBdesign page links through to a case study", async ({ page }) => {
   await page.goto("/obdesign");
-  // The studio page hands off through its Explore more tiles, the same
+  // The OBdesign page hands off through its Explore more tiles, the same
   // block every case study ends on.
   await page
     .locator('[aria-labelledby="explore-heading"]')
@@ -65,7 +65,7 @@ test("studio page links through to a case study", async ({ page }) => {
   );
 });
 
-test("landing page reaches the studio page", async ({ page }) => {
+test("landing page reaches the OBdesign page", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: /OBdesign/i }).first().click();
   await expect(page).toHaveURL(/\/obdesign/, { timeout: 15000 });
