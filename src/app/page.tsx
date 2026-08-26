@@ -473,7 +473,8 @@ I’m a <strong className="font-semibold text-white">software engineer</strong>{
             <div>
               <p className="reveal-up words max-w-[52ch] text-[clamp(1.05rem,1.8vw,1.3rem)] leading-relaxed text-white/75">
                 <Words>
-                I grew up on Salt Spring Island. At nineteen I ran a painting
+                I grew up on Salt Spring Island and I’m in my fourth year of
+                software engineering at UVic. At nineteen I ran a painting
                 business and did $80,000 in revenue. Now{" "}
                 <Link
                   href="/obdesign"
