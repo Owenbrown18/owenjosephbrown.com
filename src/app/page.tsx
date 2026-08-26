@@ -473,27 +473,22 @@ I’m a <strong className="font-semibold text-white">software engineer</strong>{
             <div>
               <p className="reveal-up words max-w-[52ch] text-[clamp(1.05rem,1.8vw,1.3rem)] leading-relaxed text-white/75">
                 <Words>
-                I grew up on Salt Spring Island and I’m studying software
-                engineering at UVic. When I was nineteen I ran a painting
+                I grew up on Salt Spring Island. At nineteen I ran a painting
                 business and did $80,000 in revenue. Now{" "}
-                <a
-                  href="https://www.obwebdesign.ca"
-                  rel="noopener"
-                  className="font-semibold text-white underline decoration-sage decoration-2 underline-offset-4 hover:decoration-white"
+                <Link
+                  href="/obdesign"
+                  className="link-underline font-semibold text-white"
                 >
                   OBdesign
-                </a>{" "}
+                </Link>{" "}
                 pays for my degree, and{" "}
                 <Link
-                  href="/work/grain"
-                  className="font-semibold text-white underline decoration-sage decoration-2 underline-offset-4 hover:decoration-white"
+                  href="/#work"
+                  className="link-underline font-semibold text-white"
                 >
                   the projects
                 </Link>{" "}
-                are where I actually learn the engineering. I’m better at finishing
-                things than starting them, which took me a while to work out.
-                Almost everything on here is live somewhere, so you can go look
-                at it instead of taking my word for it.
+                are where I actually learn the engineering.
                 </Words>
               </p>
               <p className="reveal-up words mt-6 max-w-[52ch] text-white/75">
