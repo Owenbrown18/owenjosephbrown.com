@@ -402,14 +402,65 @@
     width: 22px;
     background: rgba(15, 35, 32, 0.85);
     transition:
-      transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.2s ease;
+      transform var(--t) var(--ease-out),
+      opacity var(--t-fast) var(--ease-out);
   }
   .menu-toggle[data-open] > span:first-child {
     transform: translateY(3.75px) rotate(45deg);
   }
   .menu-toggle[data-open] > span:last-child {
     transform: translateY(-3.75px) rotate(-45deg);
+  }
+
+  /* The mobile sheet unfurls instead of snapping. grid-template-rows
+     0fr -> 1fr animates to whatever the content actually measures: no
+     max-height guess to keep in sync when a nav item is added, and no
+     JS measuring pass. It has to live in @layer components so Tailwind's
+     sm:hidden still wins on desktop; an unlayered display:grid here
+     would put the sheet back on every wide screen. */
+  .nav-sheet {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      grid-template-rows var(--t) var(--ease-out),
+      opacity var(--t-fast) var(--ease-out),
+      visibility var(--t) step-end;
+  }
+  .nav-sheet[data-open] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transition:
+      grid-template-rows var(--t) var(--ease-out),
+      opacity var(--t-fast) var(--ease-out),
+      visibility 0s;
+  }
+  /* The row that gets animated has to be able to be shorter than its
+     content, hence min-height 0 alongside the clip. */
+  .nav-sheet > * {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Items arrive on the same stagger the page sections use, so the menu
+     belongs to the same motion language as everything else. Closing runs
+     fast and undelayed: nobody wants to watch a menu leave. */
+  .nav-sheet-item {
+    opacity: 0;
+    transform: translateY(calc(var(--rise-y) * 0.6));
+    transition:
+      opacity var(--t-fast) var(--ease-out),
+      transform var(--t-fast) var(--ease-out);
+  }
+  .nav-sheet[data-open] .nav-sheet-item {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--t) var(--ease-out),
+      transform var(--t) var(--ease-out);
+    transition-delay: calc(var(--i, 0) * var(--stagger));
   }
 }
 

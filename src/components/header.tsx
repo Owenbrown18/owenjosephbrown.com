@@ -142,38 +142,46 @@ export function Header() {
       </div>
 
       {/* The sheet */}
+      {/* Stays mounted so it can animate both ways. `inert` keeps the
+          closed sheet out of the tab order and off the a11y tree, which
+          the old `hidden` did for free. */}
       <div
         id="mobile-nav"
         ref={panelRef}
-        hidden={!open}
-        className="border-t border-white/15 bg-[color-mix(in_srgb,var(--bg)_97%,transparent)] sm:hidden"
+        data-open={open ? "" : undefined}
+        inert={!open}
+        className="nav-sheet border-t border-white/15 bg-[color-mix(in_srgb,var(--bg)_97%,transparent)] sm:hidden"
       >
-        <nav aria-label="Primary" className="container-site py-4">
-          {anchors.map((item) => (
+        <div>
+          <nav aria-label="Primary" className="container-site py-4">
+            {anchors.map((item, i) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                style={{ "--i": i } as React.CSSProperties}
+                className="nav-sheet-item flex items-baseline gap-3 border-b border-white/15 py-4 text-lg text-white/90 last:border-b-0"
+              >
+                <span aria-hidden className="nav-num !text-sm">
+                  {item.num}
+                </span>
+                {item.label}
+              </Link>
+            ))}
             <Link
-              key={item.href}
-              href={item.href}
+              href="/resume"
               onClick={() => setOpen(false)}
-              className="flex items-baseline gap-3 border-b border-white/15 py-4 text-lg text-white/90 last:border-b-0"
+              style={{ "--i": anchors.length } as React.CSSProperties}
+              className="nav-sheet-item btn mt-4 w-full justify-center"
             >
-              <span aria-hidden className="nav-num !text-sm">
-                {item.num}
+              <PixelCells seed="sheet-resume" variant="hover" cols={14} rows={3} spread={240} />
+              <span className="btn__label inline-flex items-center gap-2">
+                Résumé
+                <ArrowUpRightIcon />
               </span>
-              {item.label}
             </Link>
-          ))}
-          <Link
-            href="/resume"
-            onClick={() => setOpen(false)}
-            className="btn mt-4 w-full justify-center"
-          >
-            <PixelCells seed="sheet-resume" variant="hover" cols={14} rows={3} spread={240} />
-            <span className="btn__label inline-flex items-center gap-2">
-              Résumé
-              <ArrowUpRightIcon />
-            </span>
-          </Link>
-        </nav>
+          </nav>
+        </div>
       </div>
     </header>
   );

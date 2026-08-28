@@ -151,6 +151,48 @@ test.describe("mobile", () => {
     await expect(sheet).toBeHidden();
   });
 
+  test("the sheet opens and closes on a real transition, not a snap", async ({
+    page,
+  }) => {
+    // It used to be `hidden={!open}`, which cannot animate at all. The
+    // contract is: mounted while closed (so there is something to
+    // animate), inert while closed (so `hidden`'s accessibility work
+    // isn't lost), and a non-zero transition on the row that grows.
+    await page.goto("/");
+    const sheet = page.locator("#mobile-nav");
+
+    const closed = await sheet.evaluate((el) => ({
+      rows: getComputedStyle(el).gridTemplateRows,
+      inert: el.hasAttribute("inert"),
+      duration: getComputedStyle(el).transitionDuration,
+    }));
+    expect(closed.inert, "a closed sheet stays out of the tab order").toBe(true);
+    expect(
+      closed.duration.split(",").some((d) => parseFloat(d) > 0),
+      "the sheet declares a transition",
+    ).toBe(true);
+
+    // A closed sheet must not be reachable by keyboard.
+    const reachable = await page.evaluate(() => {
+      const a = document.querySelector<HTMLAnchorElement>("#mobile-nav a");
+      a?.focus();
+      return document.activeElement === a;
+    });
+    expect(reachable, "closed sheet links cannot take focus").toBe(false);
+
+    await page.getByRole("button", { name: /open menu/i }).click();
+    await expect(sheet).toBeVisible();
+
+    const open = await sheet.evaluate((el) => ({
+      rows: getComputedStyle(el).gridTemplateRows,
+      inert: el.hasAttribute("inert"),
+      height: Math.round(el.getBoundingClientRect().height),
+    }));
+    expect(open.inert, "an open sheet is interactive").toBe(false);
+    expect(open.rows, "the animated row actually changes").not.toBe(closed.rows);
+    expect(open.height, "the sheet grows to its content").toBeGreaterThan(100);
+  });
+
   test("the desktop nav rail stays off small screens", async ({ page }) => {
     await page.goto("/");
     // The rail is the desktop progress indicator; on a phone the hamburger
