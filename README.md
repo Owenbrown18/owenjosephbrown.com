@@ -31,6 +31,38 @@ npm install
 npm run dev
 ```
 
+## Environment
+
+Nothing here is needed to run the site locally. Each variable switches on the
+feature it belongs to, and the contact form is written to degrade honestly
+without any of them. Copy `.env.example` to `.env.local` to fill them in.
+
+| Variable | Public | What it does |
+| --- | --- | --- |
+| `RESEND_API_KEY` | no | Delivers the contact form. Without it the form tells the visitor to email directly rather than pretending to send. |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | yes | Renders the Cloudflare Turnstile widget on the form. Without it no widget appears and only the honeypot guards the send. |
+| `TURNSTILE_SECRET_KEY` | no | Validates the Turnstile token server side. **Adding this is what turns enforcement on.** |
+
+The spam check fails open in two cases on purpose: no secret configured, and
+Cloudflare unreachable. Losing a real co-op enquiry to an outage is worse than
+one spam email, which still has to clear the honeypot. A missing or refused
+token is always blocked. That policy is pinned by tests in
+`tests/unit/turnstile.test.ts`.
+
+Cloudflare publishes test keys that always pass, which is what local runs and
+the checked-in tests use:
+
+```bash
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+```
+
+Swapping the secret for `2x0000000000000000000000000000000AA` makes every
+token fail, which is the quickest way to see the blocked path.
+
+After changing any of these in Vercel, redeploy: the site key is inlined into
+the client bundle at build time.
+
 ## Testing
 
 ```bash

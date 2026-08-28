@@ -1,8 +1,19 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { sendContact, type ContactState } from "@/app/contact-action";
 import { PixelCells } from "@/components/pixel-cells";
+import {
+  TurnstileWidget,
+  type TurnstileStatus,
+} from "@/components/turnstile-widget";
+
+/**
+ * Public by design: the site key identifies the widget, the secret key
+ * (server side only) is what actually validates a token. With no site key
+ * set the form runs exactly as it did before, unguarded.
+ */
+const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
 const initial: ContactState = { status: "idle" };
 
@@ -18,6 +29,12 @@ const field =
  */
 export function ContactForm() {
   const [state, action, pending] = useActionState(sendContact, initial);
+  const [spamCheck, setSpamCheck] = useState<TurnstileStatus>("idle");
+
+  // Only hold the button back when there's a check to wait for. Unsolved
+  // means the token isn't there yet and the send would bounce; failed
+  // means it never will, and the widget prints the direct address.
+  const waitingOnCheck = SITE_KEY !== "" && spamCheck !== "solved";
 
   if (state.status === "sent") {
     return (
@@ -91,6 +108,10 @@ export function ContactForm() {
         </label>
       </div>
 
+      {SITE_KEY && (
+        <TurnstileWidget siteKey={SITE_KEY} onStatusChange={setSpamCheck} />
+      )}
+
       {state.status === "error" && (
         <p role="alert" className="mt-4 border border-amber-700/40 bg-amber-500/10 px-3.5 py-2.5 text-sm text-amber-900">
           {state.message}
@@ -99,11 +120,17 @@ export function ContactForm() {
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={pending || waitingOnCheck}
         className="btn btn-primary mt-6 disabled:opacity-60"
       >
         <PixelCells seed="send" variant="hover" cols={10} rows={3} spread={240} />
-        <span className="btn__label">{pending ? "Sending…" : "Send it"}</span>
+        <span className="btn__label">
+          {pending
+            ? "Sending…"
+            : waitingOnCheck && spamCheck !== "failed"
+              ? "One moment…"
+              : "Send it"}
+        </span>
       </button>
     </form>
   );

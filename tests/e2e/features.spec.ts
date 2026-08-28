@@ -603,3 +603,68 @@ test("a client-side hop into a case study reveals nothing early", async ({
   expect(state.scrollY, "landed at the top").toBe(0);
   expect(state.belowFoldRevealed, "below-fold elements revealed early").toBe(0);
 });
+
+test.describe("contact form", () => {
+  // Deliberately no happy-path submit here. A valid submission with
+  // RESEND_API_KEY present would put a real email in Owen's inbox on every
+  // run, so the send path is covered by tests/unit/contact-action.test.ts
+  // with the mail client stubbed. These check what only a browser can.
+
+  test("renders every field, with the honeypot hidden from people", async ({
+    page,
+  }) => {
+    await gotoReady(page, "/");
+    const form = page.locator("#contact form");
+
+    for (const name of ["name", "email", "topic", "message"]) {
+      await expect(form.locator(`[name="${name}"]`)).toBeVisible();
+    }
+
+    // The honeypot has to be in the DOM and out of everyone's way: parked
+    // off screen for sighted users, untabbable, and never announced. It is
+    // deliberately NOT display:none — a bot that skips hidden fields is a
+    // bot this doesn't catch — so "hidden" here means off the canvas.
+    const pot = form.locator('[name="company"]');
+    await expect(pot).toHaveAttribute("tabindex", "-1");
+    await expect(form.locator('[aria-hidden="true"] [name="company"]')).toHaveCount(1);
+    const box = await pot.boundingBox();
+    expect(box, "the honeypot should still be laid out").not.toBeNull();
+    expect(box!.x + box!.width).toBeLessThan(0);
+  });
+
+  test("without Turnstile configured the form stays usable", async ({ page }) => {
+    // The default build ships no site key, and the form must not be held
+    // hostage by a spam check that was never set up.
+    await gotoReady(page, "/");
+    const widget = page.getByTestId("turnstile");
+    const send = page.locator("#contact").getByRole("button", { name: /send it/i });
+
+    if ((await widget.count()) === 0) {
+      await expect(send).toBeEnabled();
+      return;
+    }
+
+    // Configured: the token has to land before the button opens up, or the
+    // submit would bounce off the server check.
+    await expect(page.locator('input[name="cf-turnstile-response"]')).toHaveValue(
+      /.+/,
+      { timeout: 20_000 },
+    );
+    await expect(send).toBeEnabled();
+  });
+
+  test("the spam check never loads on arrival, only on approach", async ({
+    page,
+  }) => {
+    // The form is at the foot of the landing page. Pulling Cloudflare's
+    // script at load would tax every visit for a section most people never
+    // reach, and it would land in the Lighthouse budget.
+    const requests: string[] = [];
+    page.on("request", (r) => {
+      if (r.url().includes("challenges.cloudflare.com")) requests.push(r.url());
+    });
+
+    await gotoReady(page, "/");
+    expect(requests).toHaveLength(0);
+  });
+});
