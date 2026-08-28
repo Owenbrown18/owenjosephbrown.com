@@ -17,9 +17,8 @@ export default async function Image({
   const { slug } = await params;
   const entry = getWorkEntry(slug);
   return ogCard({
-    title: entry?.title ?? "Work",
-    subtitle: entry
-      ? `${kindLabel[entry.kind]} · ${entry.stack.join(" · ")}`
-      : "Case study",
+    eyebrow: entry ? kindLabel[entry.kind] : "Case study",
+    title: entry ? `${entry.title}.` : "Work.",
+    subtitle: entry?.summary ?? "Case study",
   });
 }

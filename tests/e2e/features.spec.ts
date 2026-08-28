@@ -64,11 +64,27 @@ test("/ascii?plain has no escape codes", async ({ request }) => {
   expect(body).not.toContain("\x1b");
 });
 
-test("OG images render", async ({ request }) => {
-  for (const path of ["/opengraph-image", "/work/grain/opengraph-image"]) {
+test("OG images render at full size on every card", async ({ request }) => {
+  // A broken card still answers 200 with a PNG, so check the pixels are
+  // really there: correct dimensions and a plausible payload. The obdesign
+  // card is listed because it is the one that swaps in Fraunces for the
+  // wordmark, which is its own font-loading path.
+  for (const path of [
+    "/opengraph-image",
+    "/work/grain/opengraph-image",
+    "/obdesign/opengraph-image",
+  ]) {
     const res = await request.get(path);
     expect(res.status(), path).toBe(200);
     expect(res.headers()["content-type"]).toContain("image/png");
+
+    const png = await res.body();
+    // IHDR carries width and height as big-endian uint32s at bytes 16-23.
+    expect(png.readUInt32BE(16), `${path} width`).toBe(1200);
+    expect(png.readUInt32BE(20), `${path} height`).toBe(630);
+    expect(png.byteLength, `${path} is not a blank card`).toBeGreaterThan(
+      20_000,
+    );
   }
 });
 
