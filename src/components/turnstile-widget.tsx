@@ -24,6 +24,7 @@ type TurnstileOptions = {
   "error-callback"?: () => void;
   "expired-callback"?: () => void;
   "timeout-callback"?: () => void;
+  "before-interactive-callback"?: () => void;
   "response-field"?: boolean;
 };
 
@@ -71,7 +72,19 @@ function loadTurnstile(): Promise<void> {
   return scriptPromise;
 }
 
-export type TurnstileStatus = "idle" | "ready" | "solved" | "failed";
+/**
+ * idle/ready: mounted, Cloudflare is deciding, usually a second or two.
+ * interactive: it decided to ask, and there is a checkbox waiting on a
+ *   click. The send button has to say so, or the visitor watches a
+ *   disabled button forever wondering what it is waiting for.
+ * solved: token in hand. failed: it will never arrive.
+ */
+export type TurnstileStatus =
+  | "idle"
+  | "ready"
+  | "interactive"
+  | "solved"
+  | "failed";
 
 export function TurnstileWidget({
   siteKey,
@@ -127,8 +140,14 @@ export function TurnstileWidget({
               setToken("");
               setStatus("ready");
             },
+            "before-interactive-callback": () => {
+              setStatus((cur) => (cur === "solved" ? cur : "interactive"));
+            },
           });
-          if (!cancelled) setStatus((s) => (s === "solved" ? s : "ready"));
+          if (!cancelled)
+            setStatus((s) =>
+              s === "solved" || s === "interactive" ? s : "ready",
+            );
         })
         .catch(() => {
           if (!cancelled) setStatus("failed");

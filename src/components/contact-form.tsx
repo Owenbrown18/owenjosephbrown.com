@@ -127,9 +127,11 @@ export function ContactForm() {
         <span className="btn__label">
           {pending
             ? "Sending…"
-            : waitingOnCheck && spamCheck !== "failed"
-              ? "One moment…"
-              : "Send it"}
+            : spamCheck === "interactive"
+              ? "Tick the box to send"
+              : waitingOnCheck && spamCheck !== "failed"
+                ? "One moment…"
+                : "Send it"}
         </span>
       </button>
     </form>
