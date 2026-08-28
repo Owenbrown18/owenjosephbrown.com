@@ -199,14 +199,26 @@ test.describe("mobile", () => {
     await page.getByRole("button", { name: /open menu/i }).click();
     await expect(sheet).toBeVisible();
 
+    // Poll for the end of the transition instead of reading straight after
+    // the click. Being visible only means the sheet started opening, and a
+    // loaded CI worker can be sampled before the row has left 0px, which
+    // made this fail against a perfectly good animation.
+    await expect
+      .poll(
+        async () =>
+          Math.round(
+            await sheet.evaluate((el) => el.getBoundingClientRect().height),
+          ),
+        { message: "the sheet grows to its content" },
+      )
+      .toBeGreaterThan(100);
+
     const open = await sheet.evaluate((el) => ({
       rows: getComputedStyle(el).gridTemplateRows,
       inert: el.hasAttribute("inert"),
-      height: Math.round(el.getBoundingClientRect().height),
     }));
     expect(open.inert, "an open sheet is interactive").toBe(false);
     expect(open.rows, "the animated row actually changes").not.toBe(closed.rows);
-    expect(open.height, "the sheet grows to its content").toBeGreaterThan(100);
   });
 
   test("the desktop nav rail stays off small screens", async ({ page }) => {
