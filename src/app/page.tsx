@@ -26,9 +26,11 @@ const personJsonLd = {
   name: "Owen Brown",
   url: "https://owenjosephbrown.com",
   email: `mailto:${identity.email}`,
-  jobTitle: "Software engineer",
+  jobTitle: "Software engineering student",
   sameAs: [identity.github, identity.linkedin, "https://www.obwebdesign.ca"],
-  alumniOf: {
+  // affiliation, not alumniOf: alumniOf asserts he has already
+  // graduated. He is in his fourth year.
+  affiliation: {
     "@type": "CollegeOrUniversity",
     name: "University of Victoria",
   },
@@ -214,10 +216,13 @@ export default function HomePage() {
 
             <p className="words-enter mt-9 max-w-[46ch] text-[clamp(1rem,1.5vw,1.15rem)] leading-relaxed text-white/75" style={{ "--enter-at": "0.2s" } as React.CSSProperties}>
               <Words>
-I’m a <strong className="font-semibold text-white">software engineer</strong>{" "}
-              in Victoria, studying at UVic and running my own web development business. I
-              build things people actually use, and most of them are live
-              somewhere you can go click on.
+I’m a{" "}
+              <strong className="font-semibold text-white">
+                software engineering student
+              </strong>{" "}
+              at UVic in Victoria, and I run my own web development
+              business. I build things people actually use, and most of them
+              are live somewhere you can go click on.
               </Words>
             </p>
 

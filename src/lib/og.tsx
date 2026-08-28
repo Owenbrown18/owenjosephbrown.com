@@ -259,7 +259,7 @@ export async function ogCard({
             }}
           >
             <span>owenjosephbrown.com</span>
-            <span>Software engineer · Victoria, BC</span>
+            <span>Software engineering student · Victoria, BC</span>
           </div>
         </div>
       </div>

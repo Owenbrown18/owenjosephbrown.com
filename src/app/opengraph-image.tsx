@@ -3,7 +3,7 @@ import { ogCard, OG_SIZE } from "@/lib/og";
 export const size = OG_SIZE;
 export const contentType = "image/png";
 export const alt =
-  "Owen Brown, software engineer: real products, real clients, real code.";
+  "Owen Brown, software engineering student: real products, real clients, real code.";
 
 export default function Image() {
   return ogCard({

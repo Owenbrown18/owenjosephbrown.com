@@ -6,7 +6,7 @@
 
 export const identity = {
   name: "Owen Brown",
-  title: "Software engineer",
+  title: "Software engineering student",
   location: "Victoria & Salt Spring Island, BC",
   email: "owenjosephbrown@gmail.com",
   site: "owenjosephbrown.com",
