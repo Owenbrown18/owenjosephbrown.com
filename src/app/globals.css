@@ -989,8 +989,8 @@ h3.reveal-init {
 }
 
 /* Per-project stages. grain is its own cream, OBdesign sits on sage,
-   Whispr on its dark app forest, leadgen on a cool mist, On the
-   Roadside on its landing page's warm cream. */
+   Whispr on a pale sage so its dark window pops, leadgen on a cool
+   mist, On the Roadside on its landing page's warm cream. */
 .frame-grain {
   background: linear-gradient(165deg, #f7f1e3 0%, #f1e8d2 100%);
   border-color: rgba(122, 99, 48, 0.22);
@@ -1000,8 +1000,8 @@ h3.reveal-init {
   border-color: rgba(46, 84, 80, 0.22);
 }
 .frame-whispr {
-  background: linear-gradient(165deg, #1d3b36 0%, #0f2724 100%);
-  border-color: rgba(15, 39, 36, 0.5);
+  background: linear-gradient(165deg, #e9efec 0%, #d6e2db 100%);
+  border-color: rgba(29, 59, 54, 0.22);
 }
 .frame-roadside {
   background: linear-gradient(165deg, #f6f1e4 0%, #efe3c9 100%);
@@ -1165,43 +1165,6 @@ h3.reveal-init {
 /* The OBdesign card composes several sites in the one frame: one large
    capture with smaller ones stepping away from it. Percentages, so the
    arrangement holds at any frame size. */
-.obdesign-stack > * {
-  position: absolute;
-  overflow: hidden;
-  border: 1px solid rgba(15, 35, 32, 0.14);
-  box-shadow:
-    0 2px 6px -2px rgba(15, 35, 32, 0.12),
-    0 22px 45px -16px rgba(15, 35, 32, 0.35);
-}
-.obdesign-stack > :nth-child(1) {
-  left: 5%;
-  top: 8%;
-  width: 60%;
-  aspect-ratio: 16 / 10;
-  z-index: 3;
-}
-.obdesign-stack > :nth-child(2) {
-  right: 4%;
-  top: 5%;
-  width: 41%;
-  aspect-ratio: 16 / 10;
-  z-index: 4;
-}
-.obdesign-stack > :nth-child(3) {
-  left: 12%;
-  bottom: 6%;
-  width: 37%;
-  aspect-ratio: 16 / 10;
-  z-index: 5;
-}
-.obdesign-stack > :nth-child(4) {
-  right: 6%;
-  bottom: 9%;
-  width: 32%;
-  aspect-ratio: 16 / 10;
-  z-index: 2;
-}
-
 /* The index is deliberately not a tidy grid: frames differ in shape and
    the second column drops, so the eye moves down the page instead of
    reading it as a table of equal boxes. */

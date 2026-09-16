@@ -104,13 +104,17 @@ const compositions: Record<
       <>
         {/* The landing page behind, the app in front: the two halves of
             what shipped, a website on the web and the app on phones. */}
-        <Shot
-          src="/images/work/on-the-roadside.webp"
-          alt=""
-          chrome
-          className="left-[4%] top-[7%] w-[72%]"
-          sizes="(min-width: 768px) 600px, 72vw"
-        />
+        <div className="absolute left-[4%] top-[6%] w-[68%]">
+          <LaptopFrame url="ontheroadside.ca">
+            <Image
+              src="/images/work/on-the-roadside.webp"
+              alt=""
+              width={1600}
+              height={1000}
+              sizes="(min-width: 768px) 560px, 68vw"
+            />
+          </LaptopFrame>
+        </div>
         <div className="absolute bottom-[-10%] right-[21%] z-10 w-[22%] -rotate-2">
           <PhoneFrame>
             <Image
@@ -143,43 +147,34 @@ const compositions: Record<
     tone: "frame-whispr",
     art: (
       <>
-        {/* Not screenshots: these pieces are re-rendered from Whispr's own
-            source styles (Hud.tsx, GeneralPane.tsx) with real alpha, so
-            corners are actually round and both HUD states exist. */}
+        {/* The app itself, not fragments of it: the real settings window
+            (its own macOS chrome) with the two HUD pills in front. The
+            pills are re-rendered from Whispr's source styles (Hud.tsx)
+            with real alpha, so their corners are actually round. */}
         <Shot
-          src="/images/whispr/card-hint-v2.webp"
+          src="/images/whispr/settings-general.webp"
           alt=""
-          className="left-[4%] top-[8%] w-[76%] aspect-[1284/132] rounded-xl"
-          sizes="(min-width: 768px) 640px, 76vw"
+          className="left-[4%] top-[7%] w-[58%] aspect-[1400/1094] rounded-lg"
+          sizes="(min-width: 768px) 480px, 58vw"
         />
-        <Shot
-          src="/images/whispr/card-models-v2.webp"
-          alt=""
-          className="right-[4%] top-[30%] z-10 w-[60%] aspect-[1224/346] rounded-xl"
-          sizes="(min-width: 768px) 500px, 60vw"
-        />
-        <div
-          className="absolute bottom-[26%] left-[7%] z-20 w-[24%]"
-        >
+        <div className="absolute right-[6%] top-[34%] z-10 w-[32%]">
           <Image
             src="/images/whispr/pill-listening-v2.webp"
             alt=""
             width={254}
             height={64}
-            sizes="(min-width: 768px) 200px, 24vw"
-            className="h-auto w-full drop-shadow-[0_10px_24px_rgba(0,0,0,0.5)]"
+            sizes="(min-width: 768px) 265px, 32vw"
+            className="h-auto w-full drop-shadow-[0_10px_24px_rgba(15,35,32,0.4)]"
           />
         </div>
-        <div
-          className="absolute bottom-[9%] left-[16%] z-20 w-[25%]"
-        >
+        <div className="absolute right-[11%] top-[52%] z-10 w-[29%]">
           <Image
             src="/images/whispr/pill-transcribing-v2.webp"
             alt=""
             width={260}
             height={64}
-            sizes="(min-width: 768px) 205px, 25vw"
-            className="h-auto w-full drop-shadow-[0_10px_24px_rgba(0,0,0,0.5)]"
+            sizes="(min-width: 768px) 240px, 29vw"
+            className="h-auto w-full drop-shadow-[0_10px_24px_rgba(15,35,32,0.4)]"
           />
         </div>
       </>
@@ -190,20 +185,30 @@ const compositions: Record<
     tone: "frame-leadgen",
     art: (
       <>
-        <Shot
-          src="/images/leadgen/dashboard-top.webp"
-          alt=""
-          chrome
-          className="left-[4%] top-[6%] w-[70%]"
-          sizes="(min-width: 768px) 580px, 70vw"
-        />
+        {/* The dashboard the operation runs from, on the machine it runs
+            on: a single local HTML file, so the laptop's URL bar carries
+            the file name rather than a domain. */}
+        <div className="absolute left-[4%] top-[6%] w-[66%]">
+          <LaptopFrame url="leads-dashboard.html">
+            <Image
+              src="/images/leadgen/dashboard-top.webp"
+              alt=""
+              width={1400}
+              height={700}
+              sizes="(min-width: 768px) 545px, 66vw"
+              // Left-anchored: the centre crop sliced the lead names in
+              // half, and the code window covers the right side anyway.
+              style={{ objectPosition: "left top" }}
+            />
+          </LaptopFrame>
+        </div>
         {/* The classifier itself, rendered from the real source: the
             system is the product here, so the code is the better photo. */}
         <Shot
           src="/images/leadgen/classifier-code.webp"
           alt=""
-          className="bottom-[6%] right-[4%] z-10 w-[54%] aspect-[1564/982]"
-          sizes="(min-width: 768px) 450px, 54vw"
+          className="bottom-[6%] right-[4%] z-10 w-[50%] aspect-[1564/982]"
+          sizes="(min-width: 768px) 415px, 50vw"
         />
       </>
     ),
@@ -418,8 +423,8 @@ I’m a{" "}
           </p>
 
           <div className="project-index mt-14 grid gap-x-10 gap-y-20 sm:mt-16 md:grid-cols-2">
-            {/* OBdesign, composed: the one card that isn't a single
-                screenshot, because ten sites is the point of it. */}
+            {/* OBdesign, composed: client sites in the same laptop frames
+                the hero uses, because the sites are the product. */}
             <ProjectCard
               num="001"
               title="OBdesign"
@@ -431,23 +436,29 @@ I’m a{" "}
               linkLabel="View OBdesign"
               tone="frame-obdesign"
             >
-              <div aria-hidden className="obdesign-stack absolute inset-0">
-                {[
-                  ["grain-construction", "Grain Construction", "560px"],
-                  ["figs-and-honey", "Figs & Honey", "380px"],
-                  ["daves-bakery", "Daves’ Bakery", "340px"],
-                  ["soma-active-health", "Soma Active Health", "300px"],
-                ].map(([slug, name, w]) => (
-                  <div key={slug}>
+              <div aria-hidden className="absolute inset-0">
+                <div className="absolute left-[4%] top-[7%] w-[62%]">
+                  <LaptopFrame url="grainconstruction.ca">
                     <Image
-                      src={`/images/work/${slug}.webp`}
-                      alt={name}
-                      fill
-                      sizes={`(min-width: 768px) ${w}, 45vw`}
-                      className="object-cover object-top"
+                      src="/images/work/grain-construction.webp"
+                      alt=""
+                      width={1600}
+                      height={1000}
+                      sizes="(min-width: 768px) 510px, 62vw"
                     />
-                  </div>
-                ))}
+                  </LaptopFrame>
+                </div>
+                <div className="absolute bottom-[6%] right-[4%] z-10 w-[50%]">
+                  <LaptopFrame url="figsandhoney.com">
+                    <Image
+                      src="/images/work/figs-and-honey.webp"
+                      alt=""
+                      width={1600}
+                      height={1000}
+                      sizes="(min-width: 768px) 410px, 50vw"
+                    />
+                  </LaptopFrame>
+                </div>
               </div>
             </ProjectCard>
 
