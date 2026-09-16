@@ -584,6 +584,10 @@ test("the OBdesign band swaps sites by name", async ({ page }) => {
   await expect(band.locator(".laptop-frame__url")).toContainText(
     "grainconstruction.ca",
   );
+  // Every swap remounts the flash grid over the incoming shot.
+  await expect(band.locator(".pixel-grid--flash .pixel-cell")).toHaveCount(
+    12 * 7,
+  );
   // Clicking pins: the choice survives the pointer leaving.
   await band.getByRole("tab", { name: "Daves' Bakery" }).click();
   await band.locator(".laptop-frame__url").hover();

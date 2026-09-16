@@ -104,6 +104,15 @@ export function ObdesignShowcase() {
                 className={`obshow-shot${i === index ? " is-active" : ""}`}
               />
             ))}
+            {/* Keyed on the shown site: every swap remounts the grid and
+                the cells blink once over the incoming shot. */}
+            <PixelCells
+              key={active.slug}
+              seed={active.slug}
+              variant="flash"
+              cols={12}
+              rows={7}
+            />
           </div>
         </LaptopFrame>
         <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">

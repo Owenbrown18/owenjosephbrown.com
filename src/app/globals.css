@@ -1088,6 +1088,35 @@ h3.reveal-init {
   opacity: 0;
   transition: opacity 0.14s ease-out var(--d, 0ms);
 }
+/* Flash grid: the hover cells run once, forwards — blink in, dissolve
+   out — over content that just swapped in place. Driven by animation,
+   not transition, so a remount plays it with no class choreography. */
+.pixel-grid--flash {
+  z-index: 5;
+}
+.pixel-grid--flash .pixel-cell {
+  background: var(--accent);
+  opacity: 0;
+  animation: cell-flash 0.26s ease-out both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes cell-flash {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pixel-grid--flash .pixel-cell {
+    animation: none;
+  }
+}
+
 /* .stage is any hoverable tile with a pixel grid and a veil: the work
    cards, the explore tiles, the OBdesign site gallery. One hover. */
 .stage:hover .pixel-grid--hover .pixel-cell,

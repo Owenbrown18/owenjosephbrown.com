@@ -6,6 +6,9 @@ import type { CSSProperties } from "react";
  * reveal: paper cells over a card's art that dissolve off on scroll-in.
  * hover:  accent cells that fill in over the thing you're hovering — a
  *         card's frame, a button — and dissolve back when you leave.
+ * flash:  accent cells that blink once and dissolve, for the moment
+ *         content swaps in place (the OBdesign laptop). Remount it
+ *         (key it on the swap) to play it again.
  *
  * Delays are seeded from `seed`, so server and client render identical
  * numbers (no hydration mismatch) and every element has its own order.
@@ -26,10 +29,10 @@ export function PixelCells({
   cols = 10,
   rows = 6,
   /** Longest delay, ms. Cards breathe; buttons need to feel instant. */
-  spread = variant === "reveal" ? 520 : 300,
+  spread = variant === "reveal" ? 520 : variant === "flash" ? 150 : 300,
 }: {
   seed: string;
-  variant: "reveal" | "hover";
+  variant: "reveal" | "hover" | "flash";
   cols?: number;
   rows?: number;
   spread?: number;
