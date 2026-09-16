@@ -448,61 +448,41 @@ I’m a{" "}
 
       </section>
 
-      {/* 03 · OBdesign. The business gets a band, not a card: branding on
-          the left, the whole client roster on the right in one laptop big
-          enough that the sites actually read. */}
+      {/* 03 · OBdesign. The business as an index, straight on the page
+          like every other section: the wordmark and the honest numbers up
+          top, then the roster rows beside one laptop big enough that the
+          sites actually read. */}
       <SectionRule num="03" />
       <section id="obdesign" className="section-pad relative">
         <div className="container-site">
-          <div className="obshow reveal-up">
-            <div className="obshow-brand">
-              <p className="eyebrow !text-[--accent-text]">03 · The business</p>
-              <h2 className="anim-heading mt-4 font-wordmark text-[clamp(2.4rem,5vw,3.6rem)] font-bold leading-none text-fg">
-                OBdesign<span className="text-[--accent]">.</span>
-              </h2>
-              <p className="mt-5 max-w-[42ch] leading-relaxed text-fg-muted">
-                <Words>
-                My one-person web development business: custom-coded sites
-                for owner-operated BC businesses, every one editable by its
-                owner without calling me. It pays for my degree, and every
-                client so far has left a five-star review.
-                </Words>
-              </p>
-              <dl className="obshow-stats">
-                {[
-                  ["25+", "sites deployed"],
-                  ["11", "live client sites"],
-                  ["$10k+", "collected"],
-                ].map(([value, label]) => (
-                  <div key={label}>
-                    <dt className="label-mono text-fg-faint">{label}</dt>
-                    <dd className="font-display text-2xl font-bold text-fg">
-                      {value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              <div className="mt-8 flex flex-wrap items-center gap-2">
-                <Link href="/obdesign" className="btn btn-primary">
-                  <span className="btn__label inline-flex items-center gap-1.5">
-                    The full story
-                    <ArrowUpRightIcon />
-                  </span>
-                </Link>
-                <a
-                  href="https://www.obwebdesign.ca"
-                  rel="noopener"
-                  className="btn"
-                >
-                  <span className="btn__label inline-flex items-center gap-1.5">
-                    obwebdesign.ca
-                    <ArrowUpRightIcon />
-                  </span>
-                </a>
-              </div>
-            </div>
-            <ObdesignShowcase />
+          <div className="reveal-up lift flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+            <h2 className="anim-heading">
+              <ObdesignWordmark className="text-[clamp(2.4rem,5.5vw,4rem)]" />
+            </h2>
+            <dl className="flex flex-wrap items-end gap-x-10 gap-y-4">
+              {[
+                ["25+", "sites deployed"],
+                ["11", "live client sites"],
+                ["$10k+", "collected"],
+              ].map(([value, label]) => (
+                <div key={label}>
+                  <dd className="font-display text-3xl font-bold text-white/90">
+                    {value}
+                  </dd>
+                  <dt className="label-mono mt-1 text-white/50">{label}</dt>
+                </div>
+              ))}
+            </dl>
           </div>
+          <p className="reveal-up words mt-5 max-w-[52ch] text-white/75">
+            <Words>
+            My one-person web development business: custom-coded sites for
+            owner-operated BC businesses, every one editable by its owner
+            without calling me. It pays for my degree, and every client so
+            far has left a five-star review.
+            </Words>
+          </p>
+          <ObdesignShowcase />
         </div>
       </section>
 
