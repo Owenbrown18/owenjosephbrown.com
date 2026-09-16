@@ -699,7 +699,9 @@ h3.reveal-init {
 }
 .obshow-shot {
   opacity: 0;
-  transition: opacity 0.45s var(--ease-out);
+  /* Quick enough that sweeping the list feels live, slow enough not to
+     strobe. */
+  transition: opacity 0.22s var(--ease-out);
 }
 .obshow-shot.is-active {
   opacity: 1;

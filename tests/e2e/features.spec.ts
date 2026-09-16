@@ -574,9 +574,19 @@ test("the OBdesign band swaps sites by name", async ({ page }) => {
   // Every client in the roster gets a pill, straight from the data.
   const { clientSites } = await import("../../src/lib/sites");
   await expect(band.getByRole("tab")).toHaveCount(clientSites.length);
-  // Picking a name swaps the laptop's URL bar, the visible shot, and
-  // both action links.
+  // Hovering previews without committing: the frame follows the pointer
+  // and falls back to the pinned row when it leaves the list.
+  await band.getByRole("tab", { name: "Figs & Honey" }).hover();
+  await expect(band.locator(".laptop-frame__url")).toContainText(
+    "figsandhoney.com",
+  );
+  await band.locator(".laptop-frame__url").hover(); // off the list
+  await expect(band.locator(".laptop-frame__url")).toContainText(
+    "grainconstruction.ca",
+  );
+  // Clicking pins: the choice survives the pointer leaving.
   await band.getByRole("tab", { name: "Daves' Bakery" }).click();
+  await band.locator(".laptop-frame__url").hover();
   await expect(band.locator(".laptop-frame__url")).toContainText(
     "davesbakery.ca",
   );

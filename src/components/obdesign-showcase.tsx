@@ -23,12 +23,17 @@ const host = (url: string) =>
  * a row far down nudges the frame back into view so the swap is seen.
  */
 export function ObdesignShowcase() {
-  const [index, setIndex] = useState(0);
+  // Two levels of intent: hovering a row previews its site in the
+  // laptop, clicking pins it. When the pointer leaves the list the
+  // frame falls back to the pinned row, so browsing costs nothing.
+  const [pinned, setPinned] = useState(0);
+  const [hovered, setHovered] = useState<number | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const index = hovered ?? pinned;
   const active = clientSites[index];
 
   const pick = (i: number) => {
-    setIndex(i);
+    setPinned(i);
     // Only below lg, where the laptop is above the list and a tap on a
     // low row can leave it off-screen. "nearest" makes it a no-op when
     // the frame is already visible.
@@ -40,15 +45,22 @@ export function ObdesignShowcase() {
   return (
     <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)] lg:gap-16">
       <div className="order-2 lg:order-1">
-        <div role="tablist" aria-label="Client sites">
+        <div
+          role="tablist"
+          aria-label="Client sites"
+          onMouseLeave={() => setHovered(null)}
+        >
           {clientSites.map((site, i) => (
             <button
               key={site.slug}
               type="button"
               role="tab"
-              aria-selected={i === index}
-              className={`obindex-row${i === index ? " is-active" : ""}`}
+              aria-selected={i === pinned}
+              className={`obindex-row${i === pinned ? " is-active" : ""}`}
               onClick={() => pick(i)}
+              onMouseEnter={() => setHovered(i)}
+              onFocus={() => setHovered(i)}
+              onBlur={() => setHovered(null)}
             >
               <span aria-hidden className="obindex-mark" />
               <span className="obindex-name font-display">{site.name}</span>
