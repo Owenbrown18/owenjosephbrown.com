@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { caseStudyUrl, clientSites } from "@/lib/sites";
+import { siteShots } from "@/lib/site-shots";
 import { LaptopFrame } from "@/components/device-frames";
 import { ArrowUpRightIcon } from "@/components/icons";
 import { PixelCells } from "@/components/pixel-cells";
@@ -100,7 +101,7 @@ export function ObdesignShowcase() {
             {clientSites.map((site, i) => (
               <Image
                 key={site.slug}
-                src={`/images/work/${site.slug}.webp`}
+                src={siteShots[site.slug]}
                 alt={i === index ? `${site.name} website on desktop` : ""}
                 fill
                 sizes="(min-width: 1280px) 40rem, (min-width: 768px) 46rem, 92vw"

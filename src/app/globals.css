@@ -1233,53 +1233,67 @@ h3.reveal-init {
 /* ---------------------------------------------------------------
    Device frames, ported from the OBdesign site's hero — Owen's call:
    the frames he already ships to clients, reused here.
+
+   The laptop is proportional: every measurement is in cqw of the frame's
+   own width, so a 280px laptop in the hero is the same object as the
+   720px one in the OBdesign band, just smaller. In rem, the bezel and URL
+   bar stayed the same pixel size at every width and the small laptops
+   read twice as heavy. Values are the original rem metrics as they
+   render on the band's laptop at a 1440px viewport (719px wide:
+   1rem = 2.2253cqw), so the band itself is unchanged. The card laptops
+   keep the TrustStrip rem metrics via --mini below.
    --------------------------------------------------------------- */
+.laptop-frame {
+  container-type: inline-size;
+}
 .laptop-frame__screen {
   background: #1a1a1c;
-  border-radius: 0.7rem 0.7rem 0.2rem 0.2rem;
-  padding: 0.5rem 0.5rem 0;
+  border-radius: 1.558cqw 1.558cqw 0.445cqw 0.445cqw;
+  padding: 1.113cqw 1.113cqw 0;
   box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.3),
-    0 34px 60px -24px rgba(0, 0, 0, 0.6);
+    0 0.278cqw 0.834cqw rgba(0, 0, 0, 0.3),
+    0 4.729cqw 8.345cqw -3.338cqw rgba(0, 0, 0, 0.6);
 }
 .laptop-frame__bar {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.7rem;
+  gap: 1.335cqw;
+  padding: 1.113cqw 1.558cqw;
   background: #f1efea;
-  border-radius: 0.35rem 0.35rem 0 0;
+  border-radius: 0.779cqw 0.779cqw 0 0;
 }
 .laptop-frame__dots {
   display: inline-flex;
-  gap: 0.3rem;
+  gap: 0.668cqw;
   flex-shrink: 0;
 }
 .laptop-frame__dots span {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 1.113cqw;
+  height: 1.113cqw;
   border-radius: 50%;
   background: rgba(11, 31, 29, 0.16);
 }
 .laptop-frame__url {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.779cqw;
   flex: 1;
   min-width: 0;
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 9999px;
-  padding: 0.22rem 0.8rem;
-  font-size: 0.68rem;
+  padding: 0.49cqw 1.78cqw;
+  /* The one floor: below ~430px wide the proportional size drops under
+     6.5px and the domain stops being text at all. */
+  font-size: max(1.513cqw, 6.5px);
   color: #6e6e66;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .laptop-frame__lock {
-  width: 0.6rem;
-  height: 0.6rem;
+  width: 1.335cqw;
+  height: 1.335cqw;
   flex-shrink: 0;
   color: #7ba49e;
 }
@@ -1288,7 +1302,7 @@ h3.reveal-init {
   aspect-ratio: 16 / 10;
   overflow: hidden;
   background: #eae8e4;
-  border-radius: 0 0 0.18rem 0.18rem;
+  border-radius: 0 0 0.4cqw 0.4cqw;
 }
 .laptop-frame__view img {
   width: 100%;
@@ -1300,10 +1314,10 @@ h3.reveal-init {
   position: relative;
   width: 112%;
   margin-left: -6%;
-  height: 0.85rem;
+  height: 1.892cqw;
   background: linear-gradient(#cfcfd2, #a9a9ae 55%, #87878d);
-  border-radius: 0 0 0.6rem 0.6rem / 0 0 0.85rem 0.85rem;
-  box-shadow: 0 14px 22px -10px rgba(0, 0, 0, 0.5);
+  border-radius: 0 0 1.335cqw 1.335cqw / 0 0 1.892cqw 1.892cqw;
+  box-shadow: 0 3.115cqw 4.896cqw -2.225cqw rgba(0, 0, 0, 0.5);
 }
 .laptop-frame__notch {
   position: absolute;
@@ -1311,9 +1325,9 @@ h3.reveal-init {
   left: 50%;
   transform: translateX(-50%);
   width: 18%;
-  height: 0.32rem;
+  height: 0.712cqw;
   background: #8b8b91;
-  border-radius: 0 0 0.4rem 0.4rem;
+  border-radius: 0 0 0.89cqw 0.89cqw;
 }
 
 .mobile-frame {
@@ -1463,10 +1477,12 @@ h3.reveal-init {
 }
 .laptop-frame--mini .laptop-frame__base {
   height: 0.6rem;
+  border-radius: 0 0 0.6rem 0.6rem / 0 0 0.85rem 0.85rem;
   box-shadow: 0 10px 16px -8px rgba(0, 0, 0, 0.45);
 }
 .laptop-frame--mini .laptop-frame__notch {
   height: 0.22rem;
+  border-radius: 0 0 0.4rem 0.4rem;
 }
 
 /* Continuous animations pause while their section is off-screen (set by

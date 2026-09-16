@@ -19,6 +19,7 @@ import { PixelCells } from "@/components/pixel-cells";
 import { Words } from "@/components/words";
 import { identity } from "@/lib/resume-data";
 import { getWorkEntries } from "@/lib/content";
+import { siteShots } from "@/lib/site-shots";
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -328,7 +329,7 @@ I’m a{" "}
             <div className="cluster-piece absolute left-0 top-[4%] w-[62%]" style={{ "--i": 1 } as React.CSSProperties}>
               <LaptopFrame url="grainconstruction.ca">
                 <Image
-                  src="/images/work/grain-construction.webp"
+                  src={siteShots["grain-construction"]}
                   alt=""
                   width={1200}
                   height={750}
@@ -340,7 +341,7 @@ I’m a{" "}
             <div className="cluster-piece absolute right-0 top-0 w-[46%]" style={{ "--i": 2 } as React.CSSProperties}>
               <LaptopFrame url="figsandhoney.com">
                 <Image
-                  src="/images/work/figs-and-honey.webp"
+                  src={siteShots["figs-and-honey"]}
                   alt=""
                   width={900}
                   height={563}
@@ -352,7 +353,7 @@ I’m a{" "}
             <div className="cluster-piece absolute bottom-[6%] left-[4%] z-[1] w-[46%]" style={{ "--i": 3 } as React.CSSProperties}>
               <LaptopFrame url="somavictoria.ca">
                 <Image
-                  src="/images/work/soma-active-health.webp"
+                  src={siteShots["soma-active-health"]}
                   alt=""
                   width={900}
                   height={563}

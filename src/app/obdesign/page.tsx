@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { caseStudyUrl, clientSites } from "@/lib/sites";
+import { siteShots } from "@/lib/site-shots";
 import { PixelCells } from "@/components/pixel-cells";
 import { ExploreMore } from "@/components/explore-more";
 import { PageHeader } from "@/components/page-header";
@@ -75,7 +76,7 @@ export default function ObdesignPage() {
             <a href={site.url} rel="noopener" className="stage reveal-up block">
               <span className="stage-frame">
                 <Image
-                  src={`/images/work/${site.slug}.webp`}
+                  src={siteShots[site.slug]}
                   alt={`${site.name} website on desktop`}
                   width={840}
                   height={525}

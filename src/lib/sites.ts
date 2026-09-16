@@ -1,7 +1,9 @@
 /**
  * Every client site OBdesign has shipped. Screenshots live in
- * public/images/work/<slug>.webp (exported from the OBdesign repo). The
- * slug matches the case study's path on obwebdesign.ca.
+ * public/images/work/<slug>.webp (regenerated from the OBdesign repo by
+ * `npm run sync:client-shots`) and render through the content-hashed
+ * imports in site-shots.ts. The slug matches the case study's path on
+ * obwebdesign.ca. A new site needs a line in both files.
  */
 export type ClientSite = {
   slug: string;

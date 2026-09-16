@@ -620,9 +620,11 @@ test("the OBdesign band swaps sites by name", async ({ page }) => {
   await expect(band.locator(".laptop-frame__url")).toContainText(
     "davesbakery.ca",
   );
+  // A content-hashed static import, never the bare public path: a bare
+  // path keeps its URL across re-syncs and caches serve the old capture.
   await expect(band.locator(".obshow-shot.is-active")).toHaveAttribute(
     "src",
-    /daves-bakery/,
+    /_next%2Fstatic%2Fmedia%2Fdaves-bakery\.[a-z0-9]+\.webp/,
   );
   await expect(
     band.getByRole("link", { name: /visit davesbakery\.ca/i }),
