@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import sharp from "sharp";
 
 /**
  * networkidle is the wrong readiness signal on a slow runner: the landing
@@ -86,6 +87,42 @@ test("OG images render at full size on every card", async ({ request }) => {
       20_000,
     );
   }
+});
+
+test("the home card really carries the three device screens", async ({
+  request,
+}) => {
+  // The card composes screenshots into laptop and phone frames. If an
+  // image fails to decode, Satori still returns a perfectly valid 1200x630
+  // PNG with blank frames, which the size check above would pass. So look
+  // at the pixels: each screen region must have real detail in it, where
+  // untouched paper is essentially flat.
+  const res = await request.get("/opengraph-image");
+  const png = await res.body();
+
+  const regions = {
+    grain: { left: 700, top: 140, width: 400, height: 200 },
+    figs: { left: 880, top: 310, width: 300, height: 200 },
+    phone: { left: 616, top: 320, width: 124, height: 200 },
+  };
+
+  for (const [name, box] of Object.entries(regions)) {
+    const crop = await sharp(png).extract(box).removeAlpha().png().toBuffer();
+    // stats() reports on its input, so the crop has to be materialised
+    // before measuring it.
+    const { channels } = await sharp(crop).stats();
+    const spread = Math.max(...channels.map((c) => c.stdev));
+    expect(spread, `${name} screen is blank`).toBeGreaterThan(15);
+  }
+
+  // The control: bare paper beside the wordmark, which must stay flat.
+  const paper = await sharp(png)
+    .extract({ left: 72, top: 20, width: 300, height: 40 })
+    .removeAlpha()
+    .png()
+    .toBuffer();
+  const { channels: flat } = await sharp(paper).stats();
+  expect(Math.max(...flat.map((c) => c.stdev))).toBeLessThan(5);
 });
 
 test("sitemap lists every case study", async ({ request }) => {

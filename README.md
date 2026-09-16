@@ -15,7 +15,7 @@ A middleware sniffs terminal user agents and rewrites the root to an ANSI-colour
 - **A live WebGL page.** The brand's forest gradient rendered as a fragment shader behind the whole landing page: value-noise fbm drifts the gradient centre, a soft light follows the pointer. DPR-clamped, 30fps-capped, paused offscreen, killed under `prefers-reduced-motion`, and it bails to a plain CSS gradient on software rasterizers.
 - **One-page landing** with numbered anchor nav: expertise, work (featured projects + a marquee of nine client sites), experience, real client testimonials, contact.
 - **Case studies as typed MDX.** Frontmatter validated with Zod at build time; unit tests assert every referenced image exists on disk. Code blocks via rehype-pretty-code and Shiki.
-- **Dynamic OG images** per page with `next/og` on the brand card.
+- **Dynamic OG images** per page with `next/og` on the brand card. The home card composes the real client screenshots into the site's own laptop and phone frames (`src/lib/og-home.tsx`); replace a screenshot under `public/images/` and the card follows on the next build.
 - **No-JS-first motion.** Scroll reveals are CSS scroll-driven animations behind `@supports`; nothing on the page depends on JavaScript to be readable.
 
 ## Stack

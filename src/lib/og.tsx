@@ -5,11 +5,11 @@ import { join } from "node:path";
 export const OG_SIZE = { width: 1200, height: 630 };
 
 /** The brand, in the four values the card actually needs. */
-const PAPER = "#f4f3ef";
-const INK = "#0f2320";
-const FOREST = "#2e5450";
+export const PAPER = "#f4f3ef";
+export const INK = "#0f2320";
+export const FOREST = "#2e5450";
 /** Sage reads at 2.1:1 on paper, so it accents and never carries text. */
-const ACCENT_TEXT = "#3d6b65";
+export const ACCENT_TEXT = "#3d6b65";
 
 /**
  * The grid, at the page's own measurements: 24px minor, 120px major, drawn
@@ -33,7 +33,7 @@ function falloff(distance: number, radius: number) {
   return Math.exp(-(t * t) * 2.2);
 }
 
-function gridLines() {
+export function gridLines() {
   const { width: W, height: H } = OG_SIZE;
   const massX = MASS.x * W;
   const massY = MASS.y * H;
@@ -87,6 +87,24 @@ function gridLines() {
   return lines;
 }
 
+/** The four faces every card draws from, read once per render. */
+export async function ogFonts() {
+  const font = (file: string) =>
+    readFile(join(process.cwd(), "src/assets/fonts", file));
+  const [bricolage, inter, interBold, fraunces] = await Promise.all([
+    font("bricolage-grotesque-latin-800-normal.woff"),
+    font("inter-latin-400-normal.woff"),
+    font("inter-latin-700-normal.woff"),
+    font("fraunces-latin-700-normal.woff"),
+  ]);
+  return [
+    { name: "Bricolage", data: bricolage, weight: 800 as const },
+    { name: "Inter", data: inter, weight: 400 as const },
+    { name: "InterBold", data: interBold, weight: 700 as const },
+    { name: "Fraunces", data: fraunces, weight: 700 as const },
+  ];
+}
+
 /**
  * Shared OG card, on the same paper the site is printed on: ink type over
  * a forest grid that shows through in one soft mass, the OB. mark, and the
@@ -112,23 +130,7 @@ export async function ogCard({
    */
   wordmark?: boolean;
 }) {
-  const [bricolage, inter, interBold, fraunces] = await Promise.all([
-    readFile(
-      join(
-        process.cwd(),
-        "src/assets/fonts/bricolage-grotesque-latin-800-normal.woff",
-      ),
-    ),
-    readFile(
-      join(process.cwd(), "src/assets/fonts/inter-latin-400-normal.woff"),
-    ),
-    readFile(
-      join(process.cwd(), "src/assets/fonts/inter-latin-700-normal.woff"),
-    ),
-    readFile(
-      join(process.cwd(), "src/assets/fonts/fraunces-latin-700-normal.woff"),
-    ),
-  ]);
+  const fonts = await ogFonts();
 
   // Headings on the site end in a sage full stop. Satori has no inline
   // layout: a div with two children must be flex, and flex wraps per item,
@@ -266,12 +268,7 @@ export async function ogCard({
     ),
     {
       ...OG_SIZE,
-      fonts: [
-        { name: "Bricolage", data: bricolage, weight: 800 as const },
-        { name: "Inter", data: inter, weight: 400 as const },
-        { name: "InterBold", data: interBold, weight: 700 as const },
-        { name: "Fraunces", data: fraunces, weight: 700 as const },
-      ],
+      fonts,
     },
   );
 }

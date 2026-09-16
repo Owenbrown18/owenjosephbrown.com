@@ -1,15 +1,11 @@
-import { ogCard, OG_SIZE } from "@/lib/og";
+import { OG_SIZE } from "@/lib/og";
+import { ogHomeCard } from "@/lib/og-home";
 
 export const size = OG_SIZE;
 export const contentType = "image/png";
 export const alt =
-  "Owen Brown, software engineering student: real products, real clients, real code.";
+  "Owen Brown, software engineering student, beside three things he built: the Grain Construction and Figs & Honey websites and the grain iOS app.";
 
 export default function Image() {
-  return ogCard({
-    eyebrow: "Portfolio",
-    title: "I build software people actually use.",
-    subtitle:
-      "UVic software engineering student. 10+ production client sites, an iOS app, and the pipeline that finds the clients.",
-  });
+  return ogHomeCard();
 }
