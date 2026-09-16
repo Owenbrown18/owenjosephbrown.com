@@ -630,71 +630,85 @@ h3.reveal-init {
   }
 }
 
-/* Client-site screenshot marquee. Clips only sideways: the laptop frames
-   cast shadows below themselves, and a both-axis overflow:hidden cut them
-   off in a hard horizontal line. Vertical padding gives the shadow room. */
-.marquee {
-  position: relative;
-  overflow-x: clip;
-  overflow-y: visible;
-  padding-block: 1rem 3rem;
+/* OBdesign band: a light panel on the dark page — branding beside the
+   client roster in one big laptop. Light so the laptop reads the way it
+   does on obwebdesign.ca, where the thin bezel sits on paper. */
+.obshow {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+  padding: clamp(1.75rem, 4vw, 3.5rem);
+  border: 1px solid rgba(46, 84, 80, 0.22);
+  border-radius: 1.25rem;
+  background: linear-gradient(165deg, #eef2ee 0%, #dde8e1 100%);
+  box-shadow: 0 30px 70px -40px rgba(0, 0, 0, 0.55);
 }
-/* Edge fades as paper-coloured overlays, not a mask: a mask on a strip
-   whose track animates forces the whole strip through an offscreen
-   buffer every frame; two static gradients composite for free. */
-.marquee::before,
-.marquee::after {
-  content: "";
+@media (min-width: 1024px) {
+  .obshow {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 3.5rem;
+  }
+}
+.obshow-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2.25rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(15, 35, 32, 0.14);
+}
+.obshow-stage {
+  min-width: 0;
+}
+.obshow-shots {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 6%;
-  z-index: 2;
-  pointer-events: none;
+  inset: 0;
 }
-.marquee::before {
-  left: 0;
-  background: linear-gradient(to right, var(--bg), transparent);
+.obshow-shot {
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-out);
 }
-.marquee::after {
-  right: 0;
-  background: linear-gradient(to left, var(--bg), transparent);
+.obshow-shot.is-active {
+  opacity: 1;
 }
-.marquee-track {
+.obshow-pills {
   display: flex;
-  width: max-content;
-  animation: marquee-scroll 55s linear infinite;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1.75rem;
 }
-.marquee-half {
+.obshow-pill {
+  padding: 0.32rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(15, 35, 32, 0.72);
+  border: 1px solid rgba(15, 35, 32, 0.18);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.55);
+  transition:
+    background var(--t-fast) ease,
+    color var(--t-fast) ease,
+    border-color var(--t-fast) ease;
+}
+.obshow-pill:hover {
+  border-color: rgba(15, 35, 32, 0.4);
+  color: rgba(15, 35, 32, 0.94);
+}
+.obshow-pill.is-active {
+  background: #0f2320;
+  border-color: #0f2320;
+  color: #f4f3ef;
+}
+.obshow-actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
 }
-.marquee-card {
-  /* Margin, not flex gap, so both halves are identical and the wrap is
-     clean. Wide enough that the laptop bases (112% of the screen) never
-     touch their neighbours — at 1.25rem they fused into one long bar. */
-  margin-right: clamp(2rem, 4vw, 3.5rem);
-  flex-shrink: 0;
-  padding: 0.25rem 0 0;
-}
-.marquee-laptop {
-  width: clamp(200px, 22vw, 280px);
-}
-@keyframes marquee-scroll {
-  to {
-    transform: translateX(-50%);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee {
-    overflow-x: auto;
-  }
-  .marquee::before,
-  .marquee::after {
-    display: none;
-  }
-  .marquee-track {
-    animation: none;
-  }
+.obshow-counter {
+  margin-right: 0.25rem;
+  color: rgba(15, 35, 32, 0.6);
 }
 
 /* Pipeline rail — the stages of a system, drawn rather than screenshotted */

@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/page-header";
 export const metadata: Metadata = {
   title: "OBdesign",
   description:
-    "10+ production websites for BC businesses, every one custom-coded and client-editable. Owen Brown's web development business.",
+    "More than 25 websites deployed, 11 of them live client sites for BC businesses, every one custom-coded and client-editable. Owen Brown's web development business.",
 };
 
 export default function ObdesignPage() {
@@ -25,7 +25,7 @@ export default function ObdesignPage() {
         }
         meta={[
           { label: "Role", value: "Founder & web developer" },
-          { label: "Sites shipped", value: "10+, generating $20,000+" },
+          { label: "Sites shipped", value: "25+ deployed · 11 live client sites" },
           {
             label: "Stack",
             value: "Next.js · Astro · TypeScript · Keystatic",
@@ -53,7 +53,8 @@ export default function ObdesignPage() {
             edits their own content without touching code.
           </p>
           <p>
-            The numbers I actually track: 10+ sites shipped and $20,000+ in revenue, roughly
+            The numbers I actually track: more than 25 sites deployed, 11 of
+            them live client sites, $10,000+ collected, roughly
             7% of first cold emails converting to paying projects (found by{" "}
             <Link href="/work/leadgen" className="link-underline text-fg">
               a pipeline I wrote
@@ -104,15 +105,17 @@ export default function ObdesignPage() {
             <p className="mt-2 text-sm leading-relaxed text-fg-muted">
               {site.blurb}
             </p>
-            <p className="mt-3 text-sm">
-              <a
-                href={caseStudyUrl(site)}
-                rel="noopener"
-                className="link-underline text-fg"
-              >
-                Read the case study on obwebdesign.ca ↗
-              </a>
-            </p>
+            {!site.noCaseStudy && (
+              <p className="mt-3 text-sm">
+                <a
+                  href={caseStudyUrl(site)}
+                  rel="noopener"
+                  className="link-underline text-fg"
+                >
+                  Read the case study on obwebdesign.ca ↗
+                </a>
+              </p>
+            )}
           </article>
         ))}
       </div>

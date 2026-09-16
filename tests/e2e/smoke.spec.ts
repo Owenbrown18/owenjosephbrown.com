@@ -68,9 +68,10 @@ test("every client site links to its case study on obwebdesign.ca", async ({
 }) => {
   const { clientSites } = await import("../../src/lib/sites");
   await page.goto("/obdesign");
+  const withStudy = clientSites.filter((s) => !s.noCaseStudy);
   const links = page.getByRole("link", { name: /read the case study/i });
-  await expect(links).toHaveCount(clientSites.length);
-  for (const site of clientSites) {
+  await expect(links).toHaveCount(withStudy.length);
+  for (const site of withStudy) {
     await expect(
       page.locator(`a[href="https://www.obwebdesign.ca/work/${site.slug}"]`),
       `case study link for ${site.slug}`,
@@ -92,6 +93,8 @@ test("retired client case studies redirect to obwebdesign.ca", async ({
 
 test("landing page reaches the OBdesign page", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: /OBdesign/i }).first().click();
+  // The band's own CTA, not the nav anchor: the nav "obdesign" link stays
+  // on the landing page, this one leaves it.
+  await page.getByRole("link", { name: /the full story/i }).click();
   await expect(page).toHaveURL(/\/obdesign/, { timeout: 15000 });
 });

@@ -141,8 +141,9 @@ test("sitemap lists every case study", async ({ request }) => {
 test("reduced motion still shows all home content", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
+  // The client roster (the marquee's successor) and a project card.
   await expect(
-    page.getByRole("group", { name: /client websites/i }),
+    page.getByRole("tablist", { name: /client sites/i }),
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: /^grain$/i })).toBeVisible();
 });
@@ -370,7 +371,7 @@ test("the nav rail fills section by section as you scroll", async ({
     );
 
   const atTop = await fills();
-  expect(atTop.length, "one rail per anchor").toBe(4);
+  expect(atTop.length, "one rail per anchor").toBe(5);
   expect(atTop.at(-1)!.x, "last section empty at the top").toBeLessThan(0.05);
 
   await page.evaluate(() =>
@@ -546,6 +547,37 @@ test("contact form is present, labelled, and honeypotted", async ({
   await expect(trap).toHaveCount(1);
   await expect(trap).not.toBeInViewport();
   await expect(page.getByRole("button", { name: /send it/i })).toBeVisible();
+});
+
+test("the OBdesign band swaps sites by name", async ({ page }) => {
+  await gotoReady(page, "/");
+  const band = page.locator("#obdesign");
+  await band.scrollIntoViewIfNeeded();
+  // Every client in the roster gets a pill, straight from the data.
+  const { clientSites } = await import("../../src/lib/sites");
+  await expect(band.getByRole("tab")).toHaveCount(clientSites.length);
+  // Picking a name swaps the laptop's URL bar, the visible shot, and
+  // both action links.
+  await band.getByRole("tab", { name: "Daves' Bakery" }).click();
+  await expect(band.locator(".laptop-frame__url")).toContainText(
+    "davesbakery.ca",
+  );
+  await expect(band.locator(".obshow-shot.is-active")).toHaveAttribute(
+    "src",
+    /daves-bakery/,
+  );
+  await expect(
+    band.getByRole("link", { name: /visit davesbakery\.ca/i }),
+  ).toBeVisible();
+  // Beyond Fitness has no obwebdesign write-up, so its case-study link
+  // must disappear rather than 404.
+  await band.getByRole("tab", { name: "Beyond Fitness" }).click();
+  await expect(
+    band.getByRole("link", { name: /case study/i }),
+  ).toHaveCount(0);
+  await expect(band.locator(".laptop-frame__url")).toContainText(
+    "beyondfitness.biz",
+  );
 });
 
 test("footer indexes every project page", async ({ page }) => {

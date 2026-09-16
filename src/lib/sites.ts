@@ -8,6 +8,8 @@ export type ClientSite = {
   name: string;
   blurb: string;
   url: string;
+  /** Beyond Fitness has no write-up on obwebdesign.ca (ongoing care, not a build). */
+  noCaseStudy?: true;
 };
 
 /** Each site's write-up lives on obwebdesign.ca, not here. */
@@ -35,6 +37,13 @@ export const clientSites: ClientSite[] = [
     blurb:
       "A 13-year-old WordPress site rebuilt in six days without touching the Square store the bakery runs on.",
     url: "https://davesbakery.ca",
+  },
+  {
+    slug: "charlies-excavating",
+    name: "Charlie's Excavating",
+    blurb:
+      "A four-page site for an excavating contractor, won by referral from a single cold email to a sister business.",
+    url: "https://charliesexcavating.ca",
   },
   {
     slug: "soma-active-health",
@@ -70,6 +79,14 @@ export const clientSites: ClientSite[] = [
     blurb:
       "A gallery-quality site for a painter: originals, art prints, and upcoming shows.",
     url: "https://adriennehughes.ca",
+  },
+  {
+    slug: "beyond-fitness",
+    name: "Beyond Fitness",
+    blurb:
+      "Ongoing care of a gym's existing site: 34 stale pages removed behind verified redirects, conflicting SPF records merged, unique metadata for every page.",
+    url: "https://www.beyondfitness.biz",
+    noCaseStudy: true,
   },
   {
     slug: "suzanne-gay",

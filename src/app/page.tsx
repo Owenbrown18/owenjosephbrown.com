@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { SiteMarquee } from "@/components/site-marquee";
+import { ObdesignShowcase } from "@/components/obdesign-showcase";
 import {
   ArrowUpRightIcon,
   GitHubIcon,
@@ -423,49 +423,10 @@ I’m a{" "}
           </p>
 
           <div className="project-index mt-14 grid gap-x-10 gap-y-20 sm:mt-16 md:grid-cols-2">
-            {/* OBdesign, composed: client sites in the same laptop frames
-                the hero uses, because the sites are the product. */}
-            <ProjectCard
-              num="001"
-              title="OBdesign"
-              href="/obdesign"
-              year="2025 – present"
-              tags={["Next.js", "Astro", "Keystatic", "Vercel"]}
-              blurb="Ten live sites for businesses around BC, all custom-coded, each one editable by the owner without calling me."
-                frameClass="aspect-[16/10]"
-              linkLabel="View OBdesign"
-              tone="frame-obdesign"
-            >
-              <div aria-hidden className="absolute inset-0">
-                <div className="absolute left-[4%] top-[7%] w-[62%]">
-                  <LaptopFrame url="grainconstruction.ca" size="mini">
-                    <Image
-                      src="/images/work/grain-construction.webp"
-                      alt=""
-                      width={1600}
-                      height={1000}
-                      sizes="(min-width: 768px) 510px, 62vw"
-                    />
-                  </LaptopFrame>
-                </div>
-                <div className="absolute bottom-[6%] right-[4%] z-10 w-[50%]">
-                  <LaptopFrame url="figsandhoney.com" size="mini">
-                    <Image
-                      src="/images/work/figs-and-honey.webp"
-                      alt=""
-                      width={1600}
-                      height={1000}
-                      sizes="(min-width: 768px) 410px, 50vw"
-                    />
-                  </LaptopFrame>
-                </div>
-              </div>
-            </ProjectCard>
-
             {projects.map((entry, i) => (
               <ProjectCard
                 key={entry.slug}
-                num={String(i + 2).padStart(3, "0")}
+                num={String(i + 1).padStart(3, "0")}
                 title={entry.title}
                 href={`/work/${entry.slug}`}
                 year={entry.year}
@@ -485,20 +446,68 @@ I’m a{" "}
           </div>
         </div>
 
-        {/* Every client site, not just the four in the OBdesign card. The
-            index shows depth; this shows breadth. */}
-        <div className="mt-20 sm:mt-24">
-          <p className="container-site eyebrow reveal-up">
-            Ten live sites, and counting
-          </p>
-          <div className="mt-6">
-            <SiteMarquee />
+      </section>
+
+      {/* 03 · OBdesign. The business gets a band, not a card: branding on
+          the left, the whole client roster on the right in one laptop big
+          enough that the sites actually read. */}
+      <SectionRule num="03" />
+      <section id="obdesign" className="section-pad relative">
+        <div className="container-site">
+          <div className="obshow reveal-up">
+            <div className="obshow-brand">
+              <p className="eyebrow !text-[--accent-text]">03 · The business</p>
+              <h2 className="anim-heading mt-4 font-wordmark text-[clamp(2.4rem,5vw,3.6rem)] font-bold leading-none text-fg">
+                OBdesign<span className="text-[--accent]">.</span>
+              </h2>
+              <p className="mt-5 max-w-[42ch] leading-relaxed text-fg-muted">
+                <Words>
+                My one-person web development business: custom-coded sites
+                for owner-operated BC businesses, every one editable by its
+                owner without calling me. It pays for my degree, and every
+                client so far has left a five-star review.
+                </Words>
+              </p>
+              <dl className="obshow-stats">
+                {[
+                  ["25+", "sites deployed"],
+                  ["11", "live client sites"],
+                  ["$10k+", "collected"],
+                ].map(([value, label]) => (
+                  <div key={label}>
+                    <dt className="label-mono text-fg-faint">{label}</dt>
+                    <dd className="font-display text-2xl font-bold text-fg">
+                      {value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="mt-8 flex flex-wrap items-center gap-2">
+                <Link href="/obdesign" className="btn btn-primary">
+                  <span className="btn__label inline-flex items-center gap-1.5">
+                    The full story
+                    <ArrowUpRightIcon />
+                  </span>
+                </Link>
+                <a
+                  href="https://www.obwebdesign.ca"
+                  rel="noopener"
+                  className="btn"
+                >
+                  <span className="btn__label inline-flex items-center gap-1.5">
+                    obwebdesign.ca
+                    <ArrowUpRightIcon />
+                  </span>
+                </a>
+              </div>
+            </div>
+            <ObdesignShowcase />
           </div>
         </div>
       </section>
 
-      {/* 03 · About: comes back up out of the tunnel. */}
-      <SectionRule num="03" />
+      {/* 04 · About: comes back up out of the tunnel. */}
+      <SectionRule num="04" />
       <section id="about" className="section-pad relative">
         <div className="container-site">
           {/* Same 64rem measure as the photo-and-text grid below, so the
@@ -508,7 +517,7 @@ I’m a{" "}
             <h2 className="anim-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white/95">
               About me<span className="text-sage">.</span>
             </h2>
-            <p className="eyebrow hidden sm:block">03</p>
+            <p className="eyebrow hidden sm:block">04</p>
           </div>
 
           {/* Centred measure: on a near-full-bleed container the photo sat
@@ -564,12 +573,12 @@ I’m a{" "}
         </div>
       </section>
 
-      {/* 04 · Contact */}
-      <SectionRule num="04" />
+      {/* 05 · Contact */}
+      <SectionRule num="05" />
       <section id="contact" className="section-pad relative overflow-hidden">
         <div className="container-site relative grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
           <div>
-            <p className="eyebrow reveal-up !text-sage">04 · Contact</p>
+            <p className="eyebrow reveal-up !text-sage">05 · Contact</p>
             {/* Same row as every other section heading: the reveal-up lift
                 wrapper drifts with scroll, the heading rises inside it. */}
             <div className="reveal-up lift mt-5">

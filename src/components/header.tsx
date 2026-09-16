@@ -17,8 +17,9 @@ import { useEffect, useRef, useState } from "react";
 const anchors = [
   { num: "01", label: "home", href: "/#home" },
   { num: "02", label: "work", href: "/#work" },
-  { num: "03", label: "about", href: "/#about" },
-  { num: "04", label: "contact", href: "/#contact" },
+  { num: "03", label: "obdesign", href: "/#obdesign" },
+  { num: "04", label: "about", href: "/#about" },
+  { num: "05", label: "contact", href: "/#contact" },
 ];
 
 export function Header() {
