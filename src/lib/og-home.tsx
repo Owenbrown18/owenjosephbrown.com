@@ -332,21 +332,21 @@ export async function ogHomeCard() {
                 Brown<span style={{ color: FOREST }}>.</span>
               </div>
             </div>
-            {/* Two set lines rather than a wrapped sentence, so the break
-                falls between the two claims instead of inside "10+ live". */}
+            {/* Set as two lines rather than left to wrap, which stranded
+                "student." alone on the second line. */}
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
                 marginTop: 28,
                 fontFamily: "Inter",
-                fontSize: 25,
+                fontSize: 27,
                 lineHeight: 1.4,
                 color: "rgba(15, 35, 32, 0.74)",
               }}
             >
-              <span>Software engineering student.</span>
-              <span>10+ live client sites and an iOS app.</span>
+              <span>Fourth-year software engineering</span>
+              <span>student at UVic.</span>
             </div>
           </div>
 

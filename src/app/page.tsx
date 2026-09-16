@@ -218,7 +218,7 @@ export default function HomePage() {
               <Words>
 I’m a{" "}
               <strong className="font-semibold text-white">
-                software engineering student
+                fourth-year software engineering student
               </strong>{" "}
               at UVic in Victoria, and I run my own web development
               business. I build things people actually use, and most of them
