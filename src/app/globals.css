@@ -640,7 +640,9 @@ h3.reveal-init {
   align-items: baseline;
   column-gap: 0.9rem;
   width: 100%;
-  padding: 0.72rem 0.15rem;
+  /* Room for the magnified name so it never kisses the hairlines.
+     Constant across states: the rows must never move. */
+  padding: 0.85rem 0.15rem;
   text-align: left;
   border-bottom: 1px solid rgba(15, 35, 32, 0.15);
 }
@@ -656,15 +658,39 @@ h3.reveal-init {
     background var(--t-fast) var(--ease-out),
     border-color var(--t-fast) var(--ease-out);
 }
+/* The magnifier: the row under the pointer grows, the pinned row rests
+   a step above the others, everything else stays quiet. Transform, not
+   font-size — growing the type reflows the list, the rows slide under a
+   stationary pointer, and the hover jumps to the neighbour on its own.
+   Scaled boxes stay put. */
 .obindex-name {
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   font-weight: 700;
   color: rgba(15, 35, 32, 0.82);
-  transition: color var(--t-fast) var(--ease-out);
+  transform-origin: left center;
+  transition:
+    color var(--t-fast) var(--ease-out),
+    transform 0.28s var(--ease-out);
+}
+.obindex-row.is-active .obindex-name {
+  transform: scale(1.18);
+}
+.obindex-row:hover .obindex-name,
+.obindex-row:focus-visible .obindex-name {
+  transform: scale(1.4);
 }
 .obindex-domain {
   color: rgba(15, 35, 32, 0.45);
-  transition: color var(--t-fast) var(--ease-out);
+  transition:
+    color var(--t-fast) var(--ease-out),
+    opacity 0.2s var(--ease-out);
+}
+/* The magnified name takes the whole row: its domain steps aside (the
+   laptop's URL bar is showing it anyway). At the narrowest two-column
+   width a long name at full magnification would otherwise run into it. */
+.obindex-row:hover .obindex-domain,
+.obindex-row:focus-visible .obindex-domain {
+  opacity: 0;
 }
 /* At phone width the name needs the whole row; the URL bar and the
    Visit link both carry the domain anyway. */
@@ -1097,7 +1123,7 @@ h3.reveal-init {
 .pixel-grid--flash .pixel-cell {
   background: var(--accent);
   opacity: 0;
-  animation: cell-flash 0.26s ease-out both;
+  animation: cell-flash 0.42s ease-out both;
   animation-delay: var(--d, 0ms);
 }
 @keyframes cell-flash {

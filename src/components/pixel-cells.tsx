@@ -29,7 +29,7 @@ export function PixelCells({
   cols = 10,
   rows = 6,
   /** Longest delay, ms. Cards breathe; buttons need to feel instant. */
-  spread = variant === "reveal" ? 520 : variant === "flash" ? 150 : 300,
+  spread = variant === "reveal" ? 520 : variant === "flash" ? 240 : 300,
 }: {
   seed: string;
   variant: "reveal" | "hover" | "flash";

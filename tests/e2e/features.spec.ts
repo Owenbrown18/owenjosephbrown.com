@@ -574,6 +574,25 @@ test("the OBdesign band swaps sites by name", async ({ page }) => {
   // Every client in the roster gets a pill, straight from the data.
   const { clientSites } = await import("../../src/lib/sites");
   await expect(band.getByRole("tab")).toHaveCount(clientSites.length);
+  // The magnifier scales the hovered name. It must be a transform, never
+  // a font-size change: growing type reflows the list, the rows slide
+  // under a still pointer, and the hover jumps to the neighbour by itself.
+  const rowTops = () =>
+    band
+      .getByRole("tab")
+      .evaluateAll((els) =>
+        els.map((e) => Math.round(e.getBoundingClientRect().top)),
+      );
+  const restingTops = await rowTops();
+  await band.getByRole("tab", { name: "Nicol Construction" }).hover();
+  await page.waitForTimeout(400); // past the 0.28s grow
+  expect(await rowTops(), "rows moved when a name magnified").toEqual(
+    restingTops,
+  );
+  await expect(band.locator(".laptop-frame__url")).toContainText(
+    "nicolconstruction.ca",
+  );
+
   // Hovering previews without committing: the frame follows the pointer
   // and falls back to the pinned row when it leaves the list.
   await band.getByRole("tab", { name: "Figs & Honey" }).hover();
