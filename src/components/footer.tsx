@@ -21,7 +21,7 @@ const colLink = "text-sm text-fg-muted link-draw";
  * a hand-written list did on the landing page.
  */
 export function Footer() {
-  const projects = getWorkEntries().filter((e) => e.kind !== "client");
+  const projects = getWorkEntries();
 
   return (
     <footer className="mt-24 border-t border-line">

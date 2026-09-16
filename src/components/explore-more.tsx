@@ -13,6 +13,7 @@ const tone: Record<string, string> = {
   grain: "frame-grain",
   whispr: "frame-whispr",
   leadgen: "frame-leadgen",
+  "on-the-roadside": "frame-roadside",
 };
 
 export function ExploreMore({ currentSlug }: { currentSlug?: string }) {

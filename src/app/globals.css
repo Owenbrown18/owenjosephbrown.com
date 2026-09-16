@@ -989,7 +989,8 @@ h3.reveal-init {
 }
 
 /* Per-project stages. grain is its own cream, OBdesign sits on sage,
-   Whispr on its dark app forest, leadgen on a cool mist. */
+   Whispr on its dark app forest, leadgen on a cool mist, On the
+   Roadside on its landing page's warm cream. */
 .frame-grain {
   background: linear-gradient(165deg, #f7f1e3 0%, #f1e8d2 100%);
   border-color: rgba(122, 99, 48, 0.22);
@@ -1001,6 +1002,10 @@ h3.reveal-init {
 .frame-whispr {
   background: linear-gradient(165deg, #1d3b36 0%, #0f2724 100%);
   border-color: rgba(15, 39, 36, 0.5);
+}
+.frame-roadside {
+  background: linear-gradient(165deg, #f6f1e4 0%, #efe3c9 100%);
+  border-color: rgba(122, 99, 48, 0.2);
 }
 .frame-leadgen {
   background: linear-gradient(165deg, #eceeeb 0%, #dfe4df 100%);

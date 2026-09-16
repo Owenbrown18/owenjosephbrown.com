@@ -54,15 +54,40 @@ test("OBdesign page links through to a case study", async ({ page }) => {
   // block every case study ends on.
   await page
     .locator('[aria-labelledby="explore-heading"]')
-    .getByRole("link", { name: /grain construction/i })
+    .getByRole("link", { name: /grain/i })
     .first()
     .click();
   // Navigation under a full three-browser run (and on a 2-core CI runner)
   // can outlast the 5s default; the assertion is about arriving, not speed.
-  await expect(page).toHaveURL(/\/work\/grain-construction/, { timeout: 15000 });
-  await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    /grain construction/i,
-  );
+  await expect(page).toHaveURL(/\/work\/grain$/, { timeout: 15000 });
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/grain/i);
+});
+
+test("every client site links to its case study on obwebdesign.ca", async ({
+  page,
+}) => {
+  const { clientSites } = await import("../../src/lib/sites");
+  await page.goto("/obdesign");
+  const links = page.getByRole("link", { name: /read the case study/i });
+  await expect(links).toHaveCount(clientSites.length);
+  for (const site of clientSites) {
+    await expect(
+      page.locator(`a[href="https://www.obwebdesign.ca/work/${site.slug}"]`),
+      `case study link for ${site.slug}`,
+    ).toHaveCount(1);
+  }
+});
+
+test("retired client case studies redirect to obwebdesign.ca", async ({
+  request,
+}) => {
+  for (const slug of ["grain-construction", "figs-and-honey", "daves-bakery"]) {
+    const res = await request.get(`/work/${slug}`, { maxRedirects: 0 });
+    expect(res.status(), slug).toBe(308);
+    expect(res.headers().location).toBe(
+      `https://www.obwebdesign.ca/work/${slug}`,
+    );
+  }
 });
 
 test("landing page reaches the OBdesign page", async ({ page }) => {

@@ -97,6 +97,47 @@ const compositions: Record<
       </>
     ),
   },
+  "on-the-roadside": {
+    frame: "aspect-[16/10]",
+    tone: "frame-roadside",
+    art: (
+      <>
+        {/* The landing page behind, the app in front: the two halves of
+            what shipped, a website on the web and the app on phones. */}
+        <Shot
+          src="/images/work/on-the-roadside.webp"
+          alt=""
+          chrome
+          className="left-[4%] top-[7%] w-[72%]"
+          sizes="(min-width: 768px) 600px, 72vw"
+        />
+        <div className="absolute bottom-[-10%] right-[21%] z-10 w-[22%] -rotate-2">
+          <PhoneFrame>
+            <Image
+              src="/images/on-the-roadside/app-home.webp"
+              alt=""
+              width={620}
+              height={1347}
+              sizes="(min-width: 768px) 240px, 27vw"
+              className="h-auto w-full"
+            />
+          </PhoneFrame>
+        </div>
+        <div className="absolute bottom-[-4%] right-[4%] z-20 w-[20%] rotate-2">
+          <PhoneFrame>
+            <Image
+              src="/images/on-the-roadside/app-detail.webp"
+              alt=""
+              width={620}
+              height={1347}
+              sizes="(min-width: 768px) 220px, 25vw"
+              className="h-auto w-full"
+            />
+          </PhoneFrame>
+        </div>
+      </>
+    ),
+  },
   whispr: {
     frame: "aspect-[16/9]",
     tone: "frame-whispr",
@@ -169,7 +210,7 @@ const compositions: Record<
   },
 };
 
-const projects = getWorkEntries().filter((e) => e.kind !== "client");
+const projects = getWorkEntries();
 
 
 export default function HomePage() {

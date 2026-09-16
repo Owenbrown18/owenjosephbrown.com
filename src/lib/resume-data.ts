@@ -76,6 +76,18 @@ export const projects: ResumeEntry[] = [
     ],
   },
   {
+    org: "On the Roadside",
+    role: "Developer, client project",
+    period: "August 2026 – present",
+    location: "iOS + web · Capacitor + Next.js",
+    link: "/work/on-the-roadside",
+    bullets: [
+      "Took over an AI-generated web prototype as its only engineer and made it production-ready in 76 commits, fixing a bug that signed users out on every launch and silent geocoding failures",
+      "Turned it into a native iOS app with Capacitor, code signing and GitHub Actions builds, then traced three App Store rejections to their root causes and resubmitted behind automated build checks",
+      "Built its production Next.js landing page (ontheroadside.ca) and shipped listing claims by emailed code and a postal-code fallback for address search",
+    ],
+  },
+  {
     org: "Lead generation pipeline",
     role: "Sole developer",
     period: "2026 – present",

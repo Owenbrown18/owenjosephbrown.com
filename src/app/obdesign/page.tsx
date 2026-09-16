@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { clientSites } from "@/lib/sites";
+import { caseStudyUrl, clientSites } from "@/lib/sites";
 import { PixelCells } from "@/components/pixel-cells";
 import { ExploreMore } from "@/components/explore-more";
 import { PageHeader } from "@/components/page-header";
@@ -104,13 +104,15 @@ export default function ObdesignPage() {
             <p className="mt-2 text-sm leading-relaxed text-fg-muted">
               {site.blurb}
             </p>
-            {site.caseStudy && (
-              <p className="mt-3 text-sm">
-                <Link href={site.caseStudy} className="link-underline text-fg">
-                  Read the case study
-                </Link>
-              </p>
-            )}
+            <p className="mt-3 text-sm">
+              <a
+                href={caseStudyUrl(site)}
+                rel="noopener"
+                className="link-underline text-fg"
+              >
+                Read the case study on obwebdesign.ca ↗
+              </a>
+            </p>
           </article>
         ))}
       </div>

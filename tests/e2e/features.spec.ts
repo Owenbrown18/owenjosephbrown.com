@@ -131,9 +131,8 @@ test("sitemap lists every case study", async ({ request }) => {
   for (const slug of [
     "grain",
     "leadgen",
-    "grain-construction",
-    "figs-and-honey",
-    "daves-bakery",
+    "whispr",
+    "on-the-roadside",
   ]) {
     expect(xml).toContain(`/work/${slug}`);
   }
@@ -307,7 +306,7 @@ test("every section heading takes part in the reveal system", async ({
 // at (0,2,0)) shipped whole case studies as headings with no text while a
 // class-based version of this test stayed green: every element had
 // .is-revealed and still painted at opacity 0.
-for (const path of ["/work/figs-and-honey", "/work/grain"]) {
+for (const path of ["/work/on-the-roadside", "/work/grain"]) {
   test(`no content is left invisible after scrolling ${path}`, async ({
     page,
   }) => {
@@ -556,11 +555,9 @@ test("footer indexes every project page", async ({ page }) => {
     await expect(footer.locator(`nav[aria-label="${label}"]`)).toBeVisible();
   }
   // Derived the same way the footer derives it, so this can't go stale.
-  const { readdirSync, readFileSync } = await import("node:fs");
-  const nonClient = readdirSync("content/work")
-    .filter((f) => f.endsWith(".mdx"))
-    .filter((f) => !/kind: "client"/.test(readFileSync(`content/work/${f}`, "utf8")));
-  for (const f of nonClient) {
+  const { readdirSync } = await import("node:fs");
+  const entries = readdirSync("content/work").filter((f) => f.endsWith(".mdx"));
+  for (const f of entries) {
     const slug = f.replace(/\.mdx$/, "");
     await expect(
       footer.locator(`a[href="/work/${slug}"]`),

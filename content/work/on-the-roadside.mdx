@@ -1,0 +1,95 @@
+---
+title: "On the Roadside"
+kind: "client"
+summary: "An AI-generated web prototype for finding farm stands and food trucks on Vancouver Island. I took it over as its only engineer, made it a native iOS app, and built its production landing page."
+year: "2026"
+timeline: "August 2026 – present"
+role: "Only engineer: iOS app, builds, App Store, landing page"
+stack: ["Capacitor", "React", "Base44", "GitHub Actions", "Vitest", "Next.js 16", "Tailwind 4"]
+liveUrl: "https://ontheroadside.ca"
+hero: "/images/work/on-the-roadside.webp"
+heroAlt: "The On the Roadside landing page: the name beside a map pin with a road running through green fields"
+order: 2
+---
+
+Cheryl had a working prototype. She'd built it with Base44, an AI app builder, and it did what she wanted: a map of the farm stands, food trucks and markets on Vancouver Island, so you can see what's open near you and pull over. It ran in a browser, it had five listings, and it couldn't get anywhere near the App Store. She messaged me on Facebook and asked if I could get it onto iPhones.
+
+I became its only engineer. I made it a native iOS app, and along the way I learned what an AI-generated codebase gets wrong once real users and App Review get their hands on it: blank screens, sign-in that only broke in production builds, pins landing in the wrong town, and three App Store rejections with three different root causes.
+
+<ScreenRow>
+  <img src="/images/on-the-roadside/app-home.webp" alt="The All Listings screen: a map of Vancouver Island with stand and truck pins, and a Find stands near me button" />
+  <img src="/images/on-the-roadside/app-trucks.webp" alt="The Food Trucks tab with cuisine filters" />
+  <img src="/images/on-the-roadside/app-detail.webp" alt="A food truck's page with its photo gallery and open or closed status" />
+</ScreenRow>
+
+## What was already there
+
+My first look was unfair. The code audit changed my mind: it was a real two-sided marketplace, with vendor signup, listing editors, reviews, messaging and saved favourites. The parts that sink most first App Store submissions were already done. It used the phone's location, it had Sign in with Apple, and it let you delete your account.
+
+The problems were elsewhere. There were five listings, which was Cheryl's to fix and she started on it that week. Vendors paid for subscriptions through Stripe, and Apple wants digital subscriptions sold inside an app to go through its own payments. And everything behind the screen (the database, auth, payments, backend functions) runs on Base44's servers, so the only part I could really move was the frontend.
+
+So we made one decision on our first call that shaped everything after it: **the iOS app is for people finding stands, and vendors manage and pay on the website.** That took the payments rule off the table without building anything.
+
+Most of the app is still hers. About 17% of the lines in it today are mine, and the rest are Cheryl's and Base44's. My part is everything it took to get that code onto phones and keep it working there.
+
+## Turning a website into an app
+
+I wrapped it with Capacitor, which runs the web app inside a native iOS shell. It loaded, but none of the listings did. The Base44 SDK makes its API calls relative to wherever the page lives, and inside the app the page lives in the app bundle, so every request for listings was going to a file that didn't exist. The fix was a native-only absolute server address that leaves the website alone.
+
+Sign-in was the next wall. Google and Apple sign-in open in the system browser and have to hand the user back to the app. That worked, until Base44 tightened its redirect rules and started refusing the app's own URL scheme. I added a small public bridge page on the website that receives the sign-in and passes it on to the app.
+
+Then the platform started undoing the fix. Base44's bot bumps its SDK version in the repo every few hours, and one of those versions loads zero listings inside the iOS web view while working fine on the website. Each bump reverted my pin, and it would have shipped an app with an empty directory. A guard now fails any build carrying the wrong version, and a GitHub workflow puts the pin back whenever the bot moves it.
+
+## Builds that couldn't come from my laptop
+
+Apple rejected an upload with "Unsupported SDK or Xcode version". The Xcode was fine. My laptop was on a macOS beta, the binary carried that build machine's version, and Apple refuses anything stamped with an unreleased OS. So builds moved to GitHub Actions, and the pipeline now checks the things that had already bitten me:
+
+<Pipeline steps="Pin: fail if the Base44 SDK isn't the version that works on iOS | Select Xcode: take the newest released Xcode and skip anything marked beta or RC | Build the web bundle: the same JavaScript the website runs | Verify the bundle: fail if the backend address is missing from it | Archive: the native build, with the build number passed in as a required input | Verify the archive: reject a prerelease build machine or Xcode stamp, and check the build number actually landed | Upload: straight to App Store Connect" />
+
+## Three rejections, three different causes
+
+| Build | What Apple said | What was actually wrong |
+| --- | --- | --- |
+| 17 | Send more information and a screen recording | Recording it on a real iPhone showed account deletion was unusable (the dialog sat inside a drawer that ate every tap) and the photo viewer sat under the navigation bar. Neither shows up in a desktop browser. |
+| 19 | "Continue with Apple" was unresponsive | Sign-in was dead in every cloud build. The backend address lived in a gitignored env file that never reached the build runner. |
+| 20 | Blank page on the events screen, plus user-generated-content safeguards | A missing icon import crashed any listing marked as added by someone else, and the lint config the project came with was silently letting undefined names through. Apple also wanted terms agreed at signup, filtering and blocking. |
+
+The second one is the one I think about. With no env file, every sign-in URL started with the string `null/` and the browser refused to open it without showing an error. Google, Apple and email login were all dead, and Apple's reviewer just happened to tap Apple first. Nothing caught it for three reasons that all look reasonable on their own: my local builds always had the env file, I tested on a phone that was already signed in, and the SDK's default server address kept everything else working. The fix is four layers deep, and the one that matters most is a check that fails any build missing the backend address.
+
+The third one was reviewed on an iPad running the app in iPhone mode, which I hadn't thought to test. The crash was my own bug from a feature I'd added the week before. The fix was one import. The real fix was turning those lint rules back on, and an iPad simulator pass is now part of every pre-submit check.
+
+For the safeguards, signup now needs you to agree to terms before an account exists, reviews go through a language filter when they're submitted, and every review has a Block button that hides that person instantly and tells the team. Report already existed.
+
+Build 21 is in review now.
+
+## Pins in the wrong town
+
+The first real user bug came from a vendor. They typed their address in Duncan and their pin landed in Steveston, 60 km away across the water, and the pin couldn't be dragged even though the screen said "Drag the pin to your exact spot". It was a static map image.
+
+Some of that was inherited. The original geocoder searched the whole world and treated every error as "address not found". Some of it was mine: my first fix drew a box around the island whose east edge took in Richmond. I fixed that, replaced the static image with a map you can tap to place the pin, and shipped it. The same vendor hit it again, this time near Lillooet.
+
+My second fix failed open. It checked each result against the town you typed, and when the town lookup itself came back empty, it waved the result through. The lookup came back empty because I'd added a fourth request to a burst against a free geocoder that allows one a second. The check most likely to be throttled was the check itself.
+
+It's fixed properly now: results outside Vancouver Island are refused on the server, an unresolved town means the step is skipped, a throttled request is retried instead of read as "not found", and when an address can't be placed the warning asks for a postal code. That last one was Cheryl's design, and it was better than mine: only ask for the postal code at the moment the address fails, because most people don't know theirs. Before building it I checked the geocoder actually had the data, and found two ways it would have failed silently (three characters returns nothing, and so does a postal code paired with a town).
+
+The lesson I took from this one: I called both earlier rounds fixed on unit tests and a check that the new code was in the live bundle. Neither exercised the real flow, and the vendor ended up being the integration test twice.
+
+## Photos that were there all along
+
+A vendor said she couldn't post photos from her phone. Her ten photos had uploaded fine. They were iPhone HEIC files, which only Safari can show, so the listing looked empty everywhere else. Uploads were saved under an API address the app treated as a foreign image and served raw, even though the same file sits on Base44's media host, which converts HEIC to WebP. I proved the conversion worked with a live request before writing any code, then rewrote those addresses in one place. Her listing needed no changes, and all 193 photos in the directory now load as resized WebP.
+
+## The landing page
+
+The app needed a front door, so I built ontheroadside.ca in Next.js and moved Cheryl's domain over to it.
+
+![The landing page's vendor section: what a free listing and a full listing include, with a List your stand button](/images/on-the-roadside/landing-vendors.webp)
+
+Two decisions on it worth writing down. The hero's entrance animation is CSS, not JavaScript. A JavaScript entrance puts the hidden starting state into the server HTML, so if the script is slow or fails the visitor gets a blank page, and I found that out when the hero rendered completely invisible in a hidden browser tab. With CSS the resting state is visible and the animation is extra. And the sticky header's scroll logic did nothing at all at first, with no error: `overflow-x: hidden` on the body makes the body the scroll container, so the window's scroll position stays at zero forever. Clipping on `main` instead fixed it.
+
+<StatRow stats="76: commits since I took over, and nobody else has committed by hand | ~17%: of the app's code is mine, the rest is Cheryl's and Base44's | 78: automated tests, the first the codebase had | 3: App Store rejections, each with a different cause" />
+
+## What I'd do differently
+
+Test on the device and in the exact build Apple gets, before calling anything fixed. Every hard bug on this project lived in a gap between where I tested and where it ran: a desktop browser instead of a phone, a local build instead of a cloud one, an iPhone instead of an iPad, unit tests instead of the real address form.
+
+And check the checks. A lint config that let an undefined component through and a geocoder check that passed when it couldn't check anything were both worse than no check at all, because I trusted them.

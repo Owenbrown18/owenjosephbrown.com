@@ -1,14 +1,18 @@
 /**
  * Every client site OBdesign has shipped. Screenshots live in
- * public/images/work/<slug>.png (exported from the OBdesign repo).
+ * public/images/work/<slug>.webp (exported from the OBdesign repo). The
+ * slug matches the case study's path on obwebdesign.ca.
  */
 export type ClientSite = {
   slug: string;
   name: string;
   blurb: string;
   url: string;
-  caseStudy?: string;
 };
+
+/** Each site's write-up lives on obwebdesign.ca, not here. */
+export const caseStudyUrl = (site: ClientSite) =>
+  `https://www.obwebdesign.ca/work/${site.slug}`;
 
 export const clientSites: ClientSite[] = [
   {
@@ -17,7 +21,6 @@ export const clientSites: ClientSite[] = [
     blurb:
       "First-ever website for a Salt Spring builder. 291 photos curated into thirteen project galleries.",
     url: "https://grainconstruction.ca",
-    caseStudy: "/work/grain-construction",
   },
   {
     slug: "figs-and-honey",
@@ -25,7 +28,6 @@ export const clientSites: ClientSite[] = [
     blurb:
       "A hacked WordPress site replaced with nine pages of booking, shop, and journal the owner runs herself.",
     url: "https://figsandhoney.com",
-    caseStudy: "/work/figs-and-honey",
   },
   {
     slug: "daves-bakery",
@@ -33,7 +35,6 @@ export const clientSites: ClientSite[] = [
     blurb:
       "A 13-year-old WordPress site rebuilt in six days without touching the Square store the bakery runs on.",
     url: "https://davesbakery.ca",
-    caseStudy: "/work/daves-bakery",
   },
   {
     slug: "soma-active-health",
