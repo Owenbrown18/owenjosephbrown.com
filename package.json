@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "lighthouse": "node scripts/lighthouse-budget.mjs"
+    "lighthouse": "node scripts/lighthouse-budget.mjs",
+    "sync:client-shots": "node scripts/sync-client-shots.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

@@ -589,6 +589,13 @@ test("the OBdesign band swaps sites by name", async ({ page }) => {
   expect(await rowTops(), "rows moved when a name magnified").toEqual(
     restingTops,
   );
+  // The domain stays on screen beside the magnified name (an earlier pass
+  // hid it on hover to dodge a collision the layout should have avoided).
+  await expect(
+    band
+      .getByRole("tab", { name: "Nicol Construction" })
+      .locator(".obindex-domain"),
+  ).toHaveCSS("opacity", "1");
   await expect(band.locator(".laptop-frame__url")).toContainText(
     "nicolconstruction.ca",
   );

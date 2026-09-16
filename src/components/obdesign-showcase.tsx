@@ -19,8 +19,10 @@ const host = (url: string) =>
  * size, because at card size every screenshot turned to mush.
  *
  * All shots stay mounted and cross-fade, so switching is instant after
- * first view. On narrow screens the laptop sits above the list; picking
- * a row far down nudges the frame back into view so the swap is seen.
+ * first view. Side by side only from xl: at lg the list column is too
+ * narrow for a magnified name to clear its domain (measured: 1.09x room
+ * at 1024px against a 1.4x magnifier). Below xl the laptop sits above
+ * the list; picking a row far down nudges the frame back into view.
  */
 export function ObdesignShowcase() {
   // Two levels of intent: hovering a row previews its site in the
@@ -34,17 +36,17 @@ export function ObdesignShowcase() {
 
   const pick = (i: number) => {
     setPinned(i);
-    // Only below lg, where the laptop is above the list and a tap on a
+    // Only below xl, where the laptop is above the list and a tap on a
     // low row can leave it off-screen. "nearest" makes it a no-op when
     // the frame is already visible.
-    if (window.matchMedia("(max-width: 1023px)").matches) {
+    if (window.matchMedia("(max-width: 1279px)").matches) {
       stageRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   };
 
   return (
-    <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)] lg:gap-16">
-      <div className="order-2 lg:order-1">
+    <div className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)] xl:gap-16">
+      <div className="order-2 xl:order-1">
         <div
           role="tablist"
           aria-label="Client sites"
@@ -89,7 +91,10 @@ export function ObdesignShowcase() {
         </div>
       </div>
 
-      <div ref={stageRef} className="order-1 scroll-mt-24 lg:order-2 lg:self-start">
+      <div
+        ref={stageRef}
+        className="order-1 mx-auto w-full max-w-[46rem] scroll-mt-24 xl:order-2 xl:max-w-none xl:self-start"
+      >
         <LaptopFrame url={host(active.url)}>
           <div className="obshow-shots">
             {clientSites.map((site, i) => (
@@ -98,7 +103,7 @@ export function ObdesignShowcase() {
                 src={`/images/work/${site.slug}.webp`}
                 alt={i === index ? `${site.name} website on desktop` : ""}
                 fill
-                sizes="(min-width: 1024px) 40rem, 92vw"
+                sizes="(min-width: 1280px) 40rem, (min-width: 768px) 46rem, 92vw"
                 priority={i === 0}
                 aria-hidden={i !== index}
                 className={`obshow-shot${i === index ? " is-active" : ""}`}

@@ -681,16 +681,7 @@ h3.reveal-init {
 }
 .obindex-domain {
   color: rgba(15, 35, 32, 0.45);
-  transition:
-    color var(--t-fast) var(--ease-out),
-    opacity 0.2s var(--ease-out);
-}
-/* The magnified name takes the whole row: its domain steps aside (the
-   laptop's URL bar is showing it anyway). At the narrowest two-column
-   width a long name at full magnification would otherwise run into it. */
-.obindex-row:hover .obindex-domain,
-.obindex-row:focus-visible .obindex-domain {
-  opacity: 0;
+  transition: color var(--t-fast) var(--ease-out);
 }
 /* At phone width the name needs the whole row; the URL bar and the
    Visit link both carry the domain anyway. */
