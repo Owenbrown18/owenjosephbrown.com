@@ -105,7 +105,7 @@ const compositions: Record<
         {/* The landing page behind, the app in front: the two halves of
             what shipped, a website on the web and the app on phones. */}
         <div className="absolute left-[4%] top-[6%] w-[68%]">
-          <LaptopFrame url="ontheroadside.ca">
+          <LaptopFrame url="ontheroadside.ca" size="mini">
             <Image
               src="/images/work/on-the-roadside.webp"
               alt=""
@@ -189,7 +189,7 @@ const compositions: Record<
             on: a single local HTML file, so the laptop's URL bar carries
             the file name rather than a domain. */}
         <div className="absolute left-[4%] top-[6%] w-[66%]">
-          <LaptopFrame url="leads-dashboard.html">
+          <LaptopFrame url="leads-dashboard.html" size="mini">
             <Image
               src="/images/leadgen/dashboard-top.webp"
               alt=""
@@ -438,7 +438,7 @@ I’m a{" "}
             >
               <div aria-hidden className="absolute inset-0">
                 <div className="absolute left-[4%] top-[7%] w-[62%]">
-                  <LaptopFrame url="grainconstruction.ca">
+                  <LaptopFrame url="grainconstruction.ca" size="mini">
                     <Image
                       src="/images/work/grain-construction.webp"
                       alt=""
@@ -449,7 +449,7 @@ I’m a{" "}
                   </LaptopFrame>
                 </div>
                 <div className="absolute bottom-[6%] right-[4%] z-10 w-[50%]">
-                  <LaptopFrame url="figsandhoney.com">
+                  <LaptopFrame url="figsandhoney.com" size="mini">
                     <Image
                       src="/images/work/figs-and-honey.webp"
                       alt=""
