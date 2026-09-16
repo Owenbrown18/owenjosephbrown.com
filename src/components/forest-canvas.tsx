@@ -168,25 +168,35 @@ export function ForestCanvas({ className = "" }: { className?: string }) {
         });
       if (!(gl instanceof WebGLRenderingContext)) return;
 
+      // From here on the canvas has an OPAQUE context: if we bail before
+      // the first draw it does not stay transparent, it stays BLACK, a
+      // full-viewport black sheet that turned the whole site dark on any
+      // machine without real GPU acceleration. Every early exit below
+      // must hide the canvas so the .forest-ground paper shows instead.
+      const bail = (): undefined => {
+        canvas.style.display = "none";
+        return undefined;
+      };
+
       // A software rasterizer would burn the main thread on every frame;
-      // the CSS gradient underneath is the better experience there.
+      // the paper underneath is the better experience there.
       const dbg = gl.getExtension("WEBGL_debug_renderer_info");
       if (dbg) {
         const renderer = String(
           gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) ?? "",
         );
-        if (/swiftshader|llvmpipe|software/i.test(renderer)) return;
+        if (/swiftshader|llvmpipe|software/i.test(renderer)) return bail();
       }
 
       const vs = compile(gl, gl.VERTEX_SHADER, VERT);
       const fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);
-      if (!vs || !fs) return;
+      if (!vs || !fs) return bail();
       const program = gl.createProgram();
-      if (!program) return;
+      if (!program) return bail();
       gl.attachShader(program, vs);
       gl.attachShader(program, fs);
       gl.linkProgram(program);
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return bail();
       gl.useProgram(program);
 
       const quad = gl.createBuffer();

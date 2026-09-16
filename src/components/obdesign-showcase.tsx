@@ -77,7 +77,7 @@ export function ObdesignShowcase() {
         </div>
       </div>
 
-      <div ref={stageRef} className="order-1 scroll-mt-24 lg:order-2 lg:sticky lg:top-28 lg:self-start">
+      <div ref={stageRef} className="order-1 scroll-mt-24 lg:order-2 lg:self-start">
         <LaptopFrame url={host(active.url)}>
           <div className="obshow-shots">
             {clientSites.map((site, i) => (

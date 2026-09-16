@@ -642,16 +642,16 @@ h3.reveal-init {
   width: 100%;
   padding: 0.72rem 0.15rem;
   text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(15, 35, 32, 0.15);
 }
 .obindex-row:first-child {
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(15, 35, 32, 0.15);
 }
 .obindex-mark {
   width: 0.5rem;
   height: 0.5rem;
   align-self: center;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(15, 35, 32, 0.3);
   transition:
     background var(--t-fast) var(--ease-out),
     border-color var(--t-fast) var(--ease-out);
@@ -659,11 +659,11 @@ h3.reveal-init {
 .obindex-name {
   font-size: 1.05rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(15, 35, 32, 0.82);
   transition: color var(--t-fast) var(--ease-out);
 }
 .obindex-domain {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(15, 35, 32, 0.45);
   transition: color var(--t-fast) var(--ease-out);
 }
 /* At phone width the name needs the whole row; the URL bar and the
@@ -675,21 +675,21 @@ h3.reveal-init {
 }
 .obindex-row:hover .obindex-name,
 .obindex-row:focus-visible .obindex-name {
-  color: rgba(255, 255, 255, 0.98);
+  color: rgba(15, 35, 32, 0.98);
 }
 .obindex-row:hover .obindex-mark,
 .obindex-row:focus-visible .obindex-mark {
-  border-color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(15, 35, 32, 0.7);
 }
 .obindex-row.is-active .obindex-mark {
-  background: var(--color-sage-soft);
-  border-color: var(--color-sage-soft);
+  background: var(--color-sage);
+  border-color: var(--color-sage);
 }
 .obindex-row.is-active .obindex-name {
-  color: #a7c4bf;
+  color: var(--color-sage);
 }
 .obindex-row.is-active .obindex-domain {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(15, 35, 32, 0.62);
 }
 
 /* The laptop's shot stack: every site mounted, one visible. */

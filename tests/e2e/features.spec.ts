@@ -549,6 +549,24 @@ test("contact form is present, labelled, and honeypotted", async ({
   await expect(page.getByRole("button", { name: /send it/i })).toBeVisible();
 });
 
+test("the ground never renders black without GPU acceleration", async ({
+  page,
+}) => {
+  // The forest canvas gets an OPAQUE WebGL context before it decides
+  // whether to draw. Bailing on a software rasterizer used to leave a
+  // full-viewport black canvas behind the whole site — every headless
+  // environment (this suite included) saw a black site for weeks while
+  // real GPUs saw paper. The canvas must hide itself when it bails, and
+  // this asserts the outcome: the page ground is paper, not black.
+  await gotoReady(page, "/");
+  const png = await page.screenshot({
+    clip: { x: 4, y: 200, width: 24, height: 24 },
+  });
+  const { channels } = await sharp(png).removeAlpha().stats();
+  const mean = channels.reduce((a, c) => a + c.mean, 0) / channels.length;
+  expect(mean, "page ground should be paper, not black").toBeGreaterThan(180);
+});
+
 test("the OBdesign band swaps sites by name", async ({ page }) => {
   await gotoReady(page, "/");
   const band = page.locator("#obdesign");
