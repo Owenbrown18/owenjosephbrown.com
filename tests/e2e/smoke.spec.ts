@@ -63,20 +63,31 @@ test("OBdesign page links through to a case study", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/grain/i);
 });
 
-test("every client site links to its case study on obwebdesign.ca", async ({
-  page,
-}) => {
-  const { clientSites } = await import("../../src/lib/sites");
+test("every client site links to its own case study", async ({ page }) => {
+  const { caseStudyUrl, clientSites } = await import("../../src/lib/sites");
   await page.goto("/obdesign");
+  // The roster only: Explore more at the foot of the page links to the
+  // same case studies.
+  const roster = page.locator("#client-sites");
   const withStudy = clientSites.filter((s) => !s.noCaseStudy);
-  const links = page.getByRole("link", { name: /read the case study/i });
+  const links = roster.getByRole("link", { name: /read the case study/i });
   await expect(links).toHaveCount(withStudy.length);
   for (const site of withStudy) {
     await expect(
-      page.locator(`a[href="https://www.obwebdesign.ca/work/${site.slug}"]`),
+      roster.locator(`a[href="${caseStudyUrl(site)}"]`),
       `case study link for ${site.slug}`,
     ).toHaveCount(1);
   }
+  // Ten of the eleven leave for obwebdesign.ca; On the Roadside's write-up
+  // is here, and pointing it at a obwebdesign.ca page that doesn't exist
+  // is the mistake this half guards.
+  await expect(
+    roster.locator('a[href="/work/on-the-roadside"]'),
+    "On the Roadside's case study link stays on this site",
+  ).toHaveCount(1);
+  await expect(
+    roster.locator('a[href="https://www.obwebdesign.ca/work/on-the-roadside"]'),
+  ).toHaveCount(0);
 });
 
 test("retired client case studies redirect to obwebdesign.ca", async ({

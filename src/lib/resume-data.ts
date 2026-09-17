@@ -33,7 +33,7 @@ export const experience: ResumeEntry[] = [
     location: "Salt Spring Island & Victoria, BC",
     link: "https://www.obwebdesign.ca",
     bullets: [
-      "Designed, built and deployed more than 25 websites on Vercel, 11 of them live client sites for BC businesses (construction, bakery, spa, health clinics, accommodation), owning everything from client discovery to post-launch support",
+      "Designed, built and deployed more than 25 websites on Vercel, 12 of them live client sites for BC businesses (construction, bakery, spa, health clinics, accommodation), owning everything from client discovery to post-launch support",
       "Builds are custom-coded Next.js and Astro apps in TypeScript with Tailwind, wired to a git-based CMS (Keystatic) so every client edits their own content; deployed on Vercel with CI from GitHub",
       "Handle the whole operations surface: domains and DNS cutovers with zero email downtime, performance budgets (Core Web Vitals verified before handoff), SEO with structured data, analytics, and maintenance",
       "Wrote the Python pipeline that finds the clients: scraping, site analysis, email discovery, and drafting, with roughly 7% of cold emails converting to paying projects",

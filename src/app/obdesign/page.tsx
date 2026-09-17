@@ -10,7 +10,7 @@ import { PageHeader } from "@/components/page-header";
 export const metadata: Metadata = {
   title: "OBdesign",
   description:
-    "More than 25 websites deployed, 11 of them live client sites for BC businesses, every one custom-coded and client-editable. Owen Brown's web development business.",
+    "More than 25 websites deployed, 12 of them live client sites for BC businesses, every one custom-coded and client-editable. Owen Brown's web development business.",
 };
 
 export default function ObdesignPage() {
@@ -26,7 +26,7 @@ export default function ObdesignPage() {
         }
         meta={[
           { label: "Role", value: "Founder & web developer" },
-          { label: "Sites shipped", value: "25+ deployed · 11 live client sites" },
+          { label: "Sites shipped", value: "25+ deployed · 12 live client sites" },
           {
             label: "Stack",
             value: "Next.js · Astro · TypeScript · Keystatic",
@@ -54,7 +54,7 @@ export default function ObdesignPage() {
             edits their own content without touching code.
           </p>
           <p>
-            The numbers I actually track: more than 25 sites deployed, 11 of
+            The numbers I actually track: more than 25 sites deployed, 12 of
             them live client sites, $10,000+ collected, roughly
             7% of first cold emails converting to paying projects (found by{" "}
             <Link href="/work/leadgen" className="link-underline text-fg">
@@ -68,7 +68,13 @@ export default function ObdesignPage() {
         </div>
       </PageHeader>
 
-      <div className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2">
+      {/* Named so the roster can be asserted apart from the Explore more
+          tiles at the foot of the page, which link to the same case
+          studies. */}
+      <div
+        id="client-sites"
+        className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2"
+      >
         {clientSites.map((site, i) => (
           <article key={site.slug}>
             {/* Same stage as the work cards: the site dissolves in behind
@@ -108,13 +114,22 @@ export default function ObdesignPage() {
             </p>
             {!site.noCaseStudy && (
               <p className="mt-3 text-sm">
-                <a
-                  href={caseStudyUrl(site)}
-                  rel="noopener"
-                  className="link-underline text-fg"
-                >
-                  Read the case study on obwebdesign.ca ↗
-                </a>
+                {site.caseStudyPath ? (
+                  <Link
+                    href={site.caseStudyPath}
+                    className="link-underline text-fg"
+                  >
+                    Read the case study →
+                  </Link>
+                ) : (
+                  <a
+                    href={caseStudyUrl(site)}
+                    rel="noopener"
+                    className="link-underline text-fg"
+                  >
+                    Read the case study on obwebdesign.ca ↗
+                  </a>
+                )}
               </p>
             )}
           </article>

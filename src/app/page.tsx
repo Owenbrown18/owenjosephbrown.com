@@ -286,7 +286,7 @@ I’m a{" "}
             <dl className="flex flex-wrap items-end gap-x-10 gap-y-4">
               {[
                 ["25+", "sites deployed"],
-                ["11", "live client sites"],
+                ["12", "live client sites"],
                 ["$10k+", "collected"],
               ].map(([value, label]) => (
                 <div key={label}>

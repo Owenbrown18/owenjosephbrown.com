@@ -134,16 +134,27 @@ export function ObdesignShowcase() {
             Visit {host(active.url)}
             <ArrowUpRightIcon />
           </a>
-          {!active.noCaseStudy && (
-            <a
-              href={caseStudyUrl(active)}
-              rel="noopener"
-              className="link-draw inline-flex items-center gap-1.5 text-sm text-white/75"
-            >
-              Case study
-              <ArrowUpRightIcon />
-            </a>
-          )}
+          {!active.noCaseStudy &&
+            // On the Roadside's write-up is on this site, so it routes
+            // client-side; every other row leaves for obwebdesign.ca.
+            (active.caseStudyPath ? (
+              <Link
+                href={active.caseStudyPath}
+                className="link-draw inline-flex items-center gap-1.5 text-sm text-white/75"
+              >
+                Case study
+                <ArrowUpRightIcon />
+              </Link>
+            ) : (
+              <a
+                href={caseStudyUrl(active)}
+                rel="noopener"
+                className="link-draw inline-flex items-center gap-1.5 text-sm text-white/75"
+              >
+                Case study
+                <ArrowUpRightIcon />
+              </a>
+            ))}
         </div>
       </div>
     </div>

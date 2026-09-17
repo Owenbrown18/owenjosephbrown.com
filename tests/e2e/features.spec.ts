@@ -638,6 +638,16 @@ test("the OBdesign band swaps sites by name", async ({ page }) => {
   await expect(band.locator(".laptop-frame__url")).toContainText(
     "beyondfitness.biz",
   );
+  // On the Roadside is the one row whose write-up is on this site, so its
+  // case-study link stays internal instead of leaving for a obwebdesign.ca
+  // page that doesn't exist.
+  await band.getByRole("tab", { name: "On the Roadside" }).click();
+  await expect(band.locator(".laptop-frame__url")).toContainText(
+    "ontheroadside.ca",
+  );
+  await expect(
+    band.getByRole("link", { name: /case study/i }),
+  ).toHaveAttribute("href", "/work/on-the-roadside");
 });
 
 test("Explore more tiles show the same pictures as the home cards", async ({

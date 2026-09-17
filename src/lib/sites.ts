@@ -12,11 +12,18 @@ export type ClientSite = {
   url: string;
   /** Beyond Fitness has no write-up on obwebdesign.ca (ongoing care, not a build). */
   noCaseStudy?: true;
+  /**
+   * A write-up that lives on this site instead of obwebdesign.ca. Only On
+   * the Roadside: the landing page is one deliverable of a project whose
+   * case study is here, so the row points at that rather than at a
+   * obwebdesign.ca page that doesn't exist.
+   */
+  caseStudyPath?: string;
 };
 
-/** Each site's write-up lives on obwebdesign.ca, not here. */
+/** Each site's write-up lives on obwebdesign.ca unless it says otherwise. */
 export const caseStudyUrl = (site: ClientSite) =>
-  `https://www.obwebdesign.ca/work/${site.slug}`;
+  site.caseStudyPath ?? `https://www.obwebdesign.ca/work/${site.slug}`;
 
 export const clientSites: ClientSite[] = [
   {
@@ -25,6 +32,17 @@ export const clientSites: ClientSite[] = [
     blurb:
       "First-ever website for a Salt Spring builder. 291 photos curated into thirteen project galleries.",
     url: "https://grainconstruction.ca",
+  },
+  {
+    // Billed as a $0 line inside the $1,900 app project, and it is still a
+    // live client site on the client's own domain: the front door the
+    // printed cards and bumper stickers point at.
+    slug: "on-the-roadside",
+    name: "On the Roadside",
+    blurb:
+      "The launch site for an iOS app that maps Vancouver Island's farm stands and food trucks, built to turn a printed bumper sticker into a vendor signup.",
+    url: "https://ontheroadside.ca",
+    caseStudyPath: "/work/on-the-roadside",
   },
   {
     slug: "figs-and-honey",
