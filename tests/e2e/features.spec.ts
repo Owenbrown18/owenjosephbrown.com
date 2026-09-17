@@ -101,7 +101,7 @@ test("the home card really carries the three device screens", async ({
   const png = await res.body();
 
   const regions = {
-    grain: { left: 700, top: 140, width: 400, height: 200 },
+    nicol: { left: 700, top: 140, width: 400, height: 200 },
     figs: { left: 880, top: 310, width: 300, height: 200 },
     phone: { left: 616, top: 320, width: 124, height: 200 },
   };

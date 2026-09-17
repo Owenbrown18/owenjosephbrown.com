@@ -238,26 +238,28 @@ function phone({
 
 /**
  * Placement, in card pixels. Satori stacks in source order, so the render
- * order below is the depth order: grain at the back, the phone in front.
+ * order below is the depth order: the big laptop at the back, the phone in
+ * front. The screens mirror the landing hero: Nicol Construction in the
+ * big laptop, Figs & Honey beside it, On the Roadside on the phone.
  */
 const LAYOUT = {
-  grain: { x: 600, y: 58, width: 548 },
+  nicol: { x: 600, y: 58, width: 548 },
   figs: { x: 858, y: 250, width: 420 },
   phone: { x: 606, y: 292, width: 146 },
 };
 
 export async function ogHomeCard() {
-  const grainView = LAYOUT.grain.width - (0.5 * 16 * LAYOUT.grain.width) / 400 * 2;
+  const nicolView = LAYOUT.nicol.width - (0.5 * 16 * LAYOUT.nicol.width) / 400 * 2;
   const figsView = LAYOUT.figs.width - (0.5 * 16 * LAYOUT.figs.width) / 400 * 2;
   const phoneRem = (16 * LAYOUT.phone.width) / 160;
   const phoneH = (LAYOUT.phone.width * 2556) / 1179;
 
-  const [fonts, grain, figs, roll] = await Promise.all([
+  const [fonts, nicol, figs, roadside] = await Promise.all([
     ogFonts(),
-    screen("images/work/grain-construction.webp", grainView, (grainView * 10) / 16),
+    screen("images/work/nicol-construction.webp", nicolView, (nicolView * 10) / 16),
     screen("images/work/figs-and-honey.webp", figsView, (figsView * 10) / 16),
     screen(
-      "images/grain/home_roll.webp",
+      "images/on-the-roadside/screen-truck-detail.webp",
       LAYOUT.phone.width - 0.64 * phoneRem,
       phoneH - 0.64 * phoneRem,
     ),
@@ -279,9 +281,9 @@ export async function ogHomeCard() {
           {gridLines()}
         </div>
 
-        {laptop({ ...LAYOUT.grain, url: "grainconstruction.ca", src: grain })}
+        {laptop({ ...LAYOUT.nicol, url: "nicolconstruction.ca", src: nicol })}
         {laptop({ ...LAYOUT.figs, url: "figsandhoney.com", src: figs })}
-        {phone({ ...LAYOUT.phone, src: roll })}
+        {phone({ ...LAYOUT.phone, src: roadside })}
 
         <div
           style={{
