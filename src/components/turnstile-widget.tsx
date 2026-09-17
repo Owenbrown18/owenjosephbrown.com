@@ -15,11 +15,16 @@ import { useEffect, useRef, useState } from "react";
  * The token is held in React state and written to a hidden input we own
  * (response-field is off) so a re-render can't drop a node Turnstile
  * injected behind React's back.
+ *
+ * Rendered with appearance "interaction-only": visitors don't see a
+ * Cloudflare box at all unless Cloudflare decides it needs a click, and
+ * then the send button says "Tick the box to send".
  */
 
 type TurnstileOptions = {
   sitekey: string;
   theme?: "light" | "dark" | "auto";
+  appearance?: "always" | "execute" | "interaction-only";
   callback?: (token: string) => void;
   "error-callback"?: () => void;
   "expired-callback"?: () => void;
@@ -123,6 +128,10 @@ export function TurnstileWidget({
             sitekey: siteKey,
             // The page is ink-on-paper, whatever the class names say.
             theme: "light",
+            // Invisible unless Cloudflare actually needs a click. The
+            // check still runs for every visitor; almost all of them just
+            // never see the box, only the rare flagged one does.
+            appearance: "interaction-only",
             "response-field": false,
             callback: (t) => {
               setToken(t);
@@ -180,8 +189,11 @@ export function TurnstileWidget({
     };
   }, [siteKey]);
 
+  // No gap in the form while the widget is invisible: space only opens
+  // when there is a checkbox to click or a failure to explain.
+  const shown = status === "interactive" || status === "failed";
   return (
-    <div className="mt-5">
+    <div className={shown ? "mt-5" : undefined}>
       <div ref={holder} data-testid="turnstile" />
       <input type="hidden" name="cf-turnstile-response" value={token} />
       {status === "failed" && (
