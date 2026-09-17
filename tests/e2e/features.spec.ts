@@ -676,6 +676,45 @@ test("Explore more tiles show the same pictures as the home cards", async ({
   }
 });
 
+for (const width of [1440, 820, 390]) {
+  test(`case studies keep one column width at ${width}px`, async ({ page }) => {
+    // Header rule, hero and every block of the body share one column.
+    // They used to step in twice (864px header, 832px hero, 656px body),
+    // and generic prose list padding outranked the Pipeline component and
+    // inset it another 20px. Checked on every case study on disk.
+    await page.setViewportSize({ width, height: 1000 });
+    const { readdirSync } = await import("node:fs");
+    const slugs = readdirSync("content/work")
+      .filter((f) => f.endsWith(".mdx"))
+      .map((f) => f.replace(/\.mdx$/, ""));
+    for (const slug of slugs) {
+      await gotoReady(page, `/work/${slug}`);
+      await page.waitForTimeout(900); // the hero's entrance scale settles
+      const offenders = await page.evaluate(() => {
+        const edges = (el: Element) => {
+          const b = el.getBoundingClientRect();
+          return [Math.round(b.left), Math.round(b.right)];
+        };
+        const [l, r] = edges(document.querySelector("header dl")!);
+        const out: string[] = [];
+        const hero = document.querySelector(".enter-pop");
+        if (hero) {
+          const [hl, hr] = edges(hero);
+          if (hl !== l || hr !== r) out.push(`hero ${hl}-${hr} vs ${l}-${r}`);
+        }
+        for (const el of document.querySelector(".prose-ob")!.children) {
+          const [bl, br] = edges(el);
+          if (bl !== l || br !== r) out.push(`${el.tagName} ${bl}-${br} vs ${l}-${r}`);
+          if (el.matches(".pipeline") && parseFloat(getComputedStyle(el).paddingLeft) !== 0)
+            out.push("pipeline inset by prose list padding");
+        }
+        return out;
+      });
+      expect(offenders, `/work/${slug} at ${width}px`).toEqual([]);
+    }
+  });
+}
+
 test("footer indexes every project page", async ({ page }) => {
   await gotoReady(page, "/");
   const footer = page.locator("footer");

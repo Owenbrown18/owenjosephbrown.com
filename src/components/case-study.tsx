@@ -49,7 +49,7 @@ export function CaseStudy({ entry }: { entry: WorkEntry }) {
             point is an interaction a still can't show; otherwise the hero. */}
         {entry.heroVideo ? (
           <div
-            className="enter-pop relative mt-12 max-w-[52rem] overflow-hidden border border-line"
+            className="enter-pop relative mt-12 overflow-hidden border border-line"
             style={{ "--i": 4 } as React.CSSProperties}
           >
             <video
@@ -66,7 +66,7 @@ export function CaseStudy({ entry }: { entry: WorkEntry }) {
         ) : (
           entry.hero && (
             <div
-              className="enter-pop relative mt-12 aspect-[16/9] max-w-[52rem] overflow-hidden border border-line"
+              className="enter-pop relative mt-12 aspect-[16/9] overflow-hidden border border-line"
               style={{ "--i": 4 } as React.CSSProperties}
             >
               <Image
@@ -74,7 +74,7 @@ export function CaseStudy({ entry }: { entry: WorkEntry }) {
                 alt={entry.heroAlt ?? entry.title}
                 fill
                 priority
-                sizes="(max-width: 900px) 100vw, 832px"
+                sizes="(max-width: 820px) 100vw, 768px"
                 className="object-cover object-top"
               />
             </div>

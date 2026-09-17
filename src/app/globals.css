@@ -355,7 +355,10 @@
 .sheet {
   margin-inline: auto;
   width: 100%;
-  max-width: 54rem;
+  /* The case study's one column. Header rule, hero and every block of
+     the body share this width; they used to step in twice (864px
+     header, 832px hero, 656px body). */
+  max-width: 48rem;
 }
 .sheet-wide {
   max-width: 80rem;
@@ -816,8 +819,18 @@ h3.reveal-init {
 /* Case-study prose. Kept bespoke rather than @tailwindcss/typography so the
    type matches the brand exactly. */
 .prose-ob {
-  max-width: 65ch;
+  /* Full column width, like the hero above it. The type steps up to
+     hold a readable measure at that width (~80 characters a line),
+     rather than the column stepping in to hold it at 16px. */
+  font-size: 1rem;
   color: var(--fg-muted);
+}
+/* On a phone the column is already narrow (~42 characters a line at
+   16px); the larger size is only for the wider column. */
+@media (min-width: 640px) {
+  .prose-ob {
+    font-size: 1.125rem;
+  }
 }
 .prose-ob > * + * {
   margin-top: 1.25em;
@@ -846,17 +859,20 @@ h3.reveal-init {
 .prose-ob a:hover {
   text-decoration-color: currentColor;
 }
-.prose-ob ul,
-.prose-ob ol {
+/* Plain markdown lists only. :where() keeps these at zero specificity so
+   a component list in the prose (the Pipeline rail) keeps its own
+   padding, marker and spacing: as .prose-ob ol (0,1,1) these used to beat
+   .pipeline (0,1,0) and inset every pipeline 20px from the column. */
+:where(.prose-ob) :where(ul, ol) {
   padding-left: 1.25rem;
 }
-.prose-ob ul {
+:where(.prose-ob) :where(ul) {
   list-style: disc;
 }
-.prose-ob ol {
+:where(.prose-ob) :where(ol) {
   list-style: decimal;
 }
-.prose-ob li + li {
+:where(.prose-ob) :where(li + li) {
   margin-top: 0.5em;
 }
 .prose-ob blockquote {
