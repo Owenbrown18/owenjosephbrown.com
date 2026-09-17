@@ -331,19 +331,19 @@ I’m a{" "}
             {/* The photo pops on its own (anim-image); no second reveal on
                 the wrapper, which stacked a rise on top of the pop. */}
             <div className="relative max-w-[380px]">
-              {/* Mounted like a work card: the same hairline the project
-                  frames carry, on a paper mat, because that border is
-                  invisible laid straight over a dark photo. */}
-              <div className="border border-[rgba(15,35,32,0.12)] bg-bg p-2 shadow-2xl">
-                <Image
-                  src={img("/images/about/owen-brown-portrait-3.jpg")}
-                  sizes="(min-width: 768px) 380px, 100vw"
-                  alt="Owen Brown"
-                  width={760}
-                  height={950}
-                  className="anim-image aspect-[4/5] w-full object-cover"
-                />
-              </div>
+              {/* The work cards' own hairline on the photo's edge. Not the
+                  base .project-frame 0.12 ink: every card's stage tone
+                  overrides that, so what reads on screen is a tinted 1px
+                  at 0.22 (frame-grain 122,99,48; frame-whispr 29,59,54).
+                  This is that line in the site's forest. */}
+              <Image
+                src={img("/images/about/owen-brown-portrait-3.jpg")}
+                sizes="(min-width: 768px) 380px, 100vw"
+                alt="Owen Brown"
+                width={760}
+                height={950}
+                className="anim-image aspect-[4/5] w-full border border-[rgba(46,84,80,0.22)] object-cover shadow-2xl"
+              />
             </div>
             <div>
               <p className="reveal-up words max-w-[52ch] text-[clamp(1.05rem,1.8vw,1.3rem)] leading-relaxed text-white/75">
