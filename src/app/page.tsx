@@ -145,7 +145,8 @@ I’m a{" "}
           </div>
 
           {/* The work, physically: client sites in the OBdesign laptop
-              frame, grain on a phone, Whispr's pill listening in over it.
+              frame, On the Roadside on a phone, Whispr's pill listening in
+              over it.
               Loosely circular, allowed to overlap, floating idle. */}
           <div
             aria-hidden
@@ -154,9 +155,9 @@ I’m a{" "}
           >
             <span className="hero-cluster__glow" />
             <div className="cluster-piece absolute left-0 top-[4%] w-[62%]" style={{ "--i": 1 } as React.CSSProperties}>
-              <LaptopFrame url="grainconstruction.ca">
+              <LaptopFrame url="nicolconstruction.ca">
                 <Image
-                  src={siteShots["grain-construction"]}
+                  src={siteShots["nicol-construction"]}
                   alt=""
                   width={1200}
                   height={750}
@@ -201,10 +202,10 @@ I’m a{" "}
             <div className="cluster-piece cluster-piece--phone absolute bottom-[-2%] right-[2%] z-[3] w-[24%]" style={{ "--i": 5 } as React.CSSProperties}>
               <PhoneFrame>
                 <Image
-                  src={img("/images/grain/home_roll.webp")}
+                  src={img("/images/on-the-roadside/screen-truck-detail.webp")}
                   alt=""
-                  width={260}
-                  height={563}
+                  width={660}
+                  height={1434}
                   sizes="(min-width: 1024px) 160px, 24vw"
                 />
               </PhoneFrame>
