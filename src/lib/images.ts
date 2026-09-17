@@ -16,8 +16,8 @@ import whisprDemoPoster from "../../public/images/whispr/demo-poster.webp";
 import leadgenDashboard from "../../public/images/leadgen/dashboard.webp";
 import onTheRoadsideShowcase from "../../public/images/on-the-roadside/showcase.webp";
 import onTheRoadsideScreenTruckDetail from "../../public/images/on-the-roadside/screen-truck-detail.webp";
-import aboutOwenBrownPortrait2 from "../../public/images/about/owen-brown-portrait-2.jpg";
-import aboutOwenBrownHeadshot2 from "../../public/images/about/owen-brown-headshot-2.jpg";
+import aboutOwenBrownPortrait3 from "../../public/images/about/owen-brown-portrait-3.jpg";
+import aboutOwenBrownHeadshot3 from "../../public/images/about/owen-brown-headshot-3.jpg";
 import workGrainConstruction from "../../public/images/work/grain-construction.webp";
 import workFigsAndHoney from "../../public/images/work/figs-and-honey.webp";
 import workDavesBakery from "../../public/images/work/daves-bakery.webp";
@@ -64,8 +64,8 @@ const registry: Record<string, StaticImageData> = {
   "/images/leadgen/dashboard.webp": leadgenDashboard,
   "/images/on-the-roadside/showcase.webp": onTheRoadsideShowcase,
   "/images/on-the-roadside/screen-truck-detail.webp": onTheRoadsideScreenTruckDetail,
-  "/images/about/owen-brown-portrait-2.jpg": aboutOwenBrownPortrait2,
-  "/images/about/owen-brown-headshot-2.jpg": aboutOwenBrownHeadshot2,
+  "/images/about/owen-brown-portrait-3.jpg": aboutOwenBrownPortrait3,
+  "/images/about/owen-brown-headshot-3.jpg": aboutOwenBrownHeadshot3,
   "/images/work/grain-construction.webp": workGrainConstruction,
   "/images/work/figs-and-honey.webp": workFigsAndHoney,
   "/images/work/daves-bakery.webp": workDavesBakery,

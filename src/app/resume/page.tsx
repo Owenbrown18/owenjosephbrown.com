@@ -151,7 +151,7 @@ export default function ResumePage() {
           <span className="portrait enter-pop relative inline-block w-36 print:w-28">
             <span aria-hidden className="portrait-echo enter-echo" style={{ "--enter-at": "0.45s" } as React.CSSProperties} />
             <Image
-              src={img("/images/about/owen-brown-headshot-2.jpg")}
+              src={img("/images/about/owen-brown-headshot-3.jpg")}
               alt="Owen Brown"
               width={288}
               height={288}
