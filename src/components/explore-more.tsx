@@ -1,20 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getWorkEntries, kindLabel } from "@/lib/content";
 import { PixelCells } from "@/components/pixel-cells";
+import { WorkArt, compositions } from "@/components/work-art";
 
 /**
  * The foot of every case study: four other projects as small tiles, so a
  * reader who finished one has the next ones in front of them instead of
- * a single "next" link. Each tile is the project's hero on its own stage
- * tone, with the same pixel-fill hover the work cards use.
+ * a single "next" link. Each tile is the project's home-card art on its
+ * own stage tone (the same composition, fitted whole into the tile), with
+ * the same pixel-fill hover the work cards use.
  */
-const tone: Record<string, string> = {
-  grain: "frame-grain",
-  whispr: "frame-whispr",
-  leadgen: "frame-leadgen",
-  "on-the-roadside": "frame-roadside",
-};
 
 export function ExploreMore({ currentSlug }: { currentSlug?: string }) {
   const others = getWorkEntries()
@@ -43,17 +38,9 @@ export function ExploreMore({ currentSlug }: { currentSlug?: string }) {
           <li key={e.slug}>
             <Link href={`/work/${e.slug}`} className="explore-tile stage reveal-up block">
               <span
-                className={`explore-tile__frame ${tone[e.slug] ?? "frame-obdesign"}`}
+                className={`explore-tile__frame ${compositions[e.slug]?.tone ?? "frame-obdesign"}`}
               >
-                {(e.thumb ?? e.hero) && (
-                  <Image
-                    src={e.thumb ?? e.hero!}
-                    alt=""
-                    fill
-                    sizes="(min-width: 1024px) 20rem, (min-width: 640px) 45vw, 100vw"
-                    className="object-cover object-top"
-                  />
-                )}
+                <WorkArt entry={e} fit="contain" />
                 <PixelCells seed={e.title} variant="reveal" />
                 <PixelCells seed={e.title} variant="hover" cols={10} rows={6} spread={260} />
                 <span aria-hidden className="frame-veil">

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { PixelCells } from "@/components/pixel-cells";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -110,7 +110,7 @@ export function Shot({
   chrome = false,
   priority = false,
 }: {
-  src: string;
+  src: StaticImageData;
   alt: string;
   className: string;
   /** Must match the shot's real rendered width, not the frame's. */
@@ -153,7 +153,7 @@ export function FrameShot({
   alt,
   priority = false,
 }: {
-  src: string;
+  src: StaticImageData;
   alt: string;
   priority?: boolean;
 }) {

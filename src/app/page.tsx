@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ObdesignShowcase } from "@/components/obdesign-showcase";
@@ -10,7 +9,8 @@ import {
   ObdesignWordmark,
 } from "@/components/icons";
 import { SectionRule } from "@/components/section-rule";
-import { ProjectCard, FrameShot, Shot } from "@/components/project-card";
+import { ProjectCard } from "@/components/project-card";
+import { WorkArt, compositions } from "@/components/work-art";
 import { PhoneFrame } from "@/components/phone-frame";
 import { LaptopFrame } from "@/components/device-frames";
 import { LocalTime } from "@/components/local-time";
@@ -20,6 +20,7 @@ import { Words } from "@/components/words";
 import { identity } from "@/lib/resume-data";
 import { getWorkEntries } from "@/lib/content";
 import { siteShots } from "@/lib/site-shots";
+import { img } from "@/lib/images";
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -39,180 +40,6 @@ const personJsonLd = {
     "@type": "PostalAddress",
     addressRegion: "BC",
     addressCountry: "CA",
-  },
-};
-
-/**
- * How each project's imagery is arranged inside its frame. Several shots
- * at different sizes rather than one flat screenshot, because a single
- * capture of a phone app or a Mac app says almost nothing.
- *
- * A slug with no composition here falls back to its hero image, so a new
- * case study still shows up on its own.
- */
-const compositions: Record<
-  string,
-  { frame: string; tone: string; art: ReactNode }
-> = {
-  grain: {
-    frame: "aspect-[16/11]",
-    tone: "frame-grain",
-    art: (
-      <>
-        <div className="absolute bottom-[-8%] left-[7%] w-[24%] -rotate-2">
-          <PhoneFrame>
-            <Image
-              src="/images/grain/home_roll.webp"
-              alt=""
-              width={260}
-              height={563}
-              sizes="(min-width: 768px) 260px, 30vw"
-              className="h-auto w-full"
-            />
-          </PhoneFrame>
-        </div>
-        <div className="absolute bottom-[5%] left-[38%] z-10 w-[26%]">
-          <PhoneFrame>
-            <Image
-              src="/images/grain/new_roll_qr.webp"
-              alt=""
-              width={260}
-              height={563}
-              sizes="(min-width: 768px) 280px, 32vw"
-              className="h-auto w-full"
-            />
-          </PhoneFrame>
-        </div>
-        <div className="absolute bottom-[-6%] right-[8%] w-[22%] rotate-2">
-          <PhoneFrame>
-            <Image
-              src="/images/grain/waiting.webp"
-              alt=""
-              width={260}
-              height={563}
-              sizes="(min-width: 768px) 240px, 27vw"
-              className="h-auto w-full"
-            />
-          </PhoneFrame>
-        </div>
-      </>
-    ),
-  },
-  "on-the-roadside": {
-    frame: "aspect-[16/10]",
-    tone: "frame-roadside",
-    art: (
-      <>
-        {/* The landing page behind, the app in front: the two halves of
-            what shipped, a website on the web and the app on phones. */}
-        <div className="absolute left-[4%] top-[6%] w-[68%]">
-          <LaptopFrame url="ontheroadside.ca" size="mini">
-            <Image
-              src="/images/work/on-the-roadside.webp"
-              alt=""
-              width={1600}
-              height={1000}
-              sizes="(min-width: 768px) 560px, 68vw"
-            />
-          </LaptopFrame>
-        </div>
-        <div className="absolute bottom-[-10%] right-[21%] z-10 w-[22%] -rotate-2">
-          <PhoneFrame>
-            <Image
-              src="/images/on-the-roadside/app-home.webp"
-              alt=""
-              width={620}
-              height={1347}
-              sizes="(min-width: 768px) 240px, 27vw"
-              className="h-auto w-full"
-            />
-          </PhoneFrame>
-        </div>
-        <div className="absolute bottom-[-4%] right-[4%] z-20 w-[20%] rotate-2">
-          <PhoneFrame>
-            <Image
-              src="/images/on-the-roadside/app-detail.webp"
-              alt=""
-              width={620}
-              height={1347}
-              sizes="(min-width: 768px) 220px, 25vw"
-              className="h-auto w-full"
-            />
-          </PhoneFrame>
-        </div>
-      </>
-    ),
-  },
-  whispr: {
-    frame: "aspect-[16/9]",
-    tone: "frame-whispr",
-    art: (
-      <>
-        {/* The app itself, not fragments of it: the real settings window
-            (its own macOS chrome) with the two HUD pills in front. The
-            pills are re-rendered from Whispr's source styles (Hud.tsx)
-            with real alpha, so their corners are actually round. */}
-        <Shot
-          src="/images/whispr/settings-general.webp"
-          alt=""
-          className="left-[4%] top-[7%] w-[58%] aspect-[1400/1094] rounded-lg"
-          sizes="(min-width: 768px) 480px, 58vw"
-        />
-        <div className="absolute right-[6%] top-[34%] z-10 w-[32%]">
-          <Image
-            src="/images/whispr/pill-listening-v2.webp"
-            alt=""
-            width={254}
-            height={64}
-            sizes="(min-width: 768px) 265px, 32vw"
-            className="h-auto w-full drop-shadow-[0_10px_24px_rgba(15,35,32,0.4)]"
-          />
-        </div>
-        <div className="absolute right-[11%] top-[52%] z-10 w-[29%]">
-          <Image
-            src="/images/whispr/pill-transcribing-v2.webp"
-            alt=""
-            width={260}
-            height={64}
-            sizes="(min-width: 768px) 240px, 29vw"
-            className="h-auto w-full drop-shadow-[0_10px_24px_rgba(15,35,32,0.4)]"
-          />
-        </div>
-      </>
-    ),
-  },
-  leadgen: {
-    frame: "aspect-[16/10]",
-    tone: "frame-leadgen",
-    art: (
-      <>
-        {/* The dashboard the operation runs from, on the machine it runs
-            on: a single local HTML file, so the laptop's URL bar carries
-            the file name rather than a domain. */}
-        <div className="absolute left-[4%] top-[6%] w-[66%]">
-          <LaptopFrame url="leads-dashboard.html" size="mini">
-            <Image
-              src="/images/leadgen/dashboard-top.webp"
-              alt=""
-              width={1400}
-              height={700}
-              sizes="(min-width: 768px) 545px, 66vw"
-              // Left-anchored: the centre crop sliced the lead names in
-              // half, and the code window covers the right side anyway.
-              style={{ objectPosition: "left top" }}
-            />
-          </LaptopFrame>
-        </div>
-        {/* The classifier itself, rendered from the real source: the
-            system is the product here, so the code is the better photo. */}
-        <Shot
-          src="/images/leadgen/classifier-code.webp"
-          alt=""
-          className="bottom-[6%] right-[4%] z-10 w-[50%] aspect-[1564/982]"
-          sizes="(min-width: 768px) 415px, 50vw"
-        />
-      </>
-    ),
   },
 };
 
@@ -363,7 +190,7 @@ I’m a{" "}
             </div>
             <div className="cluster-piece cluster-piece--code absolute bottom-[16%] right-[16%] z-[2] w-[44%]" style={{ "--i": 4 } as React.CSSProperties}>
               <Image
-                src="/images/leadgen/classifier-code.webp"
+                src={img("/images/leadgen/classifier-code.webp")}
                 alt=""
                 width={782}
                 height={491}
@@ -374,7 +201,7 @@ I’m a{" "}
             <div className="cluster-piece cluster-piece--phone absolute bottom-[-2%] right-[2%] z-[3] w-[24%]" style={{ "--i": 5 } as React.CSSProperties}>
               <PhoneFrame>
                 <Image
-                  src="/images/grain/home_roll.webp"
+                  src={img("/images/grain/home_roll.webp")}
                   alt=""
                   width={260}
                   height={563}
@@ -384,7 +211,7 @@ I’m a{" "}
             </div>
             <div className="cluster-piece absolute left-[30%] top-[42%] z-[4] w-[32%]" style={{ "--i": 6 } as React.CSSProperties}>
               <Image
-                src="/images/whispr/pill-listening-v2.webp"
+                src={img("/images/whispr/pill-listening-v2.webp")}
                 alt=""
                 width={254}
                 height={64}
@@ -436,12 +263,7 @@ I’m a{" "}
                 frameClass={compositions[entry.slug]?.frame}
                 tone={compositions[entry.slug]?.tone}
               >
-                {compositions[entry.slug]?.art ?? (
-                  <FrameShot
-                    src={entry.hero ?? "/images/work/grain-construction.webp"}
-                    alt={entry.heroAlt ?? entry.title}
-                  />
-                )}
+                <WorkArt entry={entry} />
               </ProjectCard>
             ))}
           </div>
@@ -509,7 +331,7 @@ I’m a{" "}
                 the wrapper, which stacked a rise on top of the pop. */}
             <div className="relative max-w-[380px]">
               <Image
-                src="/images/about/owen-brown-portrait-2.jpg"
+                src={img("/images/about/owen-brown-portrait-2.jpg")}
                 sizes="(min-width: 768px) 380px, 100vw"
                 alt="Owen Brown"
                 width={760}

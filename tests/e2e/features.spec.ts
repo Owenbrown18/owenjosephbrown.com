@@ -640,6 +640,42 @@ test("the OBdesign band swaps sites by name", async ({ page }) => {
   );
 });
 
+test("Explore more tiles show the same pictures as the home cards", async ({
+  page,
+}) => {
+  // Both draw from src/components/work-art.tsx. They drifted once (tiles
+  // showed each case study's hero while the home cards showed composed
+  // device art); this pins them together by the images actually drawn.
+  const shotsBy = (selector: string) =>
+    page.evaluate((sel) => {
+      const name = (src: string) => {
+        const url = decodeURIComponent(src);
+        const path = url.includes("url=") ? url.split("url=")[1].split("&")[0] : url;
+        // /_next/static/media/home_roll.2abc123.webp -> home_roll
+        return path.split("/").pop()!.split(".")[0];
+      };
+      const out: Record<string, string[]> = {};
+      for (const a of document.querySelectorAll<HTMLAnchorElement>(sel)) {
+        out[new URL(a.href).pathname] = [...a.querySelectorAll("img")]
+          .map((i) => name(i.getAttribute("src") ?? ""))
+          .sort();
+      }
+      return out;
+    }, selector);
+
+  await gotoReady(page, "/");
+  const home = await shotsBy("a.project-card");
+
+  for (const slug of ["grain", "whispr"]) {
+    await gotoReady(page, `/work/${slug}`);
+    const tiles = await shotsBy("a.explore-tile");
+    expect(Object.keys(tiles).length, `tiles on /work/${slug}`).toBeGreaterThan(0);
+    for (const [href, shots] of Object.entries(tiles)) {
+      expect(shots, `${href} tile on /work/${slug}`).toEqual(home[href]);
+    }
+  }
+});
+
 test("footer indexes every project page", async ({ page }) => {
   await gotoReady(page, "/");
   const footer = page.locator("footer");

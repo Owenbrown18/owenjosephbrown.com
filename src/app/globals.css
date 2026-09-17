@@ -1330,23 +1330,30 @@ h3.reveal-init {
   border-radius: 0 0 0.89cqw 0.89cqw;
 }
 
+/* The phone, proportional like the laptop: cqw of .mobile-frame-box.
+   Calibrated on the home grain card's middle phone (169px wide at a
+   1440px viewport, 1rem = 9.467cqw), so that card is unchanged and every
+   smaller phone is the same phone scaled. */
+.mobile-frame-box {
+  container-type: inline-size;
+}
 .mobile-frame {
   position: relative;
   aspect-ratio: 1179 / 2556;
   background: #1a1a1c;
-  border-radius: 1.4rem;
-  padding: 0.32rem;
+  border-radius: 13.254cqw;
+  padding: 3.03cqw;
   box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.3),
-    0 26px 44px -16px rgba(0, 0, 0, 0.6);
+    0 1.183cqw 3.55cqw rgba(0, 0, 0, 0.3),
+    0 15.385cqw 26.036cqw -9.467cqw rgba(0, 0, 0, 0.6);
 }
 .mobile-frame__speaker {
   position: absolute;
-  top: 0.55rem;
+  top: 5.207cqw;
   left: 50%;
   transform: translateX(-50%);
   width: 26%;
-  height: 0.18rem;
+  height: 1.704cqw;
   background: rgba(255, 255, 255, 0.18);
   border-radius: 9999px;
   z-index: 2;
@@ -1354,7 +1361,7 @@ h3.reveal-init {
 .mobile-frame__view {
   height: 100%;
   overflow: hidden;
-  border-radius: 1.1rem;
+  border-radius: 10.414cqw;
 }
 .mobile-frame__view img {
   width: 100%;
@@ -1588,9 +1595,26 @@ h3.reveal-init {
 .explore-tile__frame {
   position: relative;
   display: block;
-  aspect-ratio: 4 / 3;
+  /* 16:10, the shape most home cards already are, so the home art fits
+     almost exactly: at worst a sliver of stage tone at two edges. */
+  aspect-ratio: 16 / 10;
   overflow: hidden;
+  /* WorkArt fits a home composition by the tile's own size. */
+  container-type: size;
   border: 1px solid rgba(15, 35, 32, 0.12);
+}
+/* A home-card composition drawn whole at its own aspect inside a frame
+   of another shape (the Explore more tiles), centred, and clipped at its
+   own edges exactly as the home card's frame clips it: the same picture,
+   with the stage tone filling any difference. */
+.work-art-fit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(100cqw, calc(100cqh * var(--art-ratio)));
+  aspect-ratio: var(--art-ratio);
+  overflow: hidden;
+  transform: translate(-50%, -50%);
 }
 /* A frame that keeps the image's own ratio (the OBdesign gallery). */
 .stage-frame {

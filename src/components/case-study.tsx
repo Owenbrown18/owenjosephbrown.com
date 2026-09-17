@@ -3,6 +3,7 @@ import { Mdx } from "@/components/mdx";
 import { PageHeader } from "@/components/page-header";
 import { ExploreMore } from "@/components/explore-more";
 import { kindLabel, type WorkEntry } from "@/lib/content";
+import { img } from "@/lib/images";
 
 /**
  * Every case study, one component: the animated masthead (PageHeader),
@@ -69,7 +70,7 @@ export function CaseStudy({ entry }: { entry: WorkEntry }) {
               style={{ "--i": 4 } as React.CSSProperties}
             >
               <Image
-                src={entry.hero}
+                src={img(entry.hero)}
                 alt={entry.heroAlt ?? entry.title}
                 fill
                 priority
