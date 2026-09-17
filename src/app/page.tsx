@@ -292,7 +292,7 @@ I’m a{" "}
                   <dd className="font-display text-3xl font-bold text-white/90">
                     {value}
                   </dd>
-                  <dt className="label-mono mt-1 text-white/50">{label}</dt>
+                  <dt className="label-mono mt-1 text-white/70">{label}</dt>
                 </div>
               ))}
             </dl>

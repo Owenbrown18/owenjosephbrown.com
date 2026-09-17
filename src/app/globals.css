@@ -680,7 +680,9 @@ h3.reveal-init {
   transform: scale(1.4);
 }
 .obindex-domain {
-  color: rgba(15, 35, 32, 0.45);
+  /* 0.65 ink is 4.9:1 on paper, over the WCAG 4.5 floor for small text
+     (0.45 was 2.8:1 and failed the Lighthouse accessibility gate). */
+  color: rgba(15, 35, 32, 0.65);
   transition: color var(--t-fast) var(--ease-out);
 }
 /* At phone width the name needs the whole row; the URL bar and the
@@ -706,7 +708,7 @@ h3.reveal-init {
   color: var(--color-sage);
 }
 .obindex-row.is-active .obindex-domain {
-  color: rgba(15, 35, 32, 0.62);
+  color: rgba(15, 35, 32, 0.85);
 }
 
 /* The laptop's shot stack: every site mounted, one visible. */

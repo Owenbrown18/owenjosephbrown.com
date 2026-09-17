@@ -122,7 +122,7 @@ export function ObdesignShowcase() {
           </div>
         </LaptopFrame>
         <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <span className="label-mono text-white/50" aria-hidden>
+          <span className="label-mono text-white/70" aria-hidden>
             {String(index + 1).padStart(2, "0")} /{" "}
             {String(clientSites.length).padStart(2, "0")}
           </span>

@@ -79,7 +79,20 @@ try {
     const score = Math.round(report.categories[cat].score * 100);
     const ok = score >= floor;
     console.log(`${ok ? "PASS" : "FAIL"} ${cat}: ${score} (floor ${floor})`);
-    if (!ok) failed = true;
+    if (!ok) {
+      failed = true;
+      // Name the audits that cost the points, with their offending
+      // nodes, so a red gate says what to fix instead of just a number.
+      for (const ref of report.categories[cat].auditRefs) {
+        const audit = report.audits[ref.id];
+        if (ref.weight === 0 || audit.score === null || audit.score === 1) continue;
+        console.log(`  - ${audit.id}: ${audit.title}`);
+        for (const item of audit.details?.items ?? []) {
+          const node = item.node;
+          if (node) console.log(`      ${node.selector}  ${node.snippet?.slice(0, 140) ?? ""}`);
+        }
+      }
+    }
   }
   const tbt = report.audits["total-blocking-time"].numericValue;
   const cls = report.audits["cumulative-layout-shift"].numericValue;
