@@ -76,6 +76,18 @@ export const projects: ResumeEntry[] = [
     ],
   },
   {
+    org: "Tideline",
+    role: "Sole developer",
+    period: "September 2026 – present",
+    location: "Python · AWS Lambda + Terraform",
+    link: "/work/tideline",
+    bullets: [
+      "Python monitoring service (FastAPI, SQLite) on AWS Lambda that checks the 11 client sites I built, twice a month, for lapsing domains and certificates, dead contact forms, broken links, DNS changes and email spoofing gaps; its first run found 8 of 11 domains missing SPF or DMARC",
+      "Rebuilt it from an always-on EC2 server (Postgres, Docker) onto Lambda, EventBridge Scheduler and CloudFront to fit a USD 3 monthly budget, all in Terraform, migrating the data with every row counted; a full 86-check run takes 21 seconds",
+      "376 tests with strict mypy; separate security and correctness reviews found nothing critical or high, and every medium finding was fixed with a test the same day",
+    ],
+  },
+  {
     org: "On the Roadside",
     role: "Developer, client project",
     period: "August 2026 – present",
@@ -139,11 +151,11 @@ export const skills = [
   { label: "Languages", items: "TypeScript, JavaScript, Python, Java, SQL" },
   {
     label: "Frameworks",
-    items: "React, React Native (Expo), Next.js, Astro, Tailwind CSS, Node.js",
+    items: "React, React Native (Expo), Next.js, Astro, Tailwind CSS, Node.js, FastAPI",
   },
   {
     label: "Systems",
     items:
-      "Supabase (Postgres, RLS, RPCs), REST APIs, Git & GitHub, Vercel, CI/CD, DNS",
+      "AWS (Lambda, S3, CloudFront, EventBridge, IAM, SES, CloudWatch), Terraform, Docker, Supabase (Postgres, RLS, RPCs), REST APIs, Git & GitHub, Vercel, CI/CD, DNS",
   },
 ] as const;

@@ -777,6 +777,11 @@ h3.reveal-init {
   .stat-row {
     grid-template-columns: repeat(3, 1fr);
   }
+  /* Four stats go two by two. Three columns left the fourth alone on a
+     second row (On the Roadside's "3 rejections", Tideline's "0"). */
+  .stat-row:has(> .stat:nth-child(4):last-child) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 .stat-value {
   display: block;
@@ -1035,7 +1040,8 @@ h3.reveal-init {
 
 /* Per-project stages. grain is its own cream, OBdesign sits on sage,
    Whispr on a pale sage so its dark window pops, leadgen on a cool
-   mist, On the Roadside on its landing page's warm cream. */
+   mist, On the Roadside on its landing page's warm cream, Tideline on
+   its Paper cooled toward its Tide blue so the Deep header reads. */
 .frame-grain {
   background: linear-gradient(165deg, #f7f1e3 0%, #f1e8d2 100%);
   border-color: rgba(122, 99, 48, 0.22);
@@ -1051,6 +1057,12 @@ h3.reveal-init {
 .frame-roadside {
   background: linear-gradient(165deg, #f6f1e4 0%, #efe3c9 100%);
   border-color: rgba(122, 99, 48, 0.2);
+}
+.frame-tideline {
+  background:
+    radial-gradient(circle at 70% 46%, rgba(134, 176, 214, 0.3), transparent 48%),
+    linear-gradient(165deg, #f1f4f6 0%, #dde6ee 100%);
+  border-color: rgba(27, 52, 82, 0.2);
 }
 .frame-leadgen {
   background: linear-gradient(165deg, #eceeeb 0%, #dfe4df 100%);

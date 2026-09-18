@@ -120,6 +120,54 @@ export const compositions: Record<string, Composition> = {
       </>
     ),
   },
+  tideline: {
+    frame: "aspect-[16/10]",
+    ratio: 16 / 10,
+    tone: "frame-tideline",
+    art: (
+      <>
+        {/* The dashboard behind, and in front the two things it exists to
+            say: a site that is down, and the plain-English report a client
+            gets. Every business shown is invented (the public demo); the
+            real dashboard names real clients and stays private. */}
+        <div className="absolute left-[4%] top-[6%] w-[68%]">
+          <LaptopFrame url="tideline.obwebdesign.ca" size="mini">
+            <Image
+              src={img("/images/tideline/overview.webp")}
+              alt=""
+              width={1600}
+              height={1000}
+              sizes="(min-width: 768px) 560px, 68vw"
+            />
+          </LaptopFrame>
+        </div>
+        <div className="absolute bottom-[-10%] right-[21%] z-10 w-[22%] -rotate-2">
+          <PhoneFrame>
+            <Image
+              src={img("/images/tideline/phone-site.webp")}
+              alt=""
+              width={620}
+              height={1342}
+              sizes="(min-width: 768px) 240px, 27vw"
+              className="h-auto w-full"
+            />
+          </PhoneFrame>
+        </div>
+        <div className="absolute bottom-[-4%] right-[4%] z-20 w-[20%] rotate-2">
+          <PhoneFrame>
+            <Image
+              src={img("/images/tideline/phone-report.webp")}
+              alt=""
+              width={620}
+              height={1342}
+              sizes="(min-width: 768px) 220px, 25vw"
+              className="h-auto w-full"
+            />
+          </PhoneFrame>
+        </div>
+      </>
+    ),
+  },
   whispr: {
     frame: "aspect-[16/9]",
     ratio: 16 / 9,

@@ -14,6 +14,10 @@ export const workFrontmatter = z.object({
   role: z.string(),
   stack: z.array(z.string()),
   liveUrl: z.string().url().optional(),
+  // What the live link is, when it isn't the product itself. Tideline's
+  // real dashboard is private, so its link is a public demo over invented
+  // businesses and has to say so.
+  liveLabel: z.string().optional(),
   repoUrl: z.string().url().optional(),
   hero: z.string().optional(),
   heroAlt: z.string().optional(),

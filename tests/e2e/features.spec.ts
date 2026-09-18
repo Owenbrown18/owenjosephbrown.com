@@ -307,7 +307,7 @@ test("every section heading takes part in the reveal system", async ({
 // at (0,2,0)) shipped whole case studies as headings with no text while a
 // class-based version of this test stayed green: every element had
 // .is-revealed and still painted at opacity 0.
-for (const path of ["/work/on-the-roadside", "/work/grain"]) {
+for (const path of ["/work/on-the-roadside", "/work/grain", "/work/tideline"]) {
   test(`no content is left invisible after scrolling ${path}`, async ({
     page,
   }) => {
@@ -724,6 +724,32 @@ for (const width of [1440, 820, 390]) {
     }
   });
 }
+
+test("a stat row never leaves one stat alone on its last line", async ({
+  page,
+}) => {
+  // Three fixed columns orphaned the fourth stat on every four-stat row.
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  for (const path of ["/work/tideline", "/work/on-the-roadside", "/work/leadgen"]) {
+    await gotoReady(page, path);
+    const rows = await page.locator(".stat-row").evaluateAll((els) =>
+      els.map((row) => {
+        const tops = [...row.children].map((c) =>
+          Math.round(c.getBoundingClientRect().top),
+        );
+        const perLine = new Map<number, number>();
+        for (const t of tops) perLine.set(t, (perLine.get(t) ?? 0) + 1);
+        return [...perLine.values()];
+      }),
+    );
+    expect(rows.length, `stat rows on ${path}`).toBeGreaterThan(0);
+    for (const lines of rows) {
+      if (lines.length > 1) {
+        expect(lines.at(-1), `${path}: last line of ${lines.join("+")}`).toBeGreaterThan(1);
+      }
+    }
+  }
+});
 
 test("footer indexes every project page", async ({ page }) => {
   await gotoReady(page, "/");

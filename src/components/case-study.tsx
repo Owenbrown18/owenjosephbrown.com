@@ -34,7 +34,7 @@ export function CaseStudy({ entry }: { entry: WorkEntry }) {
             { label: "Timeline", value: entry.timeline },
             { label: "Stack", value: entry.stack.join(" · "), wide: true },
             ...(entry.liveUrl
-              ? [{ label: "Live", wide: true, value: ext(entry.liveUrl, entry.liveUrl.replace("https://", "")) }]
+              ? [{ label: entry.liveLabel ?? "Live", wide: true, value: ext(entry.liveUrl, entry.liveUrl.replace("https://", "")) }]
               : []),
             ...(entry.repoUrl
               ? [{ label: "Source", value: ext(entry.repoUrl, entry.repoUrl.replace("https://github.com/", "")) }]

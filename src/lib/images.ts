@@ -15,6 +15,10 @@ import grainBranding from "../../public/images/grain/branding.webp";
 import whisprDemoPoster from "../../public/images/whispr/demo-poster.webp";
 import leadgenDashboard from "../../public/images/leadgen/dashboard.webp";
 import onTheRoadsideShowcase from "../../public/images/on-the-roadside/showcase.webp";
+import tidelineShowcase from "../../public/images/tideline/showcase.webp";
+import tidelineOverview from "../../public/images/tideline/overview.webp";
+import tidelinePhoneSite from "../../public/images/tideline/phone-site.webp";
+import tidelinePhoneReport from "../../public/images/tideline/phone-report.webp";
 import onTheRoadsideScreenTruckDetail from "../../public/images/on-the-roadside/screen-truck-detail.webp";
 import aboutOwenBrownPortrait3 from "../../public/images/about/owen-brown-portrait-3.jpg";
 import aboutOwenBrownHeadshot3 from "../../public/images/about/owen-brown-headshot-3.jpg";
@@ -63,6 +67,10 @@ const registry: Record<string, StaticImageData> = {
   "/images/whispr/demo-poster.webp": whisprDemoPoster,
   "/images/leadgen/dashboard.webp": leadgenDashboard,
   "/images/on-the-roadside/showcase.webp": onTheRoadsideShowcase,
+  "/images/tideline/showcase.webp": tidelineShowcase,
+  "/images/tideline/overview.webp": tidelineOverview,
+  "/images/tideline/phone-site.webp": tidelinePhoneSite,
+  "/images/tideline/phone-report.webp": tidelinePhoneReport,
   "/images/on-the-roadside/screen-truck-detail.webp": onTheRoadsideScreenTruckDetail,
   "/images/about/owen-brown-portrait-3.jpg": aboutOwenBrownPortrait3,
   "/images/about/owen-brown-headshot-3.jpg": aboutOwenBrownHeadshot3,
