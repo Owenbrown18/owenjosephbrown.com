@@ -33,6 +33,18 @@ import workMaidInVictoria from "../../public/images/work/maid-in-victoria.webp";
 import workAdrienneHughes from "../../public/images/work/adrienne-hughes.webp";
 import workBeyondFitness from "../../public/images/work/beyond-fitness.webp";
 import workSuzanneGay from "../../public/images/work/suzanne-gay.webp";
+import previewGrainConstruction from "../../public/images/previews/grain-construction.webp";
+import previewOnTheRoadside from "../../public/images/previews/on-the-roadside.webp";
+import previewFigsAndHoney from "../../public/images/previews/figs-and-honey.webp";
+import previewDavesBakery from "../../public/images/previews/daves-bakery.webp";
+import previewCharliesExcavating from "../../public/images/previews/charlies-excavating.webp";
+import previewSomaActiveHealth from "../../public/images/previews/soma-active-health.webp";
+import previewBayviewCottages from "../../public/images/previews/bayview-cottages.webp";
+import previewNicolConstruction from "../../public/images/previews/nicol-construction.webp";
+import previewMaidInVictoria from "../../public/images/previews/maid-in-victoria.webp";
+import previewAdrienneHughes from "../../public/images/previews/adrienne-hughes.webp";
+import previewBeyondFitness from "../../public/images/previews/beyond-fitness.webp";
+import previewSuzanneGay from "../../public/images/previews/suzanne-gay.webp";
 
 /**
  * Every image the site draws through next/image, as a static import.
@@ -85,6 +97,18 @@ const registry: Record<string, StaticImageData> = {
   "/images/work/adrienne-hughes.webp": workAdrienneHughes,
   "/images/work/beyond-fitness.webp": workBeyondFitness,
   "/images/work/suzanne-gay.webp": workSuzanneGay,
+  "/images/previews/grain-construction.webp": previewGrainConstruction,
+  "/images/previews/on-the-roadside.webp": previewOnTheRoadside,
+  "/images/previews/figs-and-honey.webp": previewFigsAndHoney,
+  "/images/previews/daves-bakery.webp": previewDavesBakery,
+  "/images/previews/charlies-excavating.webp": previewCharliesExcavating,
+  "/images/previews/soma-active-health.webp": previewSomaActiveHealth,
+  "/images/previews/bayview-cottages.webp": previewBayviewCottages,
+  "/images/previews/nicol-construction.webp": previewNicolConstruction,
+  "/images/previews/maid-in-victoria.webp": previewMaidInVictoria,
+  "/images/previews/adrienne-hughes.webp": previewAdrienneHughes,
+  "/images/previews/beyond-fitness.webp": previewBeyondFitness,
+  "/images/previews/suzanne-gay.webp": previewSuzanneGay,
 };
 
 export function img(path: string): StaticImageData {

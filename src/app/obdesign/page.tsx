@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { caseStudyUrl, clientSites } from "@/lib/sites";
-import { siteShots } from "@/lib/site-shots";
+import { sitePreviews } from "@/lib/site-shots";
 import { PixelCells } from "@/components/pixel-cells";
 import { ExploreMore } from "@/components/explore-more";
 import { PageHeader } from "@/components/page-header";
@@ -81,13 +81,15 @@ export default function ObdesignPage() {
                 a pixel grid and fills with the accent on hover, no jump. */}
             <a href={site.url} rel="noopener" className="stage reveal-up block">
               <span className="stage-frame">
+                {/* The site's own link-preview image, 1200x630: made to
+                    read at card size, where a screenshot turns to mush */}
                 <Image
-                  src={siteShots[site.slug]}
-                  alt={`${site.name} website on desktop`}
-                  width={840}
-                  height={525}
+                  src={sitePreviews[site.slug]}
+                  alt={`${site.name}: the site's preview image`}
+                  width={1200}
+                  height={630}
                   priority={i < 2}
-                  className="h-auto w-full object-cover object-top"
+                  className="h-auto w-full object-cover"
                 />
                 <PixelCells seed={site.name} variant="reveal" />
                 <PixelCells seed={site.name} variant="hover" cols={10} rows={6} spread={260} />

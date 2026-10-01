@@ -78,9 +78,9 @@ test("every client site links to its own case study", async ({ page }) => {
       `case study link for ${site.slug}`,
     ).toHaveCount(1);
   }
-  // Ten of the eleven leave for obwebdesign.ca; On the Roadside's write-up
-  // is here, and pointing it at a obwebdesign.ca page that doesn't exist
-  // is the mistake this half guards.
+  // The rest leave for obwebdesign.ca; On the Roadside's full write-up (the
+  // app and the landing page) is here, and obwebdesign.ca's page covers only
+  // the landing page, so this half keeps the row pointing at the full story.
   await expect(
     roster.locator('a[href="/work/on-the-roadside"]'),
     "On the Roadside's case study link stays on this site",

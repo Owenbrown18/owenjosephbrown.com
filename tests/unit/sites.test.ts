@@ -21,8 +21,8 @@ describe("the client roster", () => {
       "https://www.obwebdesign.ca/work/grain-construction",
     );
     // On the Roadside's write-up is on this site: the landing page is one
-    // deliverable of a project whose case study lives here, and
-    // obwebdesign.ca has no page for it.
+    // deliverable of a project whose case study lives here (obwebdesign.ca's
+    // page covers only the landing page).
     const roadside = clientSites.find((s) => s.slug === "on-the-roadside")!;
     expect(caseStudyUrl(roadside)).toBe("/work/on-the-roadside");
   });

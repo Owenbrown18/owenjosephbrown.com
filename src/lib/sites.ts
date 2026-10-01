@@ -15,8 +15,9 @@ export type ClientSite = {
   /**
    * A write-up that lives on this site instead of obwebdesign.ca. Only On
    * the Roadside: the landing page is one deliverable of a project whose
-   * case study is here, so the row points at that rather than at a
-   * obwebdesign.ca page that doesn't exist.
+   * case study (the app and the landing page) is here, so the row points
+   * at that rather than at obwebdesign.ca's page, which covers only the
+   * landing page (added Sept 30).
    */
   caseStudyPath?: string;
 };

@@ -23,6 +23,18 @@ describe("image registry", () => {
     }
   });
 
+  it("every client site on the roster has a registered 1200x630 preview", async () => {
+    // The /obdesign cards draw the site's own OG image at its own shape, so
+    // one of another shape would break the row
+    const sharp = (await import("sharp")).default;
+    for (const site of clientSites) {
+      const path = `/images/previews/${site.slug}.webp`;
+      expect(registered).toContain(path);
+      const { width, height } = await sharp(`public${path}`).metadata();
+      expect([width, height], path).toEqual([1200, 630]);
+    }
+  });
+
   it("every case study's hero and thumb are registered", () => {
     for (const f of readdirSync("content/work").filter((f) => f.endsWith(".mdx"))) {
       const { data } = matter(readFileSync(`content/work/${f}`, "utf8"));
