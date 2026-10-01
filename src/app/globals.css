@@ -212,6 +212,14 @@
 
   html {
     scroll-behavior: smooth;
+    /* No scroll anchoring. Almost everything here moves by transform
+       (reveals rise into place, lifts follow the scroll, the roster
+       magnifies), and WebKit, Safari included, counts a transform on the
+       anchor as the content moving: when an image finished loading
+       mid-reveal it scrolled the page 20px to "hold" a rising paragraph,
+       and the roster rows slid out from under a still pointer. Chrome
+       ignores transforms here, so it loses nothing it was using. */
+    overflow-anchor: none;
   }
 
   body {

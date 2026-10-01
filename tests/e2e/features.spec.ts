@@ -567,6 +567,18 @@ test("the ground never renders black without GPU acceleration", async ({
   expect(mean, "page ground should be paper, not black").toBeGreaterThan(180);
 });
 
+test("the page never scrolls itself to hold a moving element", async ({
+  page,
+}) => {
+  // WebKit's scroll anchoring counts a transform on the anchor as the
+  // content moving. With it on, an image that finished loading while a
+  // paragraph was still rising scrolled the page 20px, which shows up
+  // only on a cold image cache: every CI run, almost no local one. The
+  // band test below caught it as rows sliding under a still pointer.
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveCSS("overflow-anchor", "none");
+});
+
 test("the OBdesign band swaps sites by name", async ({ page }) => {
   await gotoReady(page, "/");
   const band = page.locator("#obdesign");
